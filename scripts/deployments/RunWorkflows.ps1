@@ -264,7 +264,7 @@ if ($DeployRoles) {
     -Context $Context `
     -RolesDirectory $Context.RolesDirectory `
     -RoleNames $RoleNames `
-    -ManagementGroupId $Context.TopLevelManagementGroupId
+    -ManagementGroupId $Context.Variables['var-NHA-managementGroupId']
 }
 
 # Deploy Logging
