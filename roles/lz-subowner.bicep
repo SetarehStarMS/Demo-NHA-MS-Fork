@@ -13,7 +13,7 @@ targetScope = 'managementGroup'
 param assignableMgId string
 
 var scope = tenantResourceId('Microsoft.Management/managementGroups', assignableMgId)
-var roleName = 'Custom - Landing Zone Subscription Owner'
+var roleName = 'NHA - Custom - Landing Zone Subscription Owner'
 var roleDescription = 'Delegated role for subscription owner generated from subscription Owner role.'
 
 // Telemetry - Azure customer usage attribution
