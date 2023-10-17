@@ -6,13 +6,13 @@ variables:
   #var-hubnetwork-subscriptionId: 4fd845de-f6c8-4e6d-9a87-c21c4ebf7edd
   #var-hubnetwork-azfwPolicy-configurationFileName: hub-azfw-policy/azure-firewall-policy.parameters.json
   #var-logging-managementGroupId: Management
-  #var-logging-subscriptionId: 026bb6b5-ed13-40f2-b8fa-b5b987429cbb
+  var-logging-subscriptionId: 026bb6b5-ed13-40f2-b8fa-b5b987429cbb
   deploymentRegion: canadacentral
   var-NHA-managementGroupId: BCHealth-NorthernHealth
   var-BCH-managementGroupId: BCHealth
   #var-identity-managementGroupId: Identity
   #var-logging-diagnosticSettingsforNetworkSecurityGroupsStoragePrefix: pubsecnsg
-  #var-logging-configurationFileName: logging.parameters.json
+  var-logging-configurationFileName: logging.parameters.json
   var-managementgroup-hierarchy: |-
     {
               "id": "BCHealth-NorthernHealth",
