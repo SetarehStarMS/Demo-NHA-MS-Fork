@@ -9,6 +9,7 @@ variables:
   #var-logging-subscriptionId: 026bb6b5-ed13-40f2-b8fa-b5b987429cbb
   deploymentRegion: canadacentral
   var-NHA-managementGroupId: BCHealth-NorthernHealth
+  var-BCH-managementGroupId: BCHealth
   #var-identity-managementGroupId: Identity
   #var-logging-diagnosticSettingsforNetworkSecurityGroupsStoragePrefix: pubsecnsg
   #var-logging-configurationFileName: logging.parameters.json

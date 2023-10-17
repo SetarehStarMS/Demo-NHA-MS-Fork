@@ -293,7 +293,7 @@ if ($DeployCustomPolicySetDefinitions) {
   Set-PolicySet-Defintions `
   -Context $Context `
   -PolicySetDefinitionsDirectory $Context.PolicySetCustomDefinitionDirectory `
-  -ManagementGroupId $Context.TopLevelManagementGroupId `
+  -ManagementGroupId $Context.Variables['var-NHA-managementGroupId'] `
   -PolicySetDefinitionNames $CustomPolicySetDefinitionNames
 }
 
@@ -305,7 +305,7 @@ if ($DeployCustomPolicySetAssignments) {
     -ConfigurationFilePath "$($Context.LoggingDirectory)/$($Context.Variables['var-logging-configurationFileName'])" `
     -SubscriptionId $Context.Variables['var-logging-subscriptionId']
 
-  $AssignmentScope = $Context.TopLevelManagementGroupId
+  $AssignmentScope = $Context.Variables['var-NHA-managementGroupId']
   if ([string]::IsNullOrEmpty($CustomPolicySetAssignmentManagementGroupId) -eq $false) {
     $AssignmentScope = $CustomPolicySetAssignmentManagementGroupId
   }
