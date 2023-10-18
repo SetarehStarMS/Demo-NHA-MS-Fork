@@ -15,7 +15,7 @@ param policyDefinitionManagementGroupId string
 var customPolicyDefinitionMgScope = tenantResourceId('Microsoft.Management/managementGroups', policyDefinitionManagementGroupId)
 
 resource networkPolicySet 'Microsoft.Authorization/policySetDefinitions@2020-03-01' = {
-  name: 'nha-network'
+  name: 'custom-network'
   properties: {
     displayName: 'NHA - ALZ - Network'
     policyDefinitionGroups: [

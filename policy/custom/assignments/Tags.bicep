@@ -37,7 +37,7 @@ module telemetryCustomerUsageAttribution '../../../azresources/telemetry/custome
 }
 
 // Tags Inherited from Subscription to Resource Groups
-var rgInheritedPolicyFromSubscriptionToResourceGroupId = 'tags-inherited-from-subscription-to-resource-group'
+var rgInheritedPolicyFromSubscriptionToResourceGroupId = 'custom-tags-inherited-from-subscription-to-resource-group'
 var rgInheritedAssignmentFromSubscriptionToResourceGroupName = 'NHA - ALZ - Tags inherited from subscription to resource group if missing'
 
 resource rgInheritedPolicySetFromSubscriptionToResourceGroupAssignment 'Microsoft.Authorization/policyAssignments@2020-03-01' = {
@@ -67,7 +67,7 @@ resource rgPolicySetRoleAssignmentFromSubscriptionToResourceGroupContributor 'Mi
 }
 
 // Tags Inherited from Resource Groups
-var rgInheritedPolicyId = 'tags-inherited-from-resource-group'
+var rgInheritedPolicyId = 'custom-tags-inherited-from-resource-group'
 var rgInheritedAssignmentName = 'NHA - ALZ - Tags inherited from resource group if missing'
 
 resource rgInheritedPolicySetAssignment 'Microsoft.Authorization/policyAssignments@2020-03-01' = {
