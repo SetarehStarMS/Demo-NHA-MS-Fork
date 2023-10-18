@@ -25,7 +25,7 @@ param policyAssignmentManagementGroupId string
 @description('Policy set assignment enforcement mode.  Possible values are { Default, DoNotEnforce }.  Default value:  Default')
 param enforcementMode string = 'Default'
 
-var policyId = 'nha-custom-network'
+var policyId = 'custom-network'
 var assignmentName = 'NHA - ALZ - Network'
 
 var scope = tenantResourceId('Microsoft.Management/managementGroups', policyAssignmentManagementGroupId)
