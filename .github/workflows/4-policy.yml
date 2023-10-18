@@ -23,32 +23,32 @@ defaults:
     working-directory: scripts/deployments
 
 jobs:
-  # Custom_Policy_Definitions:
-  #   name: Custom policy definitions
+  Custom_Policy_Definitions:
+    name: Custom policy definitions
 
-  #   runs-on: ubuntu-latest
-  #   steps:
+    runs-on: ubuntu-latest
+    steps:
 
-  #   - name: Checkout
-  #     uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
 
-  #   - name: Configure PowerShell modules
-  #     run: |
-  #       Install-Module Az -Force
-  #       Install-Module powershell-yaml -Force
+    - name: Configure PowerShell modules
+      run: |
+        Install-Module Az -Force
+        Install-Module powershell-yaml -Force
 
-  #   - name: Deploy policy definitions
-  #     run: |
-  #       ./RunWorkflows.ps1 `
-  #         -DeployCustomPolicyDefinitions `
-  #         -EnvironmentName '${{github.event.inputs.environmentName}}' `
-  #         -LoginServicePrincipalJson (ConvertTo-SecureString -String '${{secrets.ALZ_CREDENTIALS}}' -AsPlainText -Force) `
-  #         -GitHubRepo ${env:GITHUB_REPOSITORY} `
-  #         -GitHubRef ${env:GITHUB_REF}
+    - name: Deploy policy definitions
+      run: |
+        ./RunWorkflows.ps1 `
+          -DeployCustomPolicyDefinitions `
+          -EnvironmentName '${{github.event.inputs.environmentName}}' `
+          -LoginServicePrincipalJson (ConvertTo-SecureString -String '${{secrets.ALZ_CREDENTIALS}}' -AsPlainText -Force) `
+          -GitHubRepo ${env:GITHUB_REPOSITORY} `
+          -GitHubRef ${env:GITHUB_REF}
 
   Custom_Policy_Set_Definitions:
     name: Define custom
-    #needs: Custom_Policy_Definitions
+    needs: Custom_Policy_Definitions
 
     strategy:
       matrix:
@@ -85,7 +85,7 @@ jobs:
   Custom_Policy_Set_Assignments:
     name: Assign custom
     needs:
-      #- Custom_Policy_Definitions
+      - Custom_Policy_Definitions
       - Custom_Policy_Set_Definitions
 
     strategy:

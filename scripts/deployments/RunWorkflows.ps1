@@ -284,7 +284,7 @@ if ($DeployCustomPolicyDefinitions) {
 
   Set-Policy-Definitions `
     -PolicyDefinitionsDirectory $Context.PolicyCustomDefinitionDirectory `
-    -ManagementGroupId $Context.Variables['var-BCH-managementGroupId'] `
+    -ManagementGroupId $Context.Variables['var-NHA-managementGroupId'] `
 }
 
 if ($DeployCustomPolicySetDefinitions) {
@@ -293,7 +293,7 @@ if ($DeployCustomPolicySetDefinitions) {
   Set-PolicySet-Defintions `
   -Context $Context `
   -PolicySetDefinitionsDirectory $Context.PolicySetCustomDefinitionDirectory `
-  -ManagementGroupId $Context.Variables['var-BCH-managementGroupId'] `
+  -ManagementGroupId $Context.Variables['var-NHA-managementGroupId'] `
   -PolicySetDefinitionNames $CustomPolicySetDefinitionNames
 }
 
