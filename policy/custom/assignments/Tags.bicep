@@ -38,7 +38,7 @@ module telemetryCustomerUsageAttribution '../../../azresources/telemetry/custome
 
 // Tags Inherited from Subscription to Resource Groups
 var rgInheritedPolicyFromSubscriptionToResourceGroupId = 'custom-tags-inherited-from-subscription-to-resource-group'
-var rgInheritedAssignmentFromSubscriptionToResourceGroupName = 'Custom - Tags inherited from subscription to resource group if missing'
+var rgInheritedAssignmentFromSubscriptionToResourceGroupName = 'NHA - Custom - Tags inherited from subscription to resource group if missing'
 
 resource rgInheritedPolicySetFromSubscriptionToResourceGroupAssignment 'Microsoft.Authorization/policyAssignments@2020-03-01' = {
   name: 'tags-torg-${uniqueString('tags-torg-', policyAssignmentManagementGroupId)}'
@@ -57,7 +57,7 @@ resource rgInheritedPolicySetFromSubscriptionToResourceGroupAssignment 'Microsof
 }
 
 resource rgPolicySetRoleAssignmentFromSubscriptionToResourceGroupContributor 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
-  name: guid(rgInheritedPolicyFromSubscriptionToResourceGroupId, 'RgRemediation', 'Contributor')
+  name: guid(rgInheritedAssignmentFromSubscriptionToResourceGroupName, 'RgRemediation', 'Contributor')
   scope: managementGroup()
   properties: {
     roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions','b24988ac-6180-42a0-ab88-20f7382dd24c')

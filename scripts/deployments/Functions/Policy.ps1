@@ -64,7 +64,7 @@ function Set-PolicySet-Defintions {
 
     # Replace templated parameters & create temp file for deployment
     $ParametersContent = Get-Content $PolicySetDefinitionParametersFilePath
-    $ParametersContent = $ParametersContent -Replace '{{var-topLevelManagementGroupName}}', $Context.Variables['var-BCH-managementGroupId'] 
+    $ParametersContent = $ParametersContent -Replace '{{var-topLevelManagementGroupName}}', $ManagementGroupId
 
     $PopulatedParametersFilePath = "$($PolicySetDefinitionsDirectory)/$($policySetDefinitionName)-populated.parameters.json"
     $ParametersContent | Set-Content -Path $PopulatedParametersFilePath
@@ -133,7 +133,7 @@ function Set-PolicySet-Assignments {
 
     # Replace templated parameters & create temp file for deployment
     $ParametersContent = Get-Content $PolicySetParameterFilePath
-    $ParametersContent = $ParametersContent -Replace '{{var-topLevelManagementGroupName}}', $Context.Variables['var-NHA-managementGroupId'] 
+    $ParametersContent = $ParametersContent -Replace '{{var-topLevelManagementGroupName}}', $ManagementGroupId
     $ParametersContent = $ParametersContent -Replace '{{var-logging-logAnalyticsWorkspaceResourceId}}', $LogAnalyticsWorkspaceResourceId
     $ParametersContent = $ParametersContent -Replace '{{var-logging-logAnalyticsWorkspaceId}}', $LogAnalyticsWorkspaceId
     $ParametersContent = $ParametersContent -Replace '{{var-logging-logAnalyticsResourceGroupName}}', $LogAnalyticsWorkspaceResourceGroupName

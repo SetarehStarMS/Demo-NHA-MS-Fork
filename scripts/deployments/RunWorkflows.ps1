@@ -284,7 +284,7 @@ if ($DeployCustomPolicyDefinitions) {
 
   Set-Policy-Definitions `
     -PolicyDefinitionsDirectory $Context.PolicyCustomDefinitionDirectory `
-    -ManagementGroupId $Context.TopLevelManagementGroupId
+    -ManagementGroupId $Context.Variables['var-NHA-managementGroupId'] `
 }
 
 if ($DeployCustomPolicySetDefinitions) {
