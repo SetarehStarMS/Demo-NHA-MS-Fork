@@ -7,12 +7,7 @@
         },
         "requiredResourceTags": {
             "value": [
-                "ClientOrganization",
-                "CostCenter",
-                "DataSensitivity",
-                "ProjectContact",
-                "ProjectName",
-                "TechnicalContact"
+                "Data Classification"
             ]
         },
         "policyEnforcement": {

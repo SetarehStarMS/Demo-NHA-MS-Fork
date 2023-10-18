@@ -57,7 +57,7 @@ jobs:
           # - DefenderForCloud
           # - LogAnalytics
           - Network
-          - DNSPrivateEndpoints
+          # - DNSPrivateEndpoints
           - Tags
       fail-fast: false
 
