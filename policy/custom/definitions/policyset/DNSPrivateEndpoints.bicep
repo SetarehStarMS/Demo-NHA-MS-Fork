@@ -38,7 +38,7 @@ Format of the array of objects
 @description('An array of Private DNS Zones to define as policies.')
 param privateDNSZones array
 
-var policySetName = 'nha-central-dns-private-endpoints'
+var policySetName = 'custom-central-dns-private-endpoints'
 var policySetDisplayName = 'NHA - ALZ - Central DNS for Private Endpoints'
 
 var customPolicyDefinitionMgScope = tenantResourceId('Microsoft.Management/managementGroups', policyDefinitionManagementGroupId)
