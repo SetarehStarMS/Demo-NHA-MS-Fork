@@ -133,7 +133,7 @@ function Set-PolicySet-Assignments {
 
     # Replace templated parameters & create temp file for deployment
     $ParametersContent = Get-Content $PolicySetParameterFilePath
-    $ParametersContent = $ParametersContent -Replace '{{var-topLevelManagementGroupName}}', $ManagementGroupId
+    $ParametersContent = $ParametersContent -Replace '{{var-topLevelManagementGroupName}}', $PolicySetAssignmentManagementGroupId
     $ParametersContent = $ParametersContent -Replace '{{var-logging-logAnalyticsWorkspaceResourceId}}', $LogAnalyticsWorkspaceResourceId
     $ParametersContent = $ParametersContent -Replace '{{var-logging-logAnalyticsWorkspaceId}}', $LogAnalyticsWorkspaceId
     $ParametersContent = $ParametersContent -Replace '{{var-logging-logAnalyticsResourceGroupName}}', $LogAnalyticsWorkspaceResourceGroupName
