@@ -32,7 +32,7 @@ param privateDNSZoneSubscriptionId string
 param privateDNSZoneResourceGroupName string
 
 var policyId = 'custom-central-dns-private-endpoints'
-var assignmentName = 'Custom - Central DNS for Private Endpoints'
+var assignmentName = 'NHA - ALZ - Central DNS for Private Endpoints'
 
 var scope = tenantResourceId('Microsoft.Management/managementGroups', policyAssignmentManagementGroupId)
 var policyDefinitionScope = tenantResourceId('Microsoft.Management/managementGroups', policyDefinitionManagementGroupId)

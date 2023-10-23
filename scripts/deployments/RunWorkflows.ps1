@@ -264,7 +264,7 @@ if ($DeployRoles) {
     -Context $Context `
     -RolesDirectory $Context.RolesDirectory `
     -RoleNames $RoleNames `
-    -ManagementGroupId $Context.TopLevelManagementGroupId
+    -ManagementGroupId $Context.Variables['var-NHA-managementGroupId']
 }
 
 # Deploy Logging
@@ -284,7 +284,7 @@ if ($DeployCustomPolicyDefinitions) {
 
   Set-Policy-Definitions `
     -PolicyDefinitionsDirectory $Context.PolicyCustomDefinitionDirectory `
-    -ManagementGroupId $Context.TopLevelManagementGroupId
+    -ManagementGroupId $Context.Variables['var-NHA-managementGroupId'] `
 }
 
 if ($DeployCustomPolicySetDefinitions) {
@@ -293,7 +293,7 @@ if ($DeployCustomPolicySetDefinitions) {
   Set-PolicySet-Defintions `
   -Context $Context `
   -PolicySetDefinitionsDirectory $Context.PolicySetCustomDefinitionDirectory `
-  -ManagementGroupId $Context.TopLevelManagementGroupId `
+  -ManagementGroupId $Context.Variables['var-NHA-managementGroupId'] `
   -PolicySetDefinitionNames $CustomPolicySetDefinitionNames
 }
 
@@ -305,7 +305,7 @@ if ($DeployCustomPolicySetAssignments) {
     -ConfigurationFilePath "$($Context.LoggingDirectory)/$($Context.Variables['var-logging-configurationFileName'])" `
     -SubscriptionId $Context.Variables['var-logging-subscriptionId']
 
-  $AssignmentScope = $Context.TopLevelManagementGroupId
+  $AssignmentScope = $Context.Variables['var-NHA-managementGroupId']
   if ([string]::IsNullOrEmpty($CustomPolicySetAssignmentManagementGroupId) -eq $false) {
     $AssignmentScope = $CustomPolicySetAssignmentManagementGroupId
   }
@@ -363,6 +363,23 @@ if ($DeployHubNetworkWithNVA) {
     -LogAnalyticsWorkspaceResourceId $LoggingConfiguration.LogAnalyticsWorkspaceResourceId `
     -NvaUsername $NvaUsername `
     -NvaPassword $NvaPassword
+}
+
+# Deploy Hub Networking with NGFW
+if ($DeployHubNetworkWithNGFW) {
+  Write-Host "Deploying Hub Networking with NGFW..."
+  # Get Logging information using logging config file
+  $LoggingConfiguration = Get-LoggingConfiguration `
+    -ConfigurationFilePath "$($Context.LoggingDirectory)/$($Context.Variables['var-logging-configurationFileName'])" `
+    -SubscriptionId $Context.Variables['var-logging-subscriptionId']
+
+  Set-HubNetwork-With-NGFW `
+    -Context $Context `
+    -Region $Context.Variables['var-hubnetwork-region'] `
+    -ManagementGroupId $Context.Variables['var-hubnetwork-managementGroupId'] `
+    -SubscriptionId $Context.Variables['var-hubnetwork-subscriptionId'] `
+    -ConfigurationFilePath "$($Context.NetworkingDirectory)/$($Context.Variables['var-hubnetwork-ngfw-configurationFileName'])" `
+    -LogAnalyticsWorkspaceResourceId $LoggingConfiguration.LogAnalyticsWorkspaceResourceId 
 }
 
 # Azure Firewall Policy

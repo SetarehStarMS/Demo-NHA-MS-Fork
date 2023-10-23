@@ -26,7 +26,7 @@ param policyAssignmentManagementGroupId string
 param enforcementMode string = 'Default'
 
 var policyId = 'custom-network'
-var assignmentName = 'Custom - Network'
+var assignmentName = 'NHA - ALZ - Network'
 
 var scope = tenantResourceId('Microsoft.Management/managementGroups', policyAssignmentManagementGroupId)
 var policyDefinitionScope = tenantResourceId('Microsoft.Management/managementGroups', policyDefinitionManagementGroupId)

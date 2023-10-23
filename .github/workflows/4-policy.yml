@@ -53,9 +53,9 @@ jobs:
     strategy:
       matrix:
         policySetDefinitionName:
-          - AKS
-          - DefenderForCloud
-          - LogAnalytics
+          # - AKS
+          # - DefenderForCloud
+          # - LogAnalytics
           - Network
           - DNSPrivateEndpoints
           - Tags
@@ -91,9 +91,9 @@ jobs:
     strategy:
       matrix:
         policySetAssignmentName:
-          - AKS
-          - DefenderForCloud
-          - LogAnalytics
+          # - AKS
+          # - DefenderForCloud
+          # - LogAnalytics
           - Network
           - Tags
       fail-fast: false
@@ -119,39 +119,32 @@ jobs:
           -GitHubRepo ${env:GITHUB_REPOSITORY} `
           -GitHubRef ${env:GITHUB_REF}
 
-  Builtin_Policy_Set_Assignments:
-    name: Assign built-in
+  # Builtin_Policy_Set_Assignments:
+  #   name: Assign built-in
 
-    strategy:
-      matrix:
-        policySetAssignmentName:
-          - asb
-          - nist80053r4
-          - nist80053r5
-          - pbmm
-          - cis-msft-130
-          - fedramp-moderate
-          - hitrust-hipaa
-          - location
-      fail-fast: false
+  #   strategy:
+  #     matrix:
+  #       policySetAssignmentName:
+          
+  #     fail-fast: false
 
-    runs-on: ubuntu-latest
-    steps:
+  #   runs-on: ubuntu-latest
+  #   steps:
 
-    - name: Checkout
-      uses: actions/checkout@v3
+  #   - name: Checkout
+  #     uses: actions/checkout@v3
 
-    - name: Configure PowerShell modules
-      run: |
-        Install-Module Az -Force
-        Install-Module powershell-yaml -Force
+  #   - name: Configure PowerShell modules
+  #     run: |
+  #       Install-Module Az -Force
+  #       Install-Module powershell-yaml -Force
 
-    - name: Deploy policy set assignment
-      run: |
-        ./RunWorkflows.ps1 `
-          -DeployBuiltinPolicySetAssignments `
-          -BuiltinPolicySetAssignmentNames '${{ matrix.policySetAssignmentName }}' `
-          -EnvironmentName '${{github.event.inputs.environmentName}}' `
-          -LoginServicePrincipalJson (ConvertTo-SecureString -String '${{secrets.ALZ_CREDENTIALS}}' -AsPlainText -Force) `
-          -GitHubRepo ${env:GITHUB_REPOSITORY} `
-          -GitHubRef ${env:GITHUB_REF}
+  #   - name: Deploy policy set assignment
+  #     run: |
+  #       ./RunWorkflows.ps1 `
+  #         -DeployBuiltinPolicySetAssignments `
+  #         -BuiltinPolicySetAssignmentNames '${{ matrix.policySetAssignmentName }}' `
+  #         -EnvironmentName '${{github.event.inputs.environmentName}}' `
+  #         -LoginServicePrincipalJson (ConvertTo-SecureString -String '${{secrets.ALZ_CREDENTIALS}}' -AsPlainText -Force) `
+  #         -GitHubRepo ${env:GITHUB_REPOSITORY} `
+  #         -GitHubRef ${env:GITHUB_REF}

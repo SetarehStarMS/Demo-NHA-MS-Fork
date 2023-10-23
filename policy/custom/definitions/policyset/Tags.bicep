@@ -48,7 +48,7 @@ resource tagsInheritedFromSubscriptionToResourceGroupPolicy 'Microsoft.Authoriza
 resource tagsInheritedFromSubscriptionToResourceGroupPolicySet 'Microsoft.Authorization/policySetDefinitions@2020-09-01' = {
   name: 'custom-tags-inherited-from-subscription-to-resource-group'
   properties: {
-    displayName: 'Custom - Inherited tags from subscription to resource group if missing'
+    displayName: 'NHA - ALZ - Inherited tags from subscription to resource group if missing'
     policyDefinitions: [for (tag, i) in requiredResourceTags: {
       policyDefinitionId: extensionResourceId(customPolicyDefinitionMgScope, 'Microsoft.Authorization/policyDefinitions', tagsInheritedFromSubscriptionToResourceGroupPolicy[i].name)
       policyDefinitionReferenceId: toLower(replace('Inherit ${tag} tag from the subscription to resource group if missing', ' ', '-'))
@@ -78,7 +78,7 @@ resource tagsInheritedFromResourceGroupPolicy 'Microsoft.Authorization/policyDef
 resource tagsInheritedFromResourceGroupPolicySet 'Microsoft.Authorization/policySetDefinitions@2020-09-01' = {
   name: 'custom-tags-inherited-from-resource-group'
   properties: {
-    displayName: 'Custom - Inherited tags from resource group if missing'
+    displayName: 'NHA - ALZ - Inherited tags from resource group if missing'
     policyDefinitions: [for (tag, i) in requiredResourceTags: {
       policyDefinitionId: extensionResourceId(customPolicyDefinitionMgScope, 'Microsoft.Authorization/policyDefinitions', tagsInheritedFromResourceGroupPolicy[i].name)
       policyDefinitionReferenceId: toLower(replace('Inherit ${tag} tag from the resource group if missing', ' ', '-'))
@@ -108,7 +108,7 @@ resource tagsRequiredOnResourceGroupPolicy 'Microsoft.Authorization/policyDefini
 resource tagsRequiredOnResourceGroupPolicySet 'Microsoft.Authorization/policySetDefinitions@2020-09-01' = {
   name: 'required-tags-on-resource-group'
   properties: {
-    displayName: 'Custom - Tags required on resource group'
+    displayName: 'NHA - ALZ - Tags required on resource group'
     policyDefinitions: [for (tag, i) in requiredResourceTags: {
       policyDefinitionId: extensionResourceId(customPolicyDefinitionMgScope, 'Microsoft.Authorization/policyDefinitions', tagsRequiredOnResourceGroupPolicy[i].name)
       policyDefinitionReferenceId: toLower(replace('Require ${tag} tag on resource group', ' ', '-'))
@@ -141,7 +141,7 @@ resource tagsAuditOnResourcePolicy 'Microsoft.Authorization/policyDefinitions@20
 resource tagsAuditOnResourcePolicySet 'Microsoft.Authorization/policySetDefinitions@2020-09-01' = {
   name: 'audit-required-tags-on-resources'
   properties: {
-    displayName: 'Custom - Audit for required tags on resources'
+    displayName: 'NHA - ALZ - Audit for required tags on resources'
     policyDefinitions: [for (tag, i) in requiredResourceTags: {
       policyDefinitionId: extensionResourceId(customPolicyDefinitionMgScope, 'Microsoft.Authorization/policyDefinitions', tagsAuditOnResourcePolicy[i].name)
       policyDefinitionReferenceId: toLower(replace('Audit for ${tag} tag on resource', ' ', '-'))

@@ -38,7 +38,7 @@ module telemetryCustomerUsageAttribution '../../../azresources/telemetry/custome
 
 // Tags Inherited from Subscription to Resource Groups
 var rgInheritedPolicyFromSubscriptionToResourceGroupId = 'custom-tags-inherited-from-subscription-to-resource-group'
-var rgInheritedAssignmentFromSubscriptionToResourceGroupName = 'Custom - Tags inherited from subscription to resource group if missing'
+var rgInheritedAssignmentFromSubscriptionToResourceGroupName = 'NHA - ALZ - Tags inherited from subscription to resource group if missing'
 
 resource rgInheritedPolicySetFromSubscriptionToResourceGroupAssignment 'Microsoft.Authorization/policyAssignments@2020-03-01' = {
   name: 'tags-torg-${uniqueString('tags-torg-', policyAssignmentManagementGroupId)}'
@@ -57,7 +57,7 @@ resource rgInheritedPolicySetFromSubscriptionToResourceGroupAssignment 'Microsof
 }
 
 resource rgPolicySetRoleAssignmentFromSubscriptionToResourceGroupContributor 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
-  name: guid(rgInheritedPolicyFromSubscriptionToResourceGroupId, 'RgRemediation', 'Contributor')
+  name: guid(rgInheritedAssignmentFromSubscriptionToResourceGroupName, 'RgRemediation', 'Contributor')
   scope: managementGroup()
   properties: {
     roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions','b24988ac-6180-42a0-ab88-20f7382dd24c')
@@ -68,7 +68,7 @@ resource rgPolicySetRoleAssignmentFromSubscriptionToResourceGroupContributor 'Mi
 
 // Tags Inherited from Resource Groups
 var rgInheritedPolicyId = 'custom-tags-inherited-from-resource-group'
-var rgInheritedAssignmentName = 'Custom - Tags inherited from resource group if missing'
+var rgInheritedAssignmentName = 'NHA - ALZ - Tags inherited from resource group if missing'
 
 resource rgInheritedPolicySetAssignment 'Microsoft.Authorization/policyAssignments@2020-03-01' = {
   name: 'tags-rg-${uniqueString('tags-from-rg-', policyAssignmentManagementGroupId)}'
@@ -98,7 +98,7 @@ resource rgPolicySetRoleAssignmentContributor 'Microsoft.Authorization/roleAssig
 
 // Required Tags on Resource Group
 var rgRequiredPolicyId = 'required-tags-on-resource-group'
-var rgRequiredAssignmentName = 'Custom - Required tags on resource group'
+var rgRequiredAssignmentName = 'NHA - ALZ - Required tags on resource group'
 
 resource rgRequiredPolicySetAssignment 'Microsoft.Authorization/policyAssignments@2020-03-01' = {
   name: 'tags-rg-${uniqueString('tags-required-', policyAssignmentManagementGroupId)}'
@@ -118,7 +118,7 @@ resource rgRequiredPolicySetAssignment 'Microsoft.Authorization/policyAssignment
 
 // Audit for Tags on Resources
 var resourcesPolicyId = 'audit-required-tags-on-resources'
-var resourcesAssignmentName = 'Custom - Audit for required tags on resources'
+var resourcesAssignmentName = 'NHA - ALZ - Audit for required tags on resources'
 
 resource resourcesAuditPolicySetAssignment 'Microsoft.Authorization/policyAssignments@2020-03-01' = {
   name: 'tags-r-${uniqueString('tags-missing-', policyAssignmentManagementGroupId)}'

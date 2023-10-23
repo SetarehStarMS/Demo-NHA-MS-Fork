@@ -39,7 +39,7 @@ Format of the array of objects
 param privateDNSZones array
 
 var policySetName = 'custom-central-dns-private-endpoints'
-var policySetDisplayName = 'Custom - Central DNS for Private Endpoints'
+var policySetDisplayName = 'NHA - ALZ - Central DNS for Private Endpoints'
 
 var customPolicyDefinitionMgScope = tenantResourceId('Microsoft.Management/managementGroups', policyDefinitionManagementGroupId)
 var customPolicyDefinition = json(loadTextContent('templates/DNS-PrivateEndpoints/azurepolicy.json'))

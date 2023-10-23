@@ -17,7 +17,7 @@ var customPolicyDefinitionMgScope = tenantResourceId('Microsoft.Management/manag
 resource networkPolicySet 'Microsoft.Authorization/policySetDefinitions@2020-03-01' = {
   name: 'custom-network'
   properties: {
-    displayName: 'Custom - Network'
+    displayName: 'NHA - ALZ - Network'
     policyDefinitionGroups: [
       {
         name: 'NETWORK'
@@ -25,14 +25,14 @@ resource networkPolicySet 'Microsoft.Authorization/policySetDefinitions@2020-03-
       }
     ]
     policyDefinitions: [
-      {
-        groupNames: [
-          'NETWORK'
-        ]
-        policyDefinitionId: tenantResourceId('Microsoft.Authorization/policyDefinitions', '83a86a26-fd1f-447c-b59d-e51f44264114')
-        policyDefinitionReferenceId: toLower(replace('Network interfaces should not have public IPs', ' ', '-'))
-        parameters: {}
-      }
+      // {
+      //   groupNames: [
+      //     'NETWORK'
+      //   ]
+      //   policyDefinitionId: tenantResourceId('Microsoft.Authorization/policyDefinitions', '83a86a26-fd1f-447c-b59d-e51f44264114')
+      //   policyDefinitionReferenceId: toLower(replace('Network interfaces should not have public IPs', ' ', '-'))
+      //   parameters: {}
+      // }
       {
         groupNames: [
           'NETWORK'
