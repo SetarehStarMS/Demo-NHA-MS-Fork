@@ -1,9 +1,10 @@
 variables:
-  #var-hubnetwork-region: canadacentral
-  #var-hubnetwork-managementGroupId: Connectivity
+  var-hubnetwork-region: canadacentral
+  var-hubnetwork-managementGroupId: BCHealth-NorthernHealth-Platform
   #var-hubnetwork-azfw-configurationFileName: hub-azfw/hub-network.parameters.json
   #var-hubnetwork-nva-configurationFileName: hub-nva/hub-network.parameters.json
-  #var-hubnetwork-subscriptionId: 4fd845de-f6c8-4e6d-9a87-c21c4ebf7edd
+  var-hubnetwork-ngfw-configurationFileName: hub-ngfw/hub-network.parameters.json
+  var-hubnetwork-subscriptionId: dbf14654-41b8-4a18-bcdd-a200d053975f
   #var-hubnetwork-azfwPolicy-configurationFileName: hub-azfw-policy/azure-firewall-policy.parameters.json
   #var-logging-managementGroupId: Management
   var-logging-subscriptionId: 026bb6b5-ed13-40f2-b8fa-b5b987429cbb

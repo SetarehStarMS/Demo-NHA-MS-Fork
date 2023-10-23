@@ -365,6 +365,23 @@ if ($DeployHubNetworkWithNVA) {
     -NvaPassword $NvaPassword
 }
 
+# Deploy Hub Networking with NGFW
+if ($DeployHubNetworkWithNGFW) {
+  Write-Host "Deploying Hub Networking with NGFW..."
+  # Get Logging information using logging config file
+  $LoggingConfiguration = Get-LoggingConfiguration `
+    -ConfigurationFilePath "$($Context.LoggingDirectory)/$($Context.Variables['var-logging-configurationFileName'])" `
+    -SubscriptionId $Context.Variables['var-logging-subscriptionId']
+
+  Set-HubNetwork-With-NGFW `
+    -Context $Context `
+    -Region $Context.Variables['var-hubnetwork-region'] `
+    -ManagementGroupId $Context.Variables['var-hubnetwork-managementGroupId'] `
+    -SubscriptionId $Context.Variables['var-hubnetwork-subscriptionId'] `
+    -ConfigurationFilePath "$($Context.NetworkingDirectory)/$($Context.Variables['var-hubnetwork-ngfw-configurationFileName'])" `
+    -LogAnalyticsWorkspaceResourceId $LoggingConfiguration.LogAnalyticsWorkspaceResourceId 
+}
+
 # Azure Firewall Policy
 if ($DeployAzureFirewallPolicy) {
   # Create Azure Firewall Policy
