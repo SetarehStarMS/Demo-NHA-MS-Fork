@@ -293,7 +293,8 @@ var defaultRoutes = [
     properties: {
       nextHopType: 'VirtualAppliance'
       addressPrefix: '0.0.0.0/0'
-      nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.internalIp
+      //nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.internalIp
+      nextHopIpAddress: ''
     }
   }
 ]
@@ -303,7 +304,8 @@ var routesFromAddressPrefixes = [for addressPrefix in hub.network.addressPrefixe
     properties: {
       nextHopType: 'VirtualAppliance'
       addressPrefix: addressPrefix
-      nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.internalIp
+      //nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.internalIp
+      nextHopIpAddress: ''
     }
 }]
 
@@ -340,7 +342,8 @@ module udrPaz '../../azresources/network/udr/udr-custom.bicep' = {
       properties: {
         addressPrefix: addressPrefix
         nextHopType: 'VirtualAppliance'
-        nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.externalIp
+        //nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.externalIp
+        nextHopIpAddress: ''
       }
     }]
   }
