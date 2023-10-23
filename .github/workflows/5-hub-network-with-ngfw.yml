@@ -23,7 +23,7 @@ defaults:
     working-directory: scripts/deployments
 
 jobs:
-  hub-network-with-nva:
+  hub-network-with-ngfw:
     name: Hub Network with NGFW
     runs-on: ubuntu-latest
     steps:

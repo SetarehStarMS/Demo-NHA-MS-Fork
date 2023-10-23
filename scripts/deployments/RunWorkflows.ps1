@@ -61,6 +61,9 @@ OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 
   .PARAMETER DeployHubNetworkWithNVA
     If true, run the NVA hub network workflow.
+
+  .PARAMETER DeployHubNetworkWithNGFW
+    If true, run the NGFW hub network workflow.
   
   .PARAMETER DeployIdentity
     If true, run the Identity workflow.
@@ -225,6 +228,7 @@ Write-Host "Loading functions..."
 . ".\Functions\Logging.ps1"
 . ".\Functions\Policy.ps1"
 . ".\Functions\HubNetworkWithNVA.ps1"
+. ".\Functions\HubNetworkWithNGFW.ps1"
 . ".\Functions\HubNetworkWithAzureFirewall.ps1"
 . ".\Functions\Identity.ps1"
 . ".\Functions\Subscriptions.ps1"
