@@ -1,6 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/Azure/CanadaPubSecALZ/main/schemas/latest/landingzones/lz-platform-connectivity-hub-nva.json#",
-  "contentVersion": "1.0.0.0",
+
   "parameters": {
     "serviceHealthAlerts": {
       "value": {
@@ -90,81 +89,7 @@
         "planName": "nha-ddos-plan"
       }
     },
-    "publicAccessZone": {
-      "value": {
-        "enabled": true,
-        "resourceGroupName": "nha-public-access-zone"
-      }
-    },
-    "managementRestrictedZone": {
-      "value": {
-        "enabled": true,
-        "resourceGroupName": "nha-management-restricted-zone",
-        "network": {
-          "name": "nha-management-restricted-vnet",
-          "addressPrefixes": [
-            "10.18.4.0/22"
-          ],
-          "subnets": [
-            {
-              "comments": "Management (Access Zone) Subnet",
-              "name": "MazSubnet",
-              "addressPrefix": "10.18.4.0/25",
-              "nsg": {
-                "enabled": true
-              },
-              "udr": {
-                "enabled": true
-              }
-            },
-            {
-              "comments": "Infrastructure Services (Restricted Zone) Subnet",
-              "name": "InfSubnet",
-              "addressPrefix": "10.18.4.128/25",
-              "nsg": {
-                "enabled": true
-              },
-              "udr": {
-                "enabled": true
-              }
-            },
-            {
-              "comments": "Security Services (Restricted Zone) Subnet",
-              "name": "SecSubnet",
-              "addressPrefix": "10.18.5.0/26",
-              "nsg": {
-                "enabled": true
-              },
-              "udr": {
-                "enabled": true
-              }
-            },
-            {
-              "comments": "Logging Services (Restricted Zone) Subnet",
-              "name": "LogSubnet",
-              "addressPrefix": "10.18.5.64/26",
-              "nsg": {
-                "enabled": true
-              },
-              "udr": {
-                "enabled": true
-              }
-            },
-            {
-              "comments": "Core Management Interfaces (Restricted Zone) Subnet",
-              "name": "MgmtSubnet",
-              "addressPrefix": "10.18.5.128/26",
-              "nsg": {
-                "enabled": true
-              },
-              "udr": {
-                "enabled": true
-              }
-            }
-          ]
-        }
-      }
-    },
+   
     "hub": {
       "value": {
         "resourceGroupName": "nha-hub-networking",
@@ -191,41 +116,6 @@
               "comments": "Azure Bastion",
               "name": "AzureBastionSubnet",
               "addressPrefix": "192.168.0.0/24"
-            },
-            "public": {
-              "comments": "Public Subnet Name (External Facing (Internet/Ground))",
-              "name": "PublicSubnet",
-              "addressPrefix": "100.60.0.0/24"
-            },
-            "publicAccessZone": {
-              "comments": "Public Access Zone (i.e. Application Gateway)",
-              "name": "PAZSubnet",
-              "addressPrefix": "100.60.1.0/24"
-            },
-            "externalAccessNetwork": {
-              "comments": "External Access Network",
-              "name": "EanSubnet",
-              "addressPrefix": "10.18.0.0/27"
-            },
-            "nonProductionInternal": {
-              "comments": "Non-production Internal for firewall appliances (Internal Facing Non-Production Traffic)",
-              "name": "DevIntSubnet",
-              "addressPrefix": "10.18.0.64/27"
-            },
-            "productionInternal": {
-              "comments": "Production Internal for firewall appliances (Internal Facing Production Traffic)",
-              "name": "PrdIntSubnet",
-              "addressPrefix": "10.18.0.32/27"
-            },
-            "managementRestrictedZoneInternal": {
-              "comments": "Management Restricted Zone",
-              "name": "MrzSubnet",
-              "addressPrefix": "10.18.0.96/27"
-            },
-            "highAvailability": {
-              "comments": "High Availability (Firewall to Firewall heartbeat)",
-              "name": "HASubnet",
-              "addressPrefix": "10.18.0.128/28"
             },
             "optional": []
           }

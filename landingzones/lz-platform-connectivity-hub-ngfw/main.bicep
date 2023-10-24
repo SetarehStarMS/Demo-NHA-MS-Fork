@@ -186,13 +186,14 @@ param privateDnsZones object
 @description('DDOS Standard configuration.  See docs/archetypes/hubnetwork-nva.md for configuration settings.')
 param ddosStandard object
 
-// Public Access Zone
-@description('Public Access Zone configuration.  See docs/archetypes/hubnetwork-nva.md for configuration settings.')
-param publicAccessZone object
+// // Public Access Zone
+// @description('Public Access Zone configuration.  See docs/archetypes/hubnetwork-nva.md for configuration settings.')
+// param publicAccessZone object
 
-// Management Restricted Zone
-@description('Management Restricted Zone configuration.  See docs/archetypes/hubnetwork-nva.md for configuration settings.')
-param managementRestrictedZone object
+// // Management Restricted Zone
+// @description('Management Restricted Zone configuration.  See docs/archetypes/hubnetwork-nva.md for configuration settings.')
+// param managementRestrictedZone object
+
 
 // // Temporary VM Credentials
 // @description('Temporary username for firewall virtual machines.')
@@ -286,30 +287,30 @@ module ddosPlan '../../azresources/network/ddos-standard.bicep' = if (ddosStanda
   }
 }
 
-// Route Tables
-var defaultRoutes = [
-  {
-    name: 'Hub-NVA-Default-Route'
-    properties: {
-      nextHopType: 'VirtualAppliance'
-      addressPrefix: '0.0.0.0/0'
-      //nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.internalIp
-      nextHopIpAddress: '10.0.0.1'
-    }
-  }
-]
+// // Route Tables
+// var defaultRoutes = [
+//   {
+//     name: 'Hub-NVA-Default-Route'
+//     properties: {
+//       nextHopType: 'VirtualAppliance'
+//       addressPrefix: '0.0.0.0/0'
+//       //nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.internalIp
+//       nextHopIpAddress: '10.0.0.1'
+//     }
+//   }
+// ]
 
-var routesFromAddressPrefixes = [for addressPrefix in hub.network.addressPrefixes: {
-    name: 'Hub-NVA-${replace(replace(addressPrefix, '.', '-'), '/', '-')}'
-    properties: {
-      nextHopType: 'VirtualAppliance'
-      addressPrefix: addressPrefix
-      //nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.internalIp
-      nextHopIpAddress: '10.0.0.1'
-    }
-}]
+// var routesFromAddressPrefixes = [for addressPrefix in hub.network.addressPrefixes: {
+//     name: 'Hub-NVA-${replace(replace(addressPrefix, '.', '-'), '/', '-')}'
+//     properties: {
+//       nextHopType: 'VirtualAppliance'
+//       addressPrefix: addressPrefix
+//       //nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.internalIp
+//       nextHopIpAddress: '10.0.0.1'
+//     }
+// }]
 
-var routes = union(defaultRoutes, routesFromAddressPrefixes)
+// var routes = union(defaultRoutes, routesFromAddressPrefixes)
 
 // module udrPrdSpokes '../../azresources/network/udr/udr-custom.bicep' = {
 //   name: 'deploy-route-table-PrdSpokesUdr'
@@ -331,33 +332,33 @@ var routes = union(defaultRoutes, routesFromAddressPrefixes)
 //   }
 // }
 
-module udrPaz '../../azresources/network/udr/udr-custom.bicep' = {
-  name: 'deploy-route-table-PazSubnetUdr'
-  scope: rgHubVnet
-  params: {
-    location: location
-    name: 'PazSubnetUdr'
-    routes: [for addressPrefix in managementRestrictedZone.network.addressPrefixes: {
-      name: 'PazSubnetUdrMrzFWRoute-${replace(replace(addressPrefix, '.', '-'), '/', '-')}'
-      properties: {
-        addressPrefix: addressPrefix
-        nextHopType: 'VirtualAppliance'
-        //nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.externalIp
-        nextHopIpAddress: '10.0.0.1'
-      }
-    }]
-  }
-}
+// module udrPaz '../../azresources/network/udr/udr-custom.bicep' = {
+//   name: 'deploy-route-table-PazSubnetUdr'
+//   scope: rgHubVnet
+//   params: {
+//     location: location
+//     name: 'PazSubnetUdr'
+//     routes: [for addressPrefix in managementRestrictedZone.network.addressPrefixes: {
+//       name: 'PazSubnetUdrMrzFWRoute-${replace(replace(addressPrefix, '.', '-'), '/', '-')}'
+//       properties: {
+//         addressPrefix: addressPrefix
+//         nextHopType: 'VirtualAppliance'
+//         //nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.externalIp
+//         nextHopIpAddress: '10.0.0.1'
+//       }
+//     }]
+//   }
+// }
 
-module udrHub '../../azresources/network/udr/udr-custom.bicep' = {
-  name: 'deploy-route-table-HubUdr'
-  scope: rgHubVnet
-  params: {
-    location: location
-    name: 'HubUdr'
-    routes: routes
-  }
-}
+// module udrHub '../../azresources/network/udr/udr-custom.bicep' = {
+//   name: 'deploy-route-table-HubUdr'
+//   scope: rgHubVnet
+//   params: {
+//     location: location
+//     name: 'HubUdr'
+//     routes: routes
+//   }
+// }
 
 // Hub Virtual Network
 module hubVnet 'hub/hub-vnet.bicep' = {
@@ -367,8 +368,8 @@ module hubVnet 'hub/hub-vnet.bicep' = {
     location: location
 
     hubNetwork: hub.network
-    hubUdrId: udrHub.outputs.udrId
-    pazUdrId: udrPaz.outputs.udrId
+    //hubUdrId: udrHub.outputs.udrId
+    //pazUdrId: udrPaz.outputs.udrId
 
     ddosStandardPlanId: ddosStandard.enabled ? ddosPlan.outputs.ddosPlanId : ''
   }
@@ -543,14 +544,14 @@ module bastion '../../azresources/network/bastion.bicep' = if (hub.bastion.enabl
 //   }
 // }
 
-// Public Access Zone
-module paz 'paz/paz.bicep' = if (publicAccessZone.enabled) {
-  name: 'deploy-public-access-zone'
-  scope: subscription()
-  params: {
-    location: location
-    resourceTags: resourceTags
+// // Public Access Zone
+// module paz 'paz/paz.bicep' = if (publicAccessZone.enabled) {
+//   name: 'deploy-public-access-zone'
+//   scope: subscription()
+//   params: {
+//     location: location
+//     resourceTags: resourceTags
 
-    publicAccessZone: publicAccessZone
-  }
-}
+//     publicAccessZone: publicAccessZone
+//   }
+// }

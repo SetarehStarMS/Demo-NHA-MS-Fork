@@ -1,0 +1,244 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/CanadaPubSecALZ/main/schemas/latest/landingzones/lz-platform-connectivity-hub-nva.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "serviceHealthAlerts": {
+      "value": {
+        "alertRuleName": "Networking Alerts",
+        "receivers": {
+          "app": [
+            "networking@example.com"
+          ],
+          "sms": [
+            {
+              "countryCode": "1",
+              "phoneNumber": "6135555555"
+            }
+          ],
+          "email": [
+            "networking@example.com"
+          ],
+          "voice": [
+            {
+              "countryCode": "1",
+              "phoneNumber": "6135555555"
+            }
+          ]
+        },
+        "regions": [
+          "Global",
+          "Canada Central",
+          "Canada East"
+        ],
+        "resourceGroupName": "service-health-alerts-rg",
+        "actionGroupName": "Networking Alerts",
+        "actionGroupShortName": "network-ag",
+        "incidentTypes": [
+          "Incident",
+          "Security"
+        ],
+        "alertRuleDescription": "Networking Alerts for Incidents and Security"
+      }
+    },
+    "securityCenter": {
+      "value": {
+        "email": "security@example.com",
+        "phone": "6135555555"
+      }
+    },
+    "subscriptionRoleAssignments": {
+      "value": [
+        {
+          "comments": "Built-in Contributor Role",
+          "securityGroupObjectIds": [
+            
+          ],
+          "roleDefinitionId": "b24988ac-6180-42a0-ab88-20f7382dd24c"
+        }
+      ]
+    },
+    "subscriptionBudget": {
+      "value": {
+        "createBudget": false
+      }
+    },
+    "subscriptionTags": {
+      "value": {
+        "ISSO": "isso-tbd"
+      }
+    },
+    "resourceTags": {
+      "value": {
+        "Support" : "sronassi@microsoft.com",
+        "app-id" : "",
+        "CostCenter": "23445",
+        "env": "lab",
+        "HealthOrganization": "nha",
+        "DataClassification": "infa"
+      }
+    },
+    "privateDnsZones": {
+      "value": {
+        "enabled": true,
+        "resourceGroupName": "nha-private-dns-rg"
+      }
+    },
+    "ddosStandard": {
+      "value": {
+        "resourceGroupName": "nha-ddos-rg",
+        "enabled": false,
+        "planName": "nha-ddos-plan"
+      }
+    },
+    "publicAccessZone": {
+      "value": {
+        "enabled": true,
+        "resourceGroupName": "nha-public-access-zone"
+      }
+    },
+    "managementRestrictedZone": {
+      "value": {
+        "enabled": true,
+        "resourceGroupName": "nha-management-restricted-zone",
+        "network": {
+          "name": "nha-management-restricted-vnet",
+          "addressPrefixes": [
+            "10.18.4.0/22"
+          ],
+          "subnets": [
+            {
+              "comments": "Management (Access Zone) Subnet",
+              "name": "MazSubnet",
+              "addressPrefix": "10.18.4.0/25",
+              "nsg": {
+                "enabled": true
+              },
+              "udr": {
+                "enabled": true
+              }
+            },
+            {
+              "comments": "Infrastructure Services (Restricted Zone) Subnet",
+              "name": "InfSubnet",
+              "addressPrefix": "10.18.4.128/25",
+              "nsg": {
+                "enabled": true
+              },
+              "udr": {
+                "enabled": true
+              }
+            },
+            {
+              "comments": "Security Services (Restricted Zone) Subnet",
+              "name": "SecSubnet",
+              "addressPrefix": "10.18.5.0/26",
+              "nsg": {
+                "enabled": true
+              },
+              "udr": {
+                "enabled": true
+              }
+            },
+            {
+              "comments": "Logging Services (Restricted Zone) Subnet",
+              "name": "LogSubnet",
+              "addressPrefix": "10.18.5.64/26",
+              "nsg": {
+                "enabled": true
+              },
+              "udr": {
+                "enabled": true
+              }
+            },
+            {
+              "comments": "Core Management Interfaces (Restricted Zone) Subnet",
+              "name": "MgmtSubnet",
+              "addressPrefix": "10.18.5.128/26",
+              "nsg": {
+                "enabled": true
+              },
+              "udr": {
+                "enabled": true
+              }
+            }
+          ]
+        }
+      }
+    },
+    "hub": {
+      "value": {
+        "resourceGroupName": "nha-hub-networking",
+        "bastion": {
+          "enabled": true,
+          "name": "bastion",
+          "sku": "Standard",
+          "scaleUnits": 2
+        },
+        "network": {
+          "name": "hub-vnet",
+          "addressPrefixes": [
+            "10.18.0.0/22",
+            "100.60.0.0/16"
+          ],
+          "addressPrefixBastion": "192.168.0.0/16",
+          "subnets": {
+            "gateway": {
+              "comments": "Gateway Subnet used for VPN and/or Express Route connectivity",
+              "name": "GatewaySubnet",
+              "addressPrefix": "10.18.1.0/27"
+            },
+            "bastion": {
+              "comments": "Azure Bastion",
+              "name": "AzureBastionSubnet",
+              "addressPrefix": "192.168.0.0/24"
+            },
+            "public": {
+              "comments": "Public Subnet Name (External Facing (Internet/Ground))",
+              "name": "PublicSubnet",
+              "addressPrefix": "100.60.0.0/24"
+            },
+            "publicAccessZone": {
+              "comments": "Public Access Zone (i.e. Application Gateway)",
+              "name": "PAZSubnet",
+              "addressPrefix": "100.60.1.0/24"
+            },
+            "externalAccessNetwork": {
+              "comments": "External Access Network",
+              "name": "EanSubnet",
+              "addressPrefix": "10.18.0.0/27"
+            },
+            "nonProductionInternal": {
+              "comments": "Non-production Internal for firewall appliances (Internal Facing Non-Production Traffic)",
+              "name": "DevIntSubnet",
+              "addressPrefix": "10.18.0.64/27"
+            },
+            "productionInternal": {
+              "comments": "Production Internal for firewall appliances (Internal Facing Production Traffic)",
+              "name": "PrdIntSubnet",
+              "addressPrefix": "10.18.0.32/27"
+            },
+            "managementRestrictedZoneInternal": {
+              "comments": "Management Restricted Zone",
+              "name": "MrzSubnet",
+              "addressPrefix": "10.18.0.96/27"
+            },
+            "highAvailability": {
+              "comments": "High Availability (Firewall to Firewall heartbeat)",
+              "name": "HASubnet",
+              "addressPrefix": "10.18.0.128/28"
+            },
+            "optional": []
+          }
+        },
+        "nvaFirewall": {
+         
+        }
+      }
+    },
+    "networkWatcher": {
+      "value": {
+        "resourceGroupName": "NetworkWatcherRG"
+      }
+    }
+  }
+}

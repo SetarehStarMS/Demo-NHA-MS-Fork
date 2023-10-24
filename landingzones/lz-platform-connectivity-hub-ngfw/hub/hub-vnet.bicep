@@ -13,13 +13,13 @@ param location string = resourceGroup().location
 @description('Hub Virtual network configuration.  See docs/archetypes/hubnetwork-nva.md for configuration settings.')
 param hubNetwork object
 
-// Common Route Table
-@description('Route Table Resource Id for optional subnets in Hub Virtual Network')
-param hubUdrId string
+// // Common Route Table
+// @description('Route Table Resource Id for optional subnets in Hub Virtual Network')
+// param hubUdrId string
 
-// Public Access Zone (i.e. Application Gateways)
-@description('Public Access Zone (i.e. Application Gateway) User Defined Route Resource Id.')
-param pazUdrId string
+// // Public Access Zone (i.e. Application Gateways)
+// @description('Public Access Zone (i.e. Application Gateway) User Defined Route Resource Id.')
+// param pazUdrId string
 
 // DDOS
 @description('DDOS Standard Plan Resource Id - optional (blank value = DDOS Standard Plan will not be linked to virtual network).')
@@ -73,13 +73,13 @@ module nsgpublic '../../../azresources/network/nsg/nsg-allowall.bicep' = {
 //   }
 // }
 
-module nsgpaz '../../../azresources/network/nsg/nsg-appgwv2.bicep' = {
-  name: 'deploy-nsg-${hubNetwork.subnets.publicAccessZone.name}'
-  params: {
-    name: '${hubNetwork.subnets.publicAccessZone.name}Nsg'
-    location: location
-  }
-}
+// module nsgpaz '../../../azresources/network/nsg/nsg-appgwv2.bicep' = {
+//   name: 'deploy-nsg-${hubNetwork.subnets.publicAccessZone.name}'
+//   params: {
+//     name: '${hubNetwork.subnets.publicAccessZone.name}Nsg'
+//     location: location
+//   }
+// }
 
 module nsgbastion '../../../azresources/network/nsg/nsg-bastion.bicep' = {
   name: 'deploy-nsg-AzureBastionNsg'
@@ -98,15 +98,15 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2021-02-01' = [for subnet 
 }]
 
 var requiredSubnets = [
-  {
-    name: hubNetwork.subnets.public.name
-    properties: {
-      addressPrefix: hubNetwork.subnets.public.addressPrefix
-      networkSecurityGroup: {
-        id: nsgpublic.outputs.nsgId
-      }
-    }
-  }
+  // {
+  //   name: hubNetwork.subnets.public.name
+  //   properties: {
+  //     addressPrefix: hubNetwork.subnets.public.addressPrefix
+  //     networkSecurityGroup: {
+  //       id: nsgpublic.outputs.nsgId
+  //     }
+  //   }
+  // }
   // {
   //   name: hubNetwork.subnets.externalAccessNetwork.name
   //   properties: {
@@ -152,18 +152,18 @@ var requiredSubnets = [
   //     }
   //   }
   // }
-  {
-    name: hubNetwork.subnets.publicAccessZone.name
-    properties: {
-      addressPrefix: hubNetwork.subnets.publicAccessZone.addressPrefix
-      networkSecurityGroup: {
-        id: nsgpaz.outputs.nsgId
-      }
-      routeTable: {
-        id: pazUdrId
-      }
-    }
-  }
+  // {
+  //   name: hubNetwork.subnets.publicAccessZone.name
+  //   properties: {
+  //     addressPrefix: hubNetwork.subnets.publicAccessZone.addressPrefix
+  //     networkSecurityGroup: {
+  //       id: nsgpaz.outputs.nsgId
+  //     }
+  //     routeTable: {
+  //       id: pazUdrId
+  //     }
+  //   }
+  // }
   {
     name: hubNetwork.subnets.bastion.name
     properties: {
@@ -188,9 +188,9 @@ var optionalSubnets = [for (subnet, i) in hubNetwork.subnets.optional: {
     networkSecurityGroup: (subnet.nsg.enabled) ? {
       id: nsg[i].id
     } : null
-    routeTable: (subnet.udr.enabled) ? {
-      id: hubUdrId
-    } : null
+    // routeTable: (subnet.udr.enabled) ? {
+    //   id: hubUdrId
+    // } : null
     delegations: contains(subnet, 'delegations') ? [
       {
         name: replace(subnet.delegations.serviceName, '/', '.')
@@ -231,5 +231,5 @@ output GatewaySubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.gate
 //output HASubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.highAvailability.name}'
 
 //output EANSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.externalAccessNetwork.name}'
-output PublicSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.public.name}'
-output PublicAccessZoneSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.publicAccessZone.name}'
+//output PublicSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.public.name}'
+//output PublicAccessZoneSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.publicAccessZone.name}'
