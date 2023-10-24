@@ -25,13 +25,13 @@ param hubNetwork object
 @description('DDOS Standard Plan Resource Id - optional (blank value = DDOS Standard Plan will not be linked to virtual network).')
 param ddosStandardPlanId string
 
-module nsgpublic '../../../azresources/network/nsg/nsg-allowall.bicep' = {
-  name: 'deploy-nsg-${hubNetwork.subnets.public.name}'
-  params: {
-    name: '${hubNetwork.subnets.public.name}Nsg'
-    location: location
-  }
-}
+// module nsgpublic '../../../azresources/network/nsg/nsg-allowall.bicep' = {
+//   name: 'deploy-nsg-${hubNetwork.subnets.public.name}'
+//   params: {
+//     name: '${hubNetwork.subnets.public.name}Nsg'
+//     location: location
+//   }
+// }
 
 // module nsgean '../../../azresources/network/nsg/nsg-empty.bicep' = {
 //   name: 'deploy-nsg-${hubNetwork.subnets.externalAccessNetwork.name}'
