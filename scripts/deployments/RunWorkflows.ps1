@@ -377,7 +377,9 @@ if ($DeployHubNetworkWithNGFW) {
   $LoggingConfiguration = Get-LoggingConfiguration `
     -ConfigurationFilePath "$($Context.LoggingDirectory)/$($Context.Variables['var-logging-configurationFileName'])" `
     -SubscriptionId $Context.Variables['var-logging-subscriptionId']
-
+   
+  Write-Host "test place 1."
+  
   Set-HubNetwork-With-NGFW `
     -Context $Context `
     -Region $Context.Variables['var-hubnetwork-region'] `

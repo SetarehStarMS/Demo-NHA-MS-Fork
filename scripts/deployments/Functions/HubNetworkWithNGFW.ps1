@@ -35,7 +35,9 @@ function Set-HubNetwork-With-NGFW {
     [double]$RetryDelay = 60
   )
 
+  Write-Host "test place 2."
   Set-AzContext -Subscription $SubscriptionId
+  Write-Host $SubscriptionId
 
   # $SchemaFilePath = "$($Context.SchemaDirectory)/landingzones/lz-platform-connectivity-hub-ngfw.json"
   
