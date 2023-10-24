@@ -4,7 +4,7 @@
   "parameters": {
     "serviceHealthAlerts": {
       "value": {
-        "alertRuleName": "Logging Alerts",
+        "alertRuleName": "Demo Logging Alerts",
         "receivers": {
           "app": [
             "logging@example.com"
@@ -30,8 +30,8 @@
           "Canada Central",
           "Canada East"
         ],
-        "resourceGroupName": "service-health-alerts-rg",
-        "actionGroupName": "Logging Alerts",
+        "resourceGroupName": "demo-service-health-alerts-rg",
+        "actionGroupName": "demo Logging Alerts",
         "actionGroupShortName": "logging-ag",
         "incidentTypes": [
           "Incident",
@@ -78,10 +78,10 @@
       }
     },
     "logAnalyticsResourceGroupName": {
-      "value": "pubsec-central-logging"
+      "value": "demo-pubsec-central-logging"
     },
     "logAnalyticsWorkspaceName": {
-      "value": "log-analytics-workspace"
+      "value": "demo-log-analytics-workspace"
     },
     "logAnalyticsRetentionInDays": {
       "value": 730
