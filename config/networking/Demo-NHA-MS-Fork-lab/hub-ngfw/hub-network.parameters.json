@@ -73,7 +73,7 @@
         "CostCenter": "23445",
         "env": "lab",
         "HealthOrganization": "nha",
-        "DataClassification": "infa",
+        "Data Classification": "infa",
         "DataSensitivity": "s1",
         "ProjectName": "test",
         "TechnicalContact": "me",
