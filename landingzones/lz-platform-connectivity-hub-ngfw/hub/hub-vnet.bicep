@@ -65,13 +65,13 @@ module nsgpublic '../../../azresources/network/nsg/nsg-allowall.bicep' = {
 //   }
 // }
 
-module nsgmrz '../../../azresources/network/nsg/nsg-empty.bicep' = {
-  name: 'deploy-nsg-${hubNetwork.subnets.managementRestrictedZoneInternal.name}'
-  params: {
-    name: '${hubNetwork.subnets.managementRestrictedZoneInternal.name}Nsg'
-    location: location
-  }
-}
+// module nsgmrz '../../../azresources/network/nsg/nsg-empty.bicep' = {
+//   name: 'deploy-nsg-${hubNetwork.subnets.managementRestrictedZoneInternal.name}'
+//   params: {
+//     name: '${hubNetwork.subnets.managementRestrictedZoneInternal.name}Nsg'
+//     location: location
+//   }
+// }
 
 module nsgpaz '../../../azresources/network/nsg/nsg-appgwv2.bicep' = {
   name: 'deploy-nsg-${hubNetwork.subnets.publicAccessZone.name}'
@@ -134,15 +134,15 @@ var requiredSubnets = [
   //     }
   //   }
   // }
-  {
-    name: hubNetwork.subnets.managementRestrictedZoneInternal.name
-    properties: {
-      addressPrefix: hubNetwork.subnets.managementRestrictedZoneInternal.addressPrefix
-      networkSecurityGroup: {
-        id: nsgmrz.outputs.nsgId
-      }
-    }
-  }
+  // {
+  //   name: hubNetwork.subnets.managementRestrictedZoneInternal.name
+  //   properties: {
+  //     addressPrefix: hubNetwork.subnets.managementRestrictedZoneInternal.addressPrefix
+  //     networkSecurityGroup: {
+  //       id: nsgmrz.outputs.nsgId
+  //     }
+  //   }
+  // }
   // {
   //   name: hubNetwork.subnets.highAvailability.name
   //   properties: {
@@ -225,11 +225,11 @@ output vnetId string = hubVnet.id
 output AzureBastionSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.bastion.name}'
 output GatewaySubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.gateway.name}'
 
-output NonProdIntSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.nonProductionInternal.name}'
-output ProdIntSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.productionInternal.name}'
-output MrzIntSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.managementRestrictedZoneInternal.name}'
-output HASubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.highAvailability.name}'
+//output NonProdIntSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.nonProductionInternal.name}'
+//output ProdIntSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.productionInternal.name}'
+//output MrzIntSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.managementRestrictedZoneInternal.name}'
+//output HASubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.highAvailability.name}'
 
-output EANSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.externalAccessNetwork.name}'
+//output EANSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.externalAccessNetwork.name}'
 output PublicSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.public.name}'
 output PublicAccessZoneSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.publicAccessZone.name}'

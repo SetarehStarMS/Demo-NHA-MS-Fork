@@ -321,15 +321,15 @@ var routes = union(defaultRoutes, routesFromAddressPrefixes)
 //   }
 // }
 
-module managementRestrictedZoneUdr '../../azresources/network/udr/udr-custom.bicep' = {
-  name: 'deploy-route-table-MrzSpokeUdr'
-  scope: rgHubVnet
-  params: {
-    location: location
-    name: 'MrzSpokeUdr'
-    routes: routes
-  }
-}
+// module managementRestrictedZoneUdr '../../azresources/network/udr/udr-custom.bicep' = {
+//   name: 'deploy-route-table-MrzSpokeUdr'
+//   scope: rgHubVnet
+//   params: {
+//     location: location
+//     name: 'MrzSpokeUdr'
+//     routes: routes
+//   }
+// }
 
 module udrPaz '../../azresources/network/udr/udr-custom.bicep' = {
   name: 'deploy-route-table-PazSubnetUdr'
@@ -524,24 +524,24 @@ module bastion '../../azresources/network/bastion.bicep' = if (hub.bastion.enabl
 //   }
 // }
 
-// Management Restricted Zone
-module mrz 'mrz/mrz.bicep' = if (managementRestrictedZone.enabled) {
-  name: 'deploy-management-restricted-zone'
-  scope: subscription()
-  params: {
-    location: location
-    resourceTags: resourceTags
+// // Management Restricted Zone
+// module mrz 'mrz/mrz.bicep' = if (managementRestrictedZone.enabled) {
+//   name: 'deploy-management-restricted-zone'
+//   scope: subscription()
+//   params: {
+//     location: location
+//     resourceTags: resourceTags
     
-    ddosStandardPlanId: ddosStandard.enabled ? ddosPlan.outputs.ddosPlanId : ''
+//     ddosStandardPlanId: ddosStandard.enabled ? ddosPlan.outputs.ddosPlanId : ''
 
-    hubResourceGroup: rgHubVnet.name
-    hubVnetName: hubVnet.outputs.vnetName
-    hubVnetId: hubVnet.outputs.vnetId
+//     hubResourceGroup: rgHubVnet.name
+//     hubVnetName: hubVnet.outputs.vnetName
+//     hubVnetId: hubVnet.outputs.vnetId
 
-    managementRestrictedZone: managementRestrictedZone
-    managementRestrictedZoneUdrId: managementRestrictedZoneUdr.outputs.udrId
-  }
-}
+//     managementRestrictedZone: managementRestrictedZone
+//     managementRestrictedZoneUdrId: managementRestrictedZoneUdr.outputs.udrId
+//   }
+// }
 
 // Public Access Zone
 module paz 'paz/paz.bicep' = if (publicAccessZone.enabled) {
