@@ -29,8 +29,8 @@
           "Canada Central",
           "Canada East"
         ],
-        "resourceGroupName": "service-health-alerts-rg",
-        "actionGroupName": "Networking Alerts",
+        "resourceGroupName": "demo-service-health-alerts-rg",
+        "actionGroupName": "Demo Networking Alerts",
         "actionGroupShortName": "network-ag",
         "incidentTypes": [
           "Incident",
@@ -119,15 +119,13 @@
             },
             "optional": []
           }
-        },
-        "nvaFirewall": {
-         
         }
+        
       }
     },
     "networkWatcher": {
       "value": {
-        "resourceGroupName": "NetworkWatcherRG"
+        "resourceGroupName": "nha-NetworkWatcherRG"
       }
     }
   }
