@@ -186,13 +186,13 @@ param privateDnsZones object
 @description('DDOS Standard configuration.  See docs/archetypes/hubnetwork-nva.md for configuration settings.')
 param ddosStandard object
 
-// // Public Access Zone
-// @description('Public Access Zone configuration.  See docs/archetypes/hubnetwork-nva.md for configuration settings.')
-// param publicAccessZone object
+// Public Access Zone
+@description('Public Access Zone configuration.  See docs/archetypes/hubnetwork-nva.md for configuration settings.')
+param publicAccessZone object
 
-// // Management Restricted Zone
-// @description('Management Restricted Zone configuration.  See docs/archetypes/hubnetwork-nva.md for configuration settings.')
-// param managementRestrictedZone object
+// Management Restricted Zone
+@description('Management Restricted Zone configuration.  See docs/archetypes/hubnetwork-nva.md for configuration settings.')
+param managementRestrictedZone object
 
 // // Temporary VM Credentials
 // @description('Temporary username for firewall virtual machines.')
@@ -321,33 +321,33 @@ var routes = union(defaultRoutes, routesFromAddressPrefixes)
 //   }
 // }
 
-// module managementRestrictedZoneUdr '../../azresources/network/udr/udr-custom.bicep' = {
-//   name: 'deploy-route-table-MrzSpokeUdr'
-//   scope: rgHubVnet
-//   params: {
-//     location: location
-//     name: 'MrzSpokeUdr'
-//     routes: routes
-//   }
-// }
+module managementRestrictedZoneUdr '../../azresources/network/udr/udr-custom.bicep' = {
+  name: 'deploy-route-table-MrzSpokeUdr'
+  scope: rgHubVnet
+  params: {
+    location: location
+    name: 'MrzSpokeUdr'
+    routes: routes
+  }
+}
 
-// module udrPaz '../../azresources/network/udr/udr-custom.bicep' = {
-//   name: 'deploy-route-table-PazSubnetUdr'
-//   scope: rgHubVnet
-//   params: {
-//     location: location
-//     name: 'PazSubnetUdr'
-//     routes: [for addressPrefix in managementRestrictedZone.network.addressPrefixes: {
-//       name: 'PazSubnetUdrMrzFWRoute-${replace(replace(addressPrefix, '.', '-'), '/', '-')}'
-//       properties: {
-//         addressPrefix: addressPrefix
-//         nextHopType: 'VirtualAppliance'
-//         //nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.externalIp
-//         nextHopIpAddress: '10.0.0.1'
-//       }
-//     }]
-//   }
-// }
+module udrPaz '../../azresources/network/udr/udr-custom.bicep' = {
+  name: 'deploy-route-table-PazSubnetUdr'
+  scope: rgHubVnet
+  params: {
+    location: location
+    name: 'PazSubnetUdr'
+    routes: [for addressPrefix in managementRestrictedZone.network.addressPrefixes: {
+      name: 'PazSubnetUdrMrzFWRoute-${replace(replace(addressPrefix, '.', '-'), '/', '-')}'
+      properties: {
+        addressPrefix: addressPrefix
+        nextHopType: 'VirtualAppliance'
+        //nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.externalIp
+        nextHopIpAddress: '10.0.0.1'
+      }
+    }]
+  }
+}
 
 module udrHub '../../azresources/network/udr/udr-custom.bicep' = {
   name: 'deploy-route-table-HubUdr'
@@ -368,7 +368,7 @@ module hubVnet 'hub/hub-vnet.bicep' = {
 
     hubNetwork: hub.network
     hubUdrId: udrHub.outputs.udrId
-    //pazUdrId: udrPaz.outputs.udrId
+    pazUdrId: udrPaz.outputs.udrId
 
     ddosStandardPlanId: ddosStandard.enabled ? ddosPlan.outputs.ddosPlanId : ''
   }
@@ -524,33 +524,33 @@ module bastion '../../azresources/network/bastion.bicep' = if (hub.bastion.enabl
 //   }
 // }
 
-// // Management Restricted Zone
-// module mrz 'mrz/mrz.bicep' = if (managementRestrictedZone.enabled) {
-//   name: 'deploy-management-restricted-zone'
-//   scope: subscription()
-//   params: {
-//     location: location
-//     resourceTags: resourceTags
+// Management Restricted Zone
+module mrz 'mrz/mrz.bicep' = if (managementRestrictedZone.enabled) {
+  name: 'deploy-management-restricted-zone'
+  scope: subscription()
+  params: {
+    location: location
+    resourceTags: resourceTags
     
-//     ddosStandardPlanId: ddosStandard.enabled ? ddosPlan.outputs.ddosPlanId : ''
+    ddosStandardPlanId: ddosStandard.enabled ? ddosPlan.outputs.ddosPlanId : ''
 
-//     hubResourceGroup: rgHubVnet.name
-//     hubVnetName: hubVnet.outputs.vnetName
-//     hubVnetId: hubVnet.outputs.vnetId
+    hubResourceGroup: rgHubVnet.name
+    hubVnetName: hubVnet.outputs.vnetName
+    hubVnetId: hubVnet.outputs.vnetId
 
-//     managementRestrictedZone: managementRestrictedZone
-//     managementRestrictedZoneUdrId: managementRestrictedZoneUdr.outputs.udrId
-//   }
-// }
+    managementRestrictedZone: managementRestrictedZone
+    managementRestrictedZoneUdrId: managementRestrictedZoneUdr.outputs.udrId
+  }
+}
 
-// // Public Access Zone
-// module paz 'paz/paz.bicep' = if (publicAccessZone.enabled) {
-//   name: 'deploy-public-access-zone'
-//   scope: subscription()
-//   params: {
-//     location: location
-//     resourceTags: resourceTags
+// Public Access Zone
+module paz 'paz/paz.bicep' = if (publicAccessZone.enabled) {
+  name: 'deploy-public-access-zone'
+  scope: subscription()
+  params: {
+    location: location
+    resourceTags: resourceTags
 
-//     publicAccessZone: publicAccessZone
-//   }
-// }
+    publicAccessZone: publicAccessZone
+  }
+}
