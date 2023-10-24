@@ -69,12 +69,12 @@
     },
     "resourceTags": {
       "value": {
-        "ClientOrganization": "client-organization-tag",
-        "CostCenter": "cost-center-tag",
-        "DataSensitivity": "data-sensitivity-tag",
-        "ProjectContact": "project-contact-tag",
-        "ProjectName": "project-name-tag",
-        "TechnicalContact": "technical-contact-tag"
+        "Support" : "sronassi@microsoft.com",
+        "app-id" : "",
+        "CostCenter": "23445",
+        "env": "lab",
+        "HealthOrganization": "nha",
+        "DataClassification": "infa"
       }
     },
     "logAnalyticsResourceGroupName": {
@@ -87,7 +87,7 @@
       "value": 730
     },
     "logAnalyticsAutomationAccountName": {
-      "value": "automation-account"
+      "value": "demo-automation-account"
     },
     "dataCollectionRule": {
       "value": {
