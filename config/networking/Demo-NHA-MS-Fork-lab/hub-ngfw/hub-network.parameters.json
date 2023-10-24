@@ -73,7 +73,12 @@
         "CostCenter": "23445",
         "env": "lab",
         "HealthOrganization": "nha",
-        "DataClassification": "infa"
+        "DataClassification": "infa",
+        "DataSensitivity": "s1",
+        "ProjectName": "test",
+        "TechnicalContact": "me",
+        "ProjectContact": "me",
+        "ClientOrganization": "nha"
       }
     },
     "privateDnsZones": {
