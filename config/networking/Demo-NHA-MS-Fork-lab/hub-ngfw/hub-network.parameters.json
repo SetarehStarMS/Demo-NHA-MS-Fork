@@ -110,7 +110,7 @@
           "addressPrefixes": [
             "10.18.0.0/22"
           ],
-          
+          "addressPrefixBastion": "10.18.0.0/22",
           "subnets": {
             "gateway": {
               "comments": "Gateway Subnet used for VPN and/or Express Route connectivity",
