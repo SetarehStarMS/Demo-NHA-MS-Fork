@@ -116,14 +116,14 @@ function Set-HubNetwork-With-NGFW {
     Write-Output "Deploying policy assignment using $PolicyAssignmentFilePath"
 
     $Parameters = @{
-      policyAssignmentManagementGroupId = $Context.Variables['var-hubnetwork-managementGroupId']
+      policyAssignmentManagementGroupId = $Context.Variables['var-NHA-managementGroupId']
       policyDefinitionManagementGroupId = $Context.Variables['var-NHA-managementGroupId']
       privateDNSZoneSubscriptionId = $SubscriptionId
       privateDNSZoneResourceGroupName = $Configuration.parameters.privateDnsZones.value.resourceGroupName
     }
 
     New-AzManagementGroupDeployment `
-      -ManagementGroupId $Context.Variables['var-hubnetwork-managementGroupId'] `
+      -ManagementGroupId $Context.Variables['var-NHA-managementGroupId'] `
       -Location $Context.DeploymentRegion `
       -TemplateFile $PolicyAssignmentFilePath `
       -TemplateParameterObject $Parameters
@@ -151,7 +151,7 @@ function Set-HubNetwork-With-NGFW {
     }
 
     New-AzManagementGroupDeployment `
-      -ManagementGroupId $Context.TopLevelManagementGroupId `
+      -ManagementGroupId $Context.Variables['var-NHA-managementGroupId']`
       -Location $Context.DeploymentRegion `
       -TemplateFile $PolicyAssignmentFilePath `
       -TemplateParameterObject $Parameters
