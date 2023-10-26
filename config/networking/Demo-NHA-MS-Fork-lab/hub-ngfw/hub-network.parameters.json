@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
+  "contentVersion": "1.0.0.0",
   "parameters": {
     "serviceHealthAlerts": {
       "value": {
