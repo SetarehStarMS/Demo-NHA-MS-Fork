@@ -48,11 +48,11 @@
     "subscriptionRoleAssignments": {
       "value": [
         {
-          "comments": "Built-in Contributor Role",
+          "comments": "Custom NetOps Role",
           "securityGroupObjectIds": [
-            
+            "def6c161-e15c-43e3-ae67-4e3f268592a8" 
           ],
-          "roleDefinitionId": "b24988ac-6180-42a0-ab88-20f7382dd24c"
+          "roleDefinitionId": "c3eb0af1-ae5f-56b7-97cc-bc87fc7d842a"
         }
       ]
     },
