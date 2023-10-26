@@ -108,8 +108,7 @@
         "network": {
           "name": "hub-vnet",
           "addressPrefixes": [
-            "10.18.0.0/22"
-            
+            "10.18.0.0/22"            
           ],
           "addressPrefixBastion": "10.18.0.0/22",
           "subnets": {
@@ -121,7 +120,7 @@
             "bastion": {
               "comments": "Azure Bastion",
               "name": "AzureBastionSubnet",
-              "addressPrefix": "100.60.0.0/27"
+              "addressPrefix": "10.18.0.0/27"
             },
             "optional": []
           }
