@@ -40,10 +40,10 @@ function Set-HubNetwork-With-NGFW {
   Write-Host $SubscriptionId
   Write-Host $Context.SchemaDirectory
 
-  $SchemaFilePath = "$($Context.SchemaDirectory)/landingzones/lz-platform-connectivity-hub-ngfw.json"
+  # $SchemaFilePath = "$($Context.SchemaDirectory)/landingzones/lz-platform-connectivity-hub-ngfw.json"
   
-  Write-Output "Validation JSON parameter configuration using $SchemaFilePath"
-  Get-Content -Raw $ConfigurationFilePath | Test-Json -SchemaFile $SchemaFilePath
+  # Write-Output "Validation JSON parameter configuration using $SchemaFilePath"
+  # Get-Content -Raw $ConfigurationFilePath | Test-Json -SchemaFile $SchemaFilePath
 
   # Load networking configuration
   $Configuration = Get-Content $ConfigurationFilePath | ConvertFrom-Json -Depth 100

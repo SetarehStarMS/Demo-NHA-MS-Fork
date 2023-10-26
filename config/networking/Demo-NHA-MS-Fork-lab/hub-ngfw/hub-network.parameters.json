@@ -110,7 +110,7 @@
           "addressPrefixes": [
             "10.18.0.0/22"
           ],
-          "addressPrefixBastion": "192.168.0.0/16",
+          
           "subnets": {
             "gateway": {
               "comments": "Gateway Subnet used for VPN and/or Express Route connectivity",
@@ -120,7 +120,7 @@
             "bastion": {
               "comments": "Azure Bastion",
               "name": "AzureBastionSubnet",
-              "addressPrefix": "192.168.0.0/24"
+              "addressPrefix": "10.18.0.0/27"
             },
             "optional": []
           }
