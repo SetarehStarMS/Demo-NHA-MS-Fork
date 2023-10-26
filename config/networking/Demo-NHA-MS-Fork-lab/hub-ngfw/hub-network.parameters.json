@@ -108,9 +108,10 @@
         "network": {
           "name": "hub-vnet",
           "addressPrefixes": [
-            "10.18.0.0/22",
-            "100.60.0.0/16"
+            "10.18.0.0/22"
+            
           ],
+          "addressPrefixBastion": "10.18.0.0/22",
           "subnets": {
             "gateway": {
               "comments": "Gateway Subnet used for VPN and/or Express Route connectivity",
