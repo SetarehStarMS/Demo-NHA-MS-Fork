@@ -4,7 +4,7 @@
   "parameters": {
     "serviceHealthAlerts": {
       "value": {
-        "alertRuleName": "Identity Alerts",
+        "alertRuleName": "demo Identity Alerts",
         "receivers": {
           "app": [
             "identity@example.com"
@@ -135,7 +135,9 @@
     "hubNetwork": {
       "value": {
         "virtualNetworkId": "/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet",
-        "rfc1918IPRange": "10.18.0.0/22"
+        "rfc1918IPRange": "10.18.0.0/22",
+        "rfc6598IPRange": "",
+        "egressVirtualApplianceIp": ""
 
       }
     },
