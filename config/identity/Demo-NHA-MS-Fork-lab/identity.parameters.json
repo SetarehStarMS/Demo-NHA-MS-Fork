@@ -1,6 +1,6 @@
 {
-  "$schema": "https://raw.githubusercontent.com/Azure/CanadaPubSecALZ/main/schemas/latest/landingzones/lz-platform-identity.json#",
-  "contentVersion": "1.0.0.0",
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  
   "parameters": {
     "serviceHealthAlerts": {
       "value": {
@@ -126,7 +126,9 @@
         "linkRuleSetToVnet": true,
         "linkRuleSetToVnetName": "dns-resolver-vnet-link",
         "forwardingRules": [
-          
+          {
+
+          }
         ]
       }
     },
