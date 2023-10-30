@@ -148,7 +148,7 @@
         "useRemoteGateway": false,
         "name": "id-vnet",
         "dnsServers": [
-          "168.63.129.16"
+          
         ],
         "addressPrefixes": [
           "10.15.0.0/24"
