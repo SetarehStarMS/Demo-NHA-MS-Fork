@@ -35,10 +35,10 @@ function Set-Identity {
     Write-Output $LogAnalyticsWorkspaceResourceId
 
 
-    # $SchemaFilePath = "$($Context.SchemaDirectory)/landingzones/lz-platform-identity.json"
+    $SchemaFilePath = "$($Context.SchemaDirectory)/landingzones/lz-platform-identity.json"
     
-    # Write-Output "Validation JSON parameter configuration using $SchemaFilePath"
-    # Get-Content -Raw $ConfigurationFilePath | Test-Json -SchemaFile $SchemaFilePath
+    Write-Output "Validation JSON parameter configuration using $SchemaFilePath"
+    Get-Content -Raw $ConfigurationFilePath | Test-Json -SchemaFile $SchemaFilePath
 
     # Load networking configuration
     $Configuration = Get-Content $ConfigurationFilePath | ConvertFrom-Json -Depth 100
