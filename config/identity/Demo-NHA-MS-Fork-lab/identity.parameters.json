@@ -121,13 +121,23 @@
     },
     "privateDnsResolverRuleset": {
       "value": {
-        "enabled": true,
+        "enabled": false,
         "name": "dns-resolver-ruleset",
         "linkRuleSetToVnet": true,
         "linkRuleSetToVnetName": "dns-resolver-vnet-link",
         "forwardingRules": [
           {
-
+            "name": "default",
+            "domain": "dontMakeMeThink.local",
+            "state": "Enabled",
+            "targetDnsServers": [
+              {
+                "ipAddress": "10.99.99.100"
+              },
+              {
+                "ipAddress": "10.99.99.99"
+              }
+            ]
           }
         ]
       }
@@ -147,7 +157,7 @@
         "useRemoteGateway": false,
         "name": "id-vnet",
         "dnsServers": [
-          
+          "168.63.129.16"
         ],
         "addressPrefixes": [
           "10.15.0.0/24"
