@@ -59,16 +59,16 @@ function Set-Identity {
     Write-Output "Creating new file with runtime populated parameters: $PopulatedParametersFilePath"
     $Configuration | ConvertTo-Json -Depth 100 | Set-Content $PopulatedParametersFilePath
 
-    Write-Output "Moving Subscription ($SubscriptionId) to Management Group ($ManagementGroupId)"
-    New-AzManagementGroupDeployment `
-        -ManagementGroupId $ManagementGroupId `
-        -Location $Context.DeploymentRegion `
-        -TemplateFile "$($Context.WorkingDirectory)/landingzones/utils/mg-move/move-subscription.bicep" `
-        -TemplateParameterObject @{
-            managementGroupId = $ManagementGroupId
-            subscriptionId = $SubscriptionId
-        } `
-        -Verbose
+    # Write-Output "Moving Subscription ($SubscriptionId) to Management Group ($ManagementGroupId)"
+    # New-AzManagementGroupDeployment `
+    #     -ManagementGroupId $ManagementGroupId `
+    #     -Location $Context.DeploymentRegion `
+    #     -TemplateFile "$($Context.WorkingDirectory)/landingzones/utils/mg-move/move-subscription.bicep" `
+    #     -TemplateParameterObject @{
+    #         managementGroupId = $ManagementGroupId
+    #         subscriptionId = $SubscriptionId
+    #     } `
+    #     -Verbose
         
     Write-Output "Deploying Identity to $SubscriptionId in $Region with $ConfigurationFilePath"
     New-AzSubscriptionDeployment `

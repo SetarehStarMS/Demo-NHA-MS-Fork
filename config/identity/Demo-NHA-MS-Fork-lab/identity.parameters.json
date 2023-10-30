@@ -30,8 +30,8 @@
           "Canada Central",
           "Canada East"
         ],
-        "resourceGroupName": "service-health-alerts-rg",
-        "actionGroupName": "Identity Alerts",
+        "resourceGroupName": "demo-service-health-alerts-rg",
+        "actionGroupName": "demo Identity Alerts",
         "actionGroupShortName": "identity-ag",
         "incidentTypes": [
           "Incident",
@@ -51,7 +51,7 @@
         {
           "comments": "Built-in Contributor Role",
           "securityGroupObjectIds": [
-            "b4df54ba-7232-40fa-8f51-f84e8d149322"
+            
           ],
           "roleDefinitionId": "b24988ac-6180-42a0-ab88-20f7382dd24c"
         }
@@ -64,52 +64,51 @@
     },
     "subscriptionTags": {
       "value": {
-        "ISSO": "isso-tbd",
-        "ClientOrganization": "client-organization-tag",
-        "CostCenter": "cost-center-tag",
-        "DataSensitivity": "data-sensitivity-tag",
-        "ProjectContact": "project-contact-tag",
-        "ProjectName": "project-name-tag",
-        "TechnicalContact": "technical-contact-tag"
+        
       }
     },
     "resourceTags": {
       "value": {
-        "ClientOrganization": "client-organization-tag",
-        "CostCenter": "cost-center-tag",
-        "DataSensitivity": "data-sensitivity-tag",
-        "ProjectContact": "project-contact-tag",
-        "ProjectName": "project-name-tag",
-        "TechnicalContact": "technical-contact-tag"
+        "Support" : "sronassi@microsoft.com",
+        "app-id" : "",
+        "CostCenter": "23445",
+        "env": "lab",
+        "HealthOrganization": "nha",
+        "Data Classification": "infa",
+        "DataSensitivity": "s1",
+        "ProjectName": "test",
+        "TechnicalContact": "me",
+        "ProjectContact": "me",
+        "ClientOrganization": "nha"
       }
     },
     "resourceGroups": {
       "value": {
-        "automation": "automation",
-        "networking": "networking",
+        "automation": "nha-automation-rg",
+        "networking": "nha-networking-identity-rg",
         "networkWatcher": "NetworkWatcherRG",
-        "backupRecoveryVault": "backup",
-        "domainControllers": "DomainControllersRG",
-        "dnsResolver": "dns-resolverRG",
-        "dnsCondionalForwarders": "dns-CondionalForwardersRG",
-        "privateDnsZones": "pubsec-dns"
+        "backupRecoveryVault": "nha-backup-rg",
+        "domainControllers": "nha-DomainControllersRG",
+        "dnsResolver": "nha-dns-resolverRG",
+        "dnsCondionalForwarders": "nha-dns-CondionalForwardersRG",
+        "privateDnsZones": "nha-private-dns-rg"
       }
     },
     "automation": {
       "value": {
-        "name": "automation"
+        "name": "nha-automation"
       }
     },
     "backupRecoveryVault": {
       "value": {
         "enabled": true,
-        "name": "backup-vault"
+        "name": "nha-backup-vault"
       }
     },
     "privateDnsZones": {
       "value": {
         "enabled": false,
-        "resourceGroupName": "pubsec-dns"
+        "resourceGroupName": "nha-private-dns-rg"
       }
     },
     "privateDnsResolver": {
@@ -127,28 +126,16 @@
         "linkRuleSetToVnet": true,
         "linkRuleSetToVnetName": "dns-resolver-vnet-link",
         "forwardingRules": [
-          {
-            "name": "default",
-            "domain": "dontMakeMeThink.local",
-            "state": "Enabled",
-            "targetDnsServers": [
-              {
-                "ipAddress": "10.99.99.100"
-              },
-              {
-                "ipAddress": "10.99.99.99"
-              }
-            ]
-          }
+          
         ]
       }
     },
     "hubNetwork": {
       "value": {
-        "virtualNetworkId": "/subscriptions/4fd845de-f6c8-4e6d-9a87-c21c4ebf7edd/resourceGroups/pubsec-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet",
+        "virtualNetworkId": "/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet",
         "rfc1918IPRange": "10.18.0.0/22",
-        "rfc6598IPRange": "100.60.0.0/16",
-        "egressVirtualApplianceIp": "10.18.1.4"
+        "rfc6598IPRange": "",
+        "egressVirtualApplianceIp": ""
       }
     },
     "network": {
@@ -158,7 +145,7 @@
         "useRemoteGateway": false,
         "name": "id-vnet",
         "dnsServers": [
-          "10.18.1.4"
+          
         ],
         "addressPrefixes": [
           "10.15.0.0/24"
