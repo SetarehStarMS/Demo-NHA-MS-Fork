@@ -236,6 +236,7 @@
             },
             "required": [
                 "enabled",
+                "forwardingRules",
                 "linkRuleSetToVnet",
                 "linkRuleSetToVnetName",
                 "name"
