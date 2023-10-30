@@ -31,6 +31,9 @@ function Set-Identity {
     )
 
     Set-AzContext -Subscription $SubscriptionId
+    Write-Output $SubscriptionId
+    Write-Output $LogAnalyticsWorkspaceResourceId
+
 
     # $SchemaFilePath = "$($Context.SchemaDirectory)/landingzones/lz-platform-identity.json"
     

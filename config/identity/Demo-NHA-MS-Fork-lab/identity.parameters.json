@@ -127,17 +127,7 @@
         "linkRuleSetToVnetName": "dns-resolver-vnet-link",
         "forwardingRules": [
           {
-            "name": "default",
-            "domain": "dontMakeMeThink.local",
-            "state": "Enabled",
-            "targetDnsServers": [
-              {
-                "ipAddress": "10.99.99.100"
-              },
-              {
-                "ipAddress": "10.99.99.99"
-              }
-            ]
+            
           }
         ]
       }
