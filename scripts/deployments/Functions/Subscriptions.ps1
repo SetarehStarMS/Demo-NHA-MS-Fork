@@ -106,6 +106,11 @@ function Set-Subscriptions {
 
     Set-AzContext -Subscription $SubscriptionId
     $TemplateFile = (Resolve-Path -Path "$($Context.WorkingDirectory)/landingzones/lz-$ArchetypeName/main.bicep").Path
+    Write-Output "check 1"
+    Get-AzContext
+    Set-AzContext -Subscription $SubscriptionId
+    Write-Output "check 2"
+    Get-AzContext
     New-AzSubscriptionDeployment `
       -Name "main-$DeploymentRegion" `
       -Location $DeploymentRegion `
