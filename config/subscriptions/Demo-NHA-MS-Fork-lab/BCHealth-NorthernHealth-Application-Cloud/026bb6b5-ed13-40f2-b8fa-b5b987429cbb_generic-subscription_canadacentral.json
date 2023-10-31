@@ -113,7 +113,7 @@
     },
     "hubNetwork": {
       "value": {
-        "virtualNetworkId": "/subscriptions/4fd845de-f6c8-4e6d-9a87-c21c4ebf7edd/resourceGroups/pubsec-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet",
+        "virtualNetworkId": "/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet",
         "rfc1918IPRange": "10.18.0.0/22",
         "rfc6598IPRange": "",
         "egressVirtualApplianceIp": ""
