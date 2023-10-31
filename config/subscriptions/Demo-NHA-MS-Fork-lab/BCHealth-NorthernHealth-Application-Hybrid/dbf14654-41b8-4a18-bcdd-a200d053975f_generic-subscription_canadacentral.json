@@ -124,7 +124,7 @@
         "deployVnet": true,
         "peerToHubVirtualNetwork": true,
         "useRemoteGateway": false,
-        "name": "nha-vnet-generic-hybrid",
+        "name": "nha-vnet-generic-hybrid-app2",
         "dnsServers": [
           
         ],
