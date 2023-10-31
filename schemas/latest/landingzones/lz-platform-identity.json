@@ -263,10 +263,7 @@
                 }
             },
             "required": [
-                "domain",
-                "name",
-                "state",
-                "targetDnsServers"
+                
             ],
             "title": "ForwardingRule"
         },
