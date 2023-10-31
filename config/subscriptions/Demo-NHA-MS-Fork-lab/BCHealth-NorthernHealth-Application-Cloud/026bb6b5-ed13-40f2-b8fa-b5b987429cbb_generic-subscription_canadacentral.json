@@ -102,13 +102,13 @@
     },
     "automation": {
       "value": {
-        "name": "nha-automation"
+        "name": "nha-automation-generic-cloud"
       }
     },
     "backupRecoveryVault": {
       "value": {
         "enabled": true,
-        "name": "nha-backup-vault"
+        "name": "nha-backup-vault-generic-cloud"
       }
     },
     "hubNetwork": {
@@ -124,7 +124,7 @@
         "deployVnet": true,
         "peerToHubVirtualNetwork": true,
         "useRemoteGateway": false,
-        "name": "vnet",
+        "name": "nha-vnet-generic-cloud",
         "dnsServers": [
           
         ],
