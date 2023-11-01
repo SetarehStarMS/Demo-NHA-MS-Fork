@@ -68,3 +68,9 @@ resource ascDefender 'Microsoft.Security/pricings@2018-06-01' = [for service in 
   }
 }]
 
+resource defenderCspm 'Microsoft.Security/pricings@2022-03-01' = {
+  name: 'CloudPosture'
+  properties: {
+    pricingTier: 'Standard'
+  }
+}
