@@ -38,35 +38,35 @@ resource ascWorkspaceSettings 'Microsoft.Security/workspaceSettings@2017-08-01-p
   }
 }
 
-resource ascAutoProvision 'Microsoft.Security/autoProvisioningSettings@2017-08-01-preview' = {
-  name: 'default'
-  properties: {
-    autoProvision: 'On'
-  }
-}
+// resource ascAutoProvision 'Microsoft.Security/autoProvisioningSettings@2017-08-01-preview' = {
+//   name: 'default'
+//   properties: {
+//     autoProvision: 'On'
+//   }
+// }
 
-// Enable Azure Defender
-var azureDefenderServices = [
-  'Arm'
-  'AppServices'
-  'Containers'
-  'CosmosDbs'
-  'Dns'
-  'KeyVaults'
-  'OpenSourceRelationalDatabases'
-  'SqlServers'
-  'SqlServerVirtualMachines'
-  'StorageAccounts'
-  'VirtualMachines'
-]
+// // Enable Azure Defender
+// var azureDefenderServices = [
+//   'Arm'
+//   'AppServices'
+//   'Containers'
+//   'CosmosDbs'
+//   'Dns'
+//   'KeyVaults'
+//   'OpenSourceRelationalDatabases'
+//   'SqlServers'
+//   'SqlServerVirtualMachines'
+//   'StorageAccounts'
+//   'VirtualMachines'
+// ]
 
-@batchSize(1)
-resource ascDefender 'Microsoft.Security/pricings@2018-06-01' = [for service in azureDefenderServices: {
-  name: service
-  properties: {
-    pricingTier: 'Standard'
-  }
-}]
+// @batchSize(1)
+// resource ascDefender 'Microsoft.Security/pricings@2018-06-01' = [for service in azureDefenderServices: {
+//   name: service
+//   properties: {
+//     pricingTier: 'Standard'
+//   }
+// }]
 
 resource defenderCspm 'Microsoft.Security/pricings@2022-03-01' = {
   name: 'CloudPosture'
