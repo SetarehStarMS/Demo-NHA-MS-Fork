@@ -25,6 +25,9 @@ param hubNetwork object
 @description('DDOS Standard Plan Resource Id - optional (blank value = DDOS Standard Plan will not be linked to virtual network).')
 param ddosStandardPlanId string
 
+@description('Get the DNS Private Resolver enabled/disabled setting so the associated subnets can be optionally deployed based on the value.')
+param deployDNSResolver object
+
 // module nsgpublic '../../../azresources/network/nsg/nsg-allowall.bicep' = {
 //   name: 'deploy-nsg-${hubNetwork.subnets.public.name}'
 //   params: {
@@ -96,6 +99,22 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2021-02-01' = [for subnet 
     securityRules: []
   }
 }]
+
+module nsgDnsResolverInbound '../../../azresources/network/nsg/nsg-empty.bicep' = if (deployDNSResolver.enabled) {
+  name: 'deploy-nsg-dnsResolverInbound'
+  params: {
+    name: '${hubNetwork.subnets.dnsResolverInbound.name}Nsg'
+    location: location
+  }
+}
+
+module nsgDnsResolverOutbound '../../../azresources/network/nsg/nsg-empty.bicep' = if (deployDNSResolver.enabled) {
+  name: 'deploy-nsg-dnsResolverOutbound'
+  params: {
+    name: '${hubNetwork.subnets.dnsResolverOutbound.name}Nsg'
+    location: location
+  }
+}
 
 var requiredSubnets = [
   // {
@@ -181,6 +200,52 @@ var requiredSubnets = [
   }
 ]
 
+var dnsResolverSubnets = [
+  {
+    name: hubNetwork.subnets.dnsResolverInbound.name
+    properties: {
+      addressPrefix: hubNetwork.subnets.dnsResolverInbound.addressPrefix
+      privateEndpointNetworkPolicies: 'Enabled'
+      // routeTable: {
+      //   id: udr.id
+      // }
+      networkSecurityGroup: {
+        id: nsgDnsResolverInbound.outputs.nsgId
+      }
+      delegations: [
+        {
+          name: 'delAzureDNSResolverInbound'
+          properties: {
+            serviceName: 'Microsoft.Network/dnsResolvers'
+          }
+        }
+      ]
+    }
+  }
+
+  {
+    name: hubNetwork.subnets.dnsResolverOutbound.name
+    properties: {
+      addressPrefix: hubNetwork.subnets.dnsResolverOutbound.addressPrefix
+      privateEndpointNetworkPolicies: 'Enabled'
+      // routeTable: {
+      //   id: udr.id
+      // }
+      networkSecurityGroup: {
+        id: nsgDnsResolverOutbound.outputs.nsgId
+      }
+      delegations: [
+        {
+          name: 'delAzureDNSResolverOutbound'
+          properties: {
+            serviceName: 'Microsoft.Network/dnsResolvers'
+          }
+        }
+      ]
+    }
+  }
+]
+
 var optionalSubnets = [for (subnet, i) in hubNetwork.subnets.optional: {
   name: subnet.name
   properties: {
@@ -201,8 +266,8 @@ var optionalSubnets = [for (subnet, i) in hubNetwork.subnets.optional: {
     ] : null
   }
 }]
-
-var allSubnets = union(requiredSubnets, optionalSubnets)
+//Optionally add DNS Resolver subnets based on if the deployDNSResolver parameter is set to true
+var allSubnets = deployDNSResolver.enabled ? union(requiredSubnets, optionalSubnets, dnsResolverSubnets) : union(requiredSubnets, optionalSubnets)
 
 resource hubVnet 'Microsoft.Network/virtualNetworks@2020-06-01' = {
   location: location

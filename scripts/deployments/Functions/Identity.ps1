@@ -80,5 +80,31 @@ function Set-Identity {
         -TemplateFile "$($Context.WorkingDirectory)/landingzones/lz-platform-identity/main.bicep" `
         -TemplateParameterFile $PopulatedParametersFilePath `
         -Verbose
+    
+
+  #region Check if Private DNS Zones are managed in the Identity Susbcription.  If so, enable Private DNS Zones policy assignment
+  if ($Configuration.parameters.privateDnsZones.value.enabled -eq $true) {
+    $PolicyAssignmentFilePath = "$($Context.PolicySetCustomAssignmentsDirectory)/DNSPrivateEndpoints.bicep"
+
+    Write-Output "Identity Network will manage private dns zones, creating Azure Policy assignment to automatically create Private Endpoint DNS Zones."
+    Write-Output "Deploying policy assignment using $PolicyAssignmentFilePath"
+
+    $Parameters = @{
+      policyAssignmentManagementGroupId = $Context.Variables['var-NHA-managementGroupId']
+      policyDefinitionManagementGroupId = $Context.Variables['var-NHA-managementGroupId']
+      privateDNSZoneSubscriptionId = $SubscriptionId
+      privateDNSZoneResourceGroupName = $Configuration.parameters.privateDnsZones.value.resourceGroupName
+    }
+
+    New-AzManagementGroupDeployment `
+      -ManagementGroupId $Context.Variables['var-NHA-managementGroupId'] `
+      -Location $Context.DeploymentRegion `
+      -TemplateFile $PolicyAssignmentFilePath `
+      -TemplateParameterObject $Parameters
+  }
+  else {
+    Write-Output "Identity Network will not manage private dns zones.  Azure Policy assignment will be skipped."
+  }
+  #endregion
 
 }
