@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
-  "contentVersion": "1.0.0.0",
+  
   "parameters": {
     "serviceHealthAlerts": {
       "value": {
@@ -95,7 +95,28 @@
         "planName": "nha-ddos-plan"
       }
     },
-   
+    "privateDnsResolver": {
+      "value": {
+        "enabled": true,
+        "name": "dns-resolver",
+        "inboundEndpointName": "dns-resolver-Inbound",
+        "outboundEndpointName": "dns-resolver-Outbound",
+        "resourceGroupName": "nha-dns-resolverRG2"
+      }
+    },
+    "privateDnsResolverRuleset": {
+      "value": {
+        "enabled": false,
+        "name": "dns-resolver-ruleset",
+        "linkRuleSetToVnet": false,
+        "linkRuleSetToVnetName": "dns-resolver-vnet-link",
+        "forwardingRules": [
+          {
+            
+          }
+        ]
+      }
+    },
     "hub": {
       "value": {
         "resourceGroupName": "nha-hub-networking",
@@ -121,6 +142,16 @@
               "comments": "Azure Bastion",
               "name": "AzureBastionSubnet",
               "addressPrefix": "10.18.0.0/27"
+            },
+            "dnsResolverInbound": {
+              "comments": "Azure DNS Resolver Inbound Requests subnet",
+              "name": "AzureDNSResolver-Inbound",
+              "addressPrefix": "10.18.0.32/27"
+            },
+            "dnsResolverOutbound": {
+              "comments": "Azure DNS Resolver Outbound Requests subnet",
+              "name": "AzureDNSResolver-Outbound",
+              "addressPrefix": "10.18.0.64/27"
             },
             "optional": []
           }

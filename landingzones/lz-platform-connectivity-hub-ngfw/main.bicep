@@ -186,6 +186,16 @@ param privateDnsZones object
 @description('DDOS Standard configuration.  See docs/archetypes/hubnetwork-nva.md for configuration settings.')
 param ddosStandard object
 
+
+// Private DNS Resolver
+@description('Private DNS Resolver configuration for Inbound connections.')
+param privateDnsResolver object
+
+// Private DNS Resolver Ruleset
+@description('Private DNS Resolver Default Ruleset Configuration')
+param privateDnsResolverRuleset object
+
+
 // // Public Access Zone
 // @description('Public Access Zone configuration.  See docs/archetypes/hubnetwork-nva.md for configuration settings.')
 // param publicAccessZone object
@@ -372,6 +382,7 @@ module hubVnet 'hub/hub-vnet.bicep' = {
     //pazUdrId: udrPaz.outputs.udrId
 
     ddosStandardPlanId: ddosStandard.enabled ? ddosPlan.outputs.ddosPlanId : ''
+    deployDNSResolver: privateDnsResolver
   }
 }
 
@@ -400,6 +411,22 @@ module bastion '../../azresources/network/bastion.bicep' = if (hub.bastion.enabl
     sku: hub.bastion.sku
     scaleUnits: hub.bastion.scaleUnits
     subnetId: hubVnet.outputs.AzureBastionSubnetId
+  }
+}
+
+module dnsResolver 'dnsResolver.bicep' = if (privateDnsResolver.enabled) {
+  name: 'deploy-dns-resolver'
+  scope: subscription()
+  params: {
+    privateDnsResolver: privateDnsResolver
+    location: location
+    rgVnet: rgHubVnet.name
+    vnetId: hubVnet.outputs.vnetId
+    vnetName: hubVnet.outputs.vnetName
+    network: hub.network
+    resourceTags: resourceTags
+    privateDnsResolverRuleset: privateDnsResolverRuleset
+    dnsResolverRG: privateDnsResolver.resourceGroupName
   }
 }
 
