@@ -91,7 +91,7 @@
         "domainControllers": "nha-DomainControllersRG",
         "dnsResolver": "nha-dns-resolverRG",
         "dnsCondionalForwarders": "nha-dns-CondionalForwardersRG",
-        "privateDnsZones": "nha-private-dns-rg"
+        "privateDnsZones": "nha-private-dns-rg-test"
       }
     },
     "automation": {
