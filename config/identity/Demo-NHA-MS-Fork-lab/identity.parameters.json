@@ -108,7 +108,7 @@
     "privateDnsZones": {
       "value": {
         "enabled": true,
-        "resourceGroupName": "nha-private-dns-rg"
+        "resourceGroupName": "nha-private-dns-rg-test"
       }
     },
     "privateDnsResolver": {
