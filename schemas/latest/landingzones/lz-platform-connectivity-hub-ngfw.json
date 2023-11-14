@@ -149,6 +149,9 @@
             "bastion": {
               "$ref": "#/definitions/bastion"
             },
+            "PaloAltoCloudNGFW": {
+              "$ref": "#/definitions/PaloAltoCloudNGFW"
+            },
             "network": {
               "type": "object",
               "properties": {
@@ -170,6 +173,12 @@
                     "bastion": {
                       "$ref": "#/definitions/requiredSubnet"
                     },
+                    "ngfwPrivateSubnet": {
+                      "$ref": "#/definitions/requiredSubnet"
+                    },
+                    "ngfwPublicSubnet": {
+                      "$ref": "#/definitions/requiredSubnet"
+                    },
                     "optional": {
                       "type": "array",
                       "items": {
@@ -180,6 +189,8 @@
                   "required": [
                     "gateway",
                     "bastion",
+                    "ngfwPrivateSubnet",
+                    "ngfwPublicSubnet",
                     "optional"
                   ]
                 }
@@ -317,6 +328,30 @@
         "name",
         "sku",
         "scaleUnits"
+      ]
+    },
+    "PaloAltoCloudNGFW": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "availabilityZones": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sourceNATEnabled": {
+          "type": "boolean"
+        }
+      
+      },
+      "required": [
+        "name",
+        "availabilityZones",
+        "sourceNATEnabled"
+        
       ]
     }
   }

@@ -287,30 +287,30 @@ module ddosPlan '../../azresources/network/ddos-standard.bicep' = if (ddosStanda
   }
 }
 
-// // Route Tables
-// var defaultRoutes = [
-//   {
-//     name: 'Hub-NVA-Default-Route'
-//     properties: {
-//       nextHopType: 'VirtualAppliance'
-//       addressPrefix: '0.0.0.0/0'
-//       //nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.internalIp
-//       nextHopIpAddress: '10.0.0.1'
-//     }
-//   }
-// ]
+// Route Tables
+var defaultRoutes = [
+  {
+    name: 'Hub-NGFW-Default-Route'
+    properties: {
+      nextHopType: 'VirtualAppliance'
+      addressPrefix: '0.0.0.0/0'
+      //nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.internalIp
+      nextHopIpAddress: '10.18.2.1'
+    }
+  }
+]
 
-// var routesFromAddressPrefixes = [for addressPrefix in hub.network.addressPrefixes: {
-//     name: 'Hub-NVA-${replace(replace(addressPrefix, '.', '-'), '/', '-')}'
-//     properties: {
-//       nextHopType: 'VirtualAppliance'
-//       addressPrefix: addressPrefix
-//       //nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.internalIp
-//       nextHopIpAddress: '10.0.0.1'
-//     }
-// }]
+var routesFromAddressPrefixes = [for addressPrefix in hub.network.addressPrefixes: {
+    name: 'Hub-NGFW-${replace(replace(addressPrefix, '.', '-'), '/', '-')}'
+    properties: {
+      nextHopType: 'VirtualAppliance'
+      addressPrefix: addressPrefix
+      //nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.internalIp
+      nextHopIpAddress: '10.18.2.1'
+    }
+}]
 
-// var routes = union(defaultRoutes, routesFromAddressPrefixes)
+var routes = union(defaultRoutes, routesFromAddressPrefixes)
 
 // module udrPrdSpokes '../../azresources/network/udr/udr-custom.bicep' = {
 //   name: 'deploy-route-table-PrdSpokesUdr'
@@ -350,15 +350,15 @@ module ddosPlan '../../azresources/network/ddos-standard.bicep' = if (ddosStanda
 //   }
 // }
 
-// module udrHub '../../azresources/network/udr/udr-custom.bicep' = {
-//   name: 'deploy-route-table-HubUdr'
-//   scope: rgHubVnet
-//   params: {
-//     location: location
-//     name: 'HubUdr'
-//     routes: routes
-//   }
-// }
+module udrHub '../../azresources/network/udr/udr-custom.bicep' = {
+  name: 'deploy-route-table-HubUdr'
+  scope: rgHubVnet
+  params: {
+    location: location
+    name: 'HubUdr'
+    routes: routes
+  }
+}
 
 // Hub Virtual Network
 module hubVnet 'hub/hub-vnet.bicep' = {
@@ -368,10 +368,25 @@ module hubVnet 'hub/hub-vnet.bicep' = {
     location: location
 
     hubNetwork: hub.network
-    //hubUdrId: udrHub.outputs.udrId
+    hubUdrId: udrHub.outputs.udrId
     //pazUdrId: udrPaz.outputs.udrId
 
     ddosStandardPlanId: ddosStandard.enabled ? ddosPlan.outputs.ddosPlanId : ''
+  }
+}
+
+// Palo Alto Cloud NGFW
+module PaloAltoCloudNGFW '../../azresources/network/PaloAltoCloudNGFW.bicep' = {
+  name: 'deploy-paloalto-cloud-ngfw'
+  scope: rgHubVnet
+  params: {
+    location: location
+    name: hub.PaloAltoCloudNGFW.name
+    zones: hub.PaloAltoCloudNGFW.availabilityZones
+    //firewallSubnetId: hubVnet.outputs.AzureFirewallSubnetId
+    //firewallManagementSubnetId: hubVnet.outputs.AzureFirewallManagementSubnetId
+    //existingFirewallPolicyId: hub.azureFirewall.firewallPolicyId
+    sourceNATEnabled: hub.PaloAltoCloudNGFW.sourceNATEnabled
   }
 }
 

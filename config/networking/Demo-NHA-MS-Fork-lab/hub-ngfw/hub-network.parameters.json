@@ -105,6 +105,16 @@
           "sku": "Standard",
           "scaleUnits": 2
         },
+        "PaloAltoCloudNGFW": {
+          "name": "nha-hub-PaloAltoCloudNGFW",
+          "availabilityZones": [
+            "1",
+            "2",
+            "3"
+          ],
+          "sourceNATEnabled": true
+          
+        },
         "network": {
           "name": "hub-vnet",
           "addressPrefixes": [
@@ -122,6 +132,16 @@
               "name": "AzureBastionSubnet",
               "addressPrefix": "10.18.0.0/27"
             },
+            "ngfwPrivateSubnet": {
+              "comments": "PaloAlto NGFW Private Subnet",
+              "name": "NGFWPrivateSubnet",
+              "addressPrefix": "10.18.2.0/26"
+            },
+            "ngfwPublicSubnet": {
+              "comments": "PaloAlto NGFW Public Subnet",
+              "name": "NGFWPublicSubnet",
+              "addressPrefix": "10.18.3.0/26"
+            },
             "optional": []
           }
         }
@@ -130,7 +150,7 @@
     },
     "networkWatcher": {
       "value": {
-        "resourceGroupName": "nha-NetworkWatcherRG"
+        "resourceGroupName": "NetworkWatcherRG"
       }
     }
   }

@@ -13,9 +13,9 @@ param location string = resourceGroup().location
 @description('Hub Virtual network configuration.  See docs/archetypes/hubnetwork-nva.md for configuration settings.')
 param hubNetwork object
 
-// // Common Route Table
-// @description('Route Table Resource Id for optional subnets in Hub Virtual Network')
-// param hubUdrId string
+// Common Route Table
+@description('Route Table Resource Id for optional subnets in Hub Virtual Network')
+param hubUdrId string
 
 // // Public Access Zone (i.e. Application Gateways)
 // @description('Public Access Zone (i.e. Application Gateway) User Defined Route Resource Id.')
@@ -179,6 +179,18 @@ var requiredSubnets = [
       addressPrefix: hubNetwork.subnets.gateway.addressPrefix
     }
   }
+  {
+    name: hubNetwork.subnets.ngfwPrivateSubnet.name
+    properties: {
+      addressPrefix: hubNetwork.subnets.ngfwPrivateSubnet.addressPrefix
+    }
+  }
+  {
+    name: hubNetwork.subnets.ngfwPublicSubnet.name
+    properties: {
+      addressPrefix: hubNetwork.subnets.ngfwPublicSubnet.addressPrefix
+    }
+  }
 ]
 
 var optionalSubnets = [for (subnet, i) in hubNetwork.subnets.optional: {
@@ -188,9 +200,9 @@ var optionalSubnets = [for (subnet, i) in hubNetwork.subnets.optional: {
     networkSecurityGroup: (subnet.nsg.enabled) ? {
       id: nsg[i].id
     } : null
-    // routeTable: (subnet.udr.enabled) ? {
-    //   id: hubUdrId
-    // } : null
+    routeTable: (subnet.udr.enabled) ? {
+      id: hubUdrId
+    } : null
     delegations: contains(subnet, 'delegations') ? [
       {
         name: replace(subnet.delegations.serviceName, '/', '.')
