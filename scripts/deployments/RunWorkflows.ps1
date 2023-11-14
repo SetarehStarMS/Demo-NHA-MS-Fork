@@ -194,7 +194,7 @@ Param(
   [SecureString]$NvaUsername=$null,
   [SecureString]$NvaPassword=$null
 )
-
+Write-Host "test test test test"
 #Requires -Modules Az, powershell-yaml
 
 $ErrorActionPreference = "Stop"
