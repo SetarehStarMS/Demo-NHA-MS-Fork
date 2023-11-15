@@ -184,12 +184,28 @@ var requiredSubnets = [
     properties: {
       addressPrefix: hubNetwork.subnets.ngfwPrivateSubnet.addressPrefix
     }
+    delegations: [
+      {
+        name: 'delPaloAltoCloudngfwPrivate'
+        properties: {
+          serviceName: 'PaloAltoNetworks.Cloudngfw/firewalls'
+        }
+      }
+    ]
   }
   {
     name: hubNetwork.subnets.ngfwPublicSubnet.name
     properties: {
       addressPrefix: hubNetwork.subnets.ngfwPublicSubnet.addressPrefix
     }
+    delegations: [
+      {
+        name: 'delPaloAltoCloudngfwPublic'
+        properties: {
+          serviceName: 'PaloAltoNetworks.Cloudngfw/firewalls'
+        }
+      }
+    ]
   }
 ]
 
