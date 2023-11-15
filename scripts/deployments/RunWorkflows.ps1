@@ -1,3 +1,5 @@
+using module Az
+using module powershell-yaml
 <#
 ----------------------------------------------------------------------------------
 Copyright (c) Microsoft Corporation.
@@ -196,7 +198,7 @@ Param(
 )
 Write-Host "test test test test"
 
-#Requires -Modules Az, powershell-yaml -Version 11.0.0
+
 
 $ErrorActionPreference = "Stop"
 
