@@ -194,17 +194,6 @@ Param(
   [SecureString]$NvaUsername=$null,
   [SecureString]$NvaPassword=$null
 )
-Write-Host "test test test test"
-if ($LoginServicePrincipalJson -ne $null) {
-  Write-Host "Logging in to Azure using service principal..."
-  $ServicePrincipal = ($LoginServicePrincipalJson | ConvertFrom-SecureString -AsPlainText) | ConvertFrom-Json
-  $Password = ConvertTo-SecureString $ServicePrincipal.password -AsPlainText -Force
-  $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $ServicePrincipal.appId, $Password
-  Connect-AzAccount -ServicePrincipal -TenantId $ServicePrincipal.tenant -Credential $Credential
-}
-import-module Az
-Import-module powershell-yaml
-#Requires -Modules Az, powershell-yaml
 
 $ErrorActionPreference = "Stop"
 
