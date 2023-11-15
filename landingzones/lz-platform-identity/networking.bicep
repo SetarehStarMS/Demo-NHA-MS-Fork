@@ -195,34 +195,34 @@ param deployDNSResolver object
 var hubVnetIdSplit = split(hubNetwork.virtualNetworkId, '/')
 
 
-// var routesToHub = [
-//   // Force Routes to Hub IPs (RFC1918 range) via FW despite knowing that route via peering
-//   {
-//     name: 'SpokeUdrHubRFC1918FWRoute'
-//     properties: {
-//       addressPrefix: hubNetwork.rfc1918IPRange
-//       nextHopType: 'VirtualAppliance'
-//       nextHopIpAddress: hubNetwork.egressVirtualApplianceIp
-//     }
-//   }
-//   // Force Routes to Hub IPs (CGNAT range) via FW despite knowing that route via peering
-//   {
-//     name: 'SpokeUdrHubRFC6598FWRoute'
-//     properties: {
-//       addressPrefix: hubNetwork.rfc6598IPRange
-//       nextHopType: 'VirtualAppliance'
-//       nextHopIpAddress: hubNetwork.egressVirtualApplianceIp
-//     }
-//   }
-//   {
-//     name: 'RouteToEgressFirewall'
-//     properties: {
-//       addressPrefix: '0.0.0.0/0'
-//       nextHopType: 'VirtualAppliance'
-//       nextHopIpAddress: hubNetwork.egressVirtualApplianceIp
-//     }
-//   }
-// ]
+var routesToHub = [
+  // Force Routes to Hub IPs (RFC1918 range) via FW despite knowing that route via peering
+  {
+    name: 'SpokeUdrHubRFC1918FWRoute'
+    properties: {
+      addressPrefix: hubNetwork.rfc1918IPRange
+      nextHopType: 'VirtualAppliance'
+      nextHopIpAddress: hubNetwork.egressVirtualApplianceIp
+    }
+  }
+  // Force Routes to Hub IPs (CGNAT range) via FW despite knowing that route via peering
+  {
+    name: 'SpokeUdrHubRFC6598FWRoute'
+    properties: {
+      addressPrefix: hubNetwork.rfc6598IPRange
+      nextHopType: 'VirtualAppliance'
+      nextHopIpAddress: hubNetwork.egressVirtualApplianceIp
+    }
+  }
+  {
+    name: 'RouteToEgressFirewall'
+    properties: {
+      addressPrefix: '0.0.0.0/0'
+      nextHopType: 'VirtualAppliance'
+      nextHopIpAddress: hubNetwork.egressVirtualApplianceIp
+    }
+  }
+]
 
 // Network Security Groups
 resource nsg 'Microsoft.Network/networkSecurityGroups@2021-02-01' = [for subnet in network.subnets.optional: if (subnet.nsg.enabled) {
@@ -257,14 +257,14 @@ module nsgDnsResolverOutbound '../../azresources/network/nsg/nsg-empty.bicep' = 
   }
 }
 
-// // Route Tables
-// resource udr 'Microsoft.Network/routeTables@2021-02-01' = {
-//   name: 'RouteTable'
-//   location: location
-//   properties: {
-//     routes: network.peerToHubVirtualNetwork ? routesToHub : null
-//   }
-// }
+// Route Tables
+resource udr 'Microsoft.Network/routeTables@2021-02-01' = {
+  name: 'RouteTable'
+  location: location
+  properties: {
+    routes: network.peerToHubVirtualNetwork ? routesToHub : null
+  }
+}
 
 // Virtual Network
 var requiredSubnets = [
@@ -273,9 +273,9 @@ var requiredSubnets = [
     properties: {
       addressPrefix: network.subnets.domainControllers.addressPrefix
       privateEndpointNetworkPolicies: 'Enabled'
-      // routeTable: {
-      //   id: udr.id
-      // }
+      routeTable: {
+        id: udr.id
+      }
       networkSecurityGroup: {
         id: nsgDomainControllers.outputs.nsgId
       }
@@ -289,9 +289,9 @@ var dnsResolverSubnets = [
     properties: {
       addressPrefix: network.subnets.dnsResolverInbound.addressPrefix
       privateEndpointNetworkPolicies: 'Enabled'
-      // routeTable: {
-      //   id: udr.id
-      // }
+      routeTable: {
+        id: udr.id
+      }
       networkSecurityGroup: {
         id: nsgDnsResolverInbound.outputs.nsgId
       }
@@ -311,9 +311,9 @@ var dnsResolverSubnets = [
     properties: {
       addressPrefix: network.subnets.dnsResolverOutbound.addressPrefix
       privateEndpointNetworkPolicies: 'Enabled'
-      // routeTable: {
-      //   id: udr.id
-      // }
+      routeTable: {
+        id: udr.id
+      }
       networkSecurityGroup: {
         id: nsgDnsResolverOutbound.outputs.nsgId
       }
@@ -336,9 +336,9 @@ var optionalSubnets = [for (subnet, i) in network.subnets.optional: {
     networkSecurityGroup: (subnet.nsg.enabled) ? {
       id: nsg[i].id
     } : null
-    // routeTable: (subnet.udr.enabled) ? {
-    //   id: udr.id
-    // } : null
+    routeTable: (subnet.udr.enabled) ? {
+      id: udr.id
+    } : null
     delegations: contains(subnet, 'delegations') ? [
       {
         name: replace(subnet.delegations.serviceName, '/', '.')

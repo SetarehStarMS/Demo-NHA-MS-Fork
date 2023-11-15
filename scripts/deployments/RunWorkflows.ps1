@@ -195,6 +195,8 @@ Param(
   [SecureString]$NvaPassword=$null
 )
 Write-Host "test test test test"
+import-module Az.accounts
+import-module powershell-yaml
 #Requires -Modules Az, powershell-yaml
 
 $ErrorActionPreference = "Stop"
