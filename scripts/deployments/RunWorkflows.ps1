@@ -1,5 +1,3 @@
-using module Az
-using module powershell-yaml
 <#
 ----------------------------------------------------------------------------------
 Copyright (c) Microsoft Corporation.
@@ -197,7 +195,8 @@ Param(
   [SecureString]$NvaPassword=$null
 )
 Write-Host "test test test test"
-
+import-module Az
+Import-module powershell-yaml
 
 
 $ErrorActionPreference = "Stop"
