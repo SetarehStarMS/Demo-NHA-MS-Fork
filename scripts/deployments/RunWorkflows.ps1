@@ -204,7 +204,7 @@ if ($LoginServicePrincipalJson -ne $null) {
 }
 import-module Az
 Import-module powershell-yaml
-
+#Requires -Modules Az, powershell-yaml
 
 $ErrorActionPreference = "Stop"
 
