@@ -112,7 +112,9 @@
             "2",
             "3"
           ],
-          "sourceNATEnabled": true
+          "sourceNATEnabled": true,
+          "networkType": "VNET",
+          "enableDnsProxy": false
           
         },
         "network": {

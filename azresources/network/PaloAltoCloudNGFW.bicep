@@ -21,9 +21,6 @@ param network object
 @description('Network Type for NGFW: VNET or VWAN')
 param networkType string
 
-@description('If Source NAT is enabled or not')
-param enableEgressNat string
-
 @description('Whether to enable Source NAT for NGFW with different public IP Address.')
 param sourceNATEnabled bool
 
@@ -96,7 +93,7 @@ resource paloAltoFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09-01' = {
           resourceId: ngfwPublicIp.id
         }
       ]
-      enableEgressNat: enableEgressNat
+      enableEgressNat: '${sourceNATEnabled}'
       egressNatIp: [
         {
           resourceId: sourceNATPublicIp.id
