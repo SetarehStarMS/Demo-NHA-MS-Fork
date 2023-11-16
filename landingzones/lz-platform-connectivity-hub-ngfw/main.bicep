@@ -383,9 +383,11 @@ module PaloAltoCloudNGFW '../../azresources/network/PaloAltoCloudNGFW.bicep' = {
     location: location
     name: hub.PaloAltoCloudNGFW.name
     zones: hub.PaloAltoCloudNGFW.availabilityZones
-    //firewallSubnetId: hubVnet.outputs.AzureFirewallSubnetId
-    //firewallManagementSubnetId: hubVnet.outputs.AzureFirewallManagementSubnetId
-    //existingFirewallPolicyId: hub.azureFirewall.firewallPolicyId
+    vnetId: hubVnet.outputs.vnetId
+    network: hub.network
+    networkType: 'VNET'
+    enableEgressNat: 'TRUE'
+    enableDnsProxy: 'FALSE'
     sourceNATEnabled: hub.PaloAltoCloudNGFW.sourceNATEnabled
   }
 }

@@ -12,17 +12,24 @@ param name string
 @description('Availability Zones to deploy Azure Firewall.')
 param zones array
 
-// @description('Subnet Id for AzureFirewallSubnet.')
-// param firewallSubnetId string
+@description('virtual network ID that NGFW reside in')
+param vnetId string
 
-// @description('Subnet Id for AzureFirewallManagementSubnet.')
-// param firewallManagementSubnetId string
+@description('Network configuration for the spoke virtual network.  It includes name, dnsServers, address spaces, vnet peering and subnets.')
+param network object
+
+@description('Network Type for NGFW: VNET or VWAN')
+param networkType string
+
+@description('If Source NAT is enabled or not')
+param enableEgressNat string
 
 @description('Whether to enable Source NAT for NGFW with different public IP Address.')
 param sourceNATEnabled bool
 
-// @description('Existing Firewall Policy Resource Id')
-// param existingFirewallPolicyId string
+@description('If enableDnsProxy')
+param enableDnsProxy string
+
 
 resource ngfwPublicIp 'Microsoft.Network/publicIPAddresses@2021-02-01' = {
   name: '${name}-PublicIp'
@@ -50,46 +57,129 @@ resource sourceNATPublicIp 'Microsoft.Network/publicIPAddresses@2021-02-01' = if
   }
 }
 
-// resource firewall 'Microsoft.Network/azureFirewalls@2021-02-01' = {
+resource localRuleStacks 'PaloAltoNetworks.Cloudngfw/localRulestacks@2023-09-01' = {
+  name: '${name}-lrs'
+  location: location
+  properties: {
+    scope: 'LOCAL'
+    defaultMode: 'IPS'
+    securityServices: {
+        vulnerabilityProfile: 'BestPractice'
+        antiSpywareProfile: 'BestPractice'
+        antiVirusProfile: 'BestPractice'
+        urlFilteringProfile: 'BestPractice'
+        fileBlockingProfile: 'BestPractice'
+        dnsSubscription: 'BestPractice'
+    }
+ }
+}
+
+resource paloAltoFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09-01' = {
+  name: name
+  location: location
+  properties: {
+    networkProfile: {
+      vnetConfiguration: {
+        vnet: {
+          resourceId: vnetId
+        }
+        trustSubnet: {
+          resourceId: network.subnets.ngfwPrivateSubnet.id
+        }
+        unTrustSubnet: {
+          resourceId: network.subnets.ngfwPublicSubnet.id
+        }
+      }
+      networkType: networkType
+      publicIps: [
+        {
+          resourceId: ngfwPublicIp.id
+        }
+      ]
+      enableEgressNat: enableEgressNat
+      egressNatIp: [
+        {
+          resourceId: sourceNATPublicIp.id
+        }
+      ]
+    }
+    associatedRulestack: {
+      resourceId: localRuleStacks.id
+    }
+    dnsSettings: {
+      enableDnsProxy: enableDnsProxy
+      enabledDnsType: 'CUSTOM'
+    }
+    planData: {
+      usageType: 'PAYG'
+      billingCycle: 'MONTHLY'
+      planId: 'panw-cloud-ngfw-payg'
+    }
+    marketplaceDetails: {
+      offerId: 'pan_swfw_cloud_ngfw'
+      publisherId: 'paloaltonetworks'
+    }
+  }
+  
+}
+
+// resource paloAltoFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09-01' = {
 //   name: name
 //   location: location
-//   zones: !empty(zones) ? zones : null
 //   properties: {
-//     sku: {
-//       name: 'AZFW_VNet'
-//       tier: 'Premium'
-//     }
-//     firewallPolicy: {
-//       id: existingFirewallPolicyId
-//     }
-//     ipConfigurations: [
-//       {
-//         name: 'ipConfig'
-//         properties: {
-//           subnet: {
-//             id: firewallSubnetId
-//           }
-//           publicIPAddress: !forcedTunnelingEnabled ? {
-//             id: firewallPublicIp.id
-//           } : null
-//         }
-//       }
-//     ]
-//     managementIpConfiguration: forcedTunnelingEnabled ? {
-//       name: 'managementIpConfig'
-//       properties: {
-//         subnet: {
-//           id: firewallManagementSubnetId
-//         }
-//         publicIPAddress: {
-//           id: firewallManagementPublicIp.id
-//         }
-//       }
-//     } : null
-//   }
+//     networkProfile: {
+//         vnetConfiguration: {
+//             vnet: {
+//                 resourceId: '/subscriptions/7d5b86f5-567f-4ad6-afdd-4b2bd0ae63ee/resourceGroups/nh-cc-rg-lab-hub-networking-01/providers/Microsoft.Network/virtualNetworks/nh-cc-lab-vnet-hybridhub-01'
+//             },
+//             trustSubnet: {
+//                 resourceId: '/subscriptions/7d5b86f5-567f-4ad6-afdd-4b2bd0ae63ee/resourceGroups/nh-cc-rg-lab-hub-networking-01/providers/Microsoft.Network/virtualNetworks/nh-cc-lab-vnet-hybridhub-01/subnets/nh-cc-lab-snet-ngfw-private-01'
+//             },
+//             unTrustSubnet: {
+//                 resourceId: '/subscriptions/7d5b86f5-567f-4ad6-afdd-4b2bd0ae63ee/resourceGroups/nh-cc-rg-lab-hub-networking-01/providers/Microsoft.Network/virtualNetworks/nh-cc-lab-vnet-hybridhub-01/subnets/nh-cc-lab-snet-ngfw-public-01'
+//             },
+//             ipOfTrustSubnetForUdr: {
+//                 address: '10.242.128.132'
+//             }
+//         },
+//         networkType: 'VNET',
+//         publicIps: [
+//             {
+//                 resourceId: '/subscriptions/7d5b86f5-567f-4ad6-afdd-4b2bd0ae63ee/resourceGroups/nh-cc-rg-lab-hub-networking-01/providers/Microsoft.Network/publicIPAddresses/nh-cc-lab-hub-PaloAltoCloudNGFW-pip-01',
+//                 address: '20.220.245.146'
+//             }
+//         ],
+//         enableEgressNat: 'ENABLED',
+//         egressNatIp: [
+//             {
+//                 resourceId: '/subscriptions/7d5b86f5-567f-4ad6-afdd-4b2bd0ae63ee/resourceGroups/nh-cc-rg-lab-hub-networking-01/providers/Microsoft.Network/publicIPAddresses/nh-cc-lab-hub-PaloAltoCloudNGFW-sourcenat-pip-01',
+//                 address: '20.220.246.2'
+//             }
+//         ]
+//     },
+//     associatedRulestack: {
+//         resourceId: '/subscriptions/7d5b86f5-567f-4ad6-afdd-4b2bd0ae63ee/resourceGroups/nh-cc-rg-lab-hub-networking-01/providers/PaloAltoNetworks.Cloudngfw/localRulestacks/nh-cc-lab-hub-PaloAltoCloudNGFW-lrs',
+//         location: location,
+//         rulestackId: 'SUBSCRIPTION~7d5b86f5-567f-4ad6-afdd-4b2bd0ae63ee~RG~nh-cc-rg-lab-hub-networking-01~STACK~nh-cc-lab-hub-PaloAltoCloudNGFW-lrs'
+//     },
+//     dnsSettings: {
+//         enableDnsProxy: 'DISABLED',
+//         enabledDnsType: 'CUSTOM'
+//     },
+//     isPanoramaManaged: 'FALSE',
+//     provisioningState: 'Succeeded',
+//     planData: {
+//         usageType: 'PAYG',
+//         billingCycle: 'MONTHLY',
+//         planId: 'panw-cloud-ngfw-payg',
+//         effectiveDate: '0001-01-01T00:00:00Z'
+//     },
+//     marketplaceDetails: {
+//         offerId: 'pan_swfw_cloud_ngfw',
+//         publisherId: 'paloaltonetworks',
+//         marketplaceSubscriptionStatus: 'Subscribed',
+//         marketplaceSubscriptionId: 'd7301fc7-f123-4d61-dd41-14c369e02405'
+//     },
+//     panEtag: '45315dfe-8409-11ee-a79b-9e7061a6911e'
 // }
-
-
-// Outputs
-// output firewallId string = firewall.id
-// output firewallPrivateIp string = firewall.properties.ipConfigurations[0].properties.privateIPAddress
+  
