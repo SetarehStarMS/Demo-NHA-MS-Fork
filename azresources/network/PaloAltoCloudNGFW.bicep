@@ -25,7 +25,7 @@ param networkType string
 param sourceNATEnabled bool
 
 @description('If enableDnsProxy')
-param enableDnsProxy string
+param enableDnsProxy bool
 
 
 resource ngfwPublicIp 'Microsoft.Network/publicIPAddresses@2021-02-01' = {
@@ -104,7 +104,7 @@ resource paloAltoFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09-01' = {
       resourceId: localRuleStacks.id
     }
     dnsSettings: {
-      enableDnsProxy: enableDnsProxy
+      enableDnsProxy: '${enableDnsProxy}'
       enabledDnsType: 'CUSTOM'
     }
     planData: {
