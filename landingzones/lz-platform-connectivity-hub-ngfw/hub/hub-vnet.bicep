@@ -186,7 +186,7 @@ var requiredSubnets = [
     }
     delegations: [
       {
-        name: 'PaloAltoNetworks.Cloudngfw/firewalls'
+        name: 'PaloAltoNetworks.Cloudngfw.firewalls'
         properties: {
           serviceName: 'PaloAltoNetworks.Cloudngfw/firewalls'
         }
@@ -200,7 +200,7 @@ var requiredSubnets = [
     }
     delegations: [
       {
-        name: 'PaloAltoNetworks.Cloudngfw/firewalls'
+        name: 'PaloAltoNetworks.Cloudngfw.firewalls'
         properties: {
           serviceName: 'PaloAltoNetworks.Cloudngfw/firewalls'
         }
