@@ -116,13 +116,13 @@
         "virtualNetworkId": "/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet",
         "rfc1918IPRange": "10.18.0.0/22",
         "rfc6598IPRange": "",
-        "egressVirtualApplianceIp": "10.18.2.1"
+        "egressVirtualApplianceIp": ""
       }
     },
     "network": {
       "value": {
         "deployVnet": true,
-        "peerToHubVirtualNetwork": true,
+        "peerToHubVirtualNetwork": false,
         "useRemoteGateway": false,
         "name": "nha-vnet-generic-cloud",
         "dnsServers": [
@@ -140,7 +140,7 @@
               "enabled": true
             },
             "udr": {
-              "enabled": true
+              "enabled": false
             }
           },
           {
@@ -151,7 +151,7 @@
               "enabled": true
             },
             "udr": {
-              "enabled": true
+              "enabled": false
             }
           },
           {
@@ -162,7 +162,7 @@
               "enabled": true
             },
             "udr": {
-              "enabled": true
+              "enabled": false
             }
           },
           {
@@ -173,7 +173,7 @@
               "enabled": true
             },
             "udr": {
-              "enabled": true
+              "enabled": false
             }
           },
           {
