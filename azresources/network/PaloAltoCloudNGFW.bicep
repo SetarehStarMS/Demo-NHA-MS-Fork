@@ -94,11 +94,11 @@ resource paloAltoFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09-01' = {
         }
       ]
       enableEgressNat: '${sourceNATEnabled}'
-      egressNatIp: [
+      egressNatIp: sourceNATEnabled ? [
         {
           resourceId: sourceNATPublicIp.id
         }
-      ]
+      ]: null
     }
     associatedRulestack: {
       resourceId: localRuleStacks.id
