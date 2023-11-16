@@ -208,7 +208,7 @@ param ddosStandard object
 // Reference:  https://learn.microsoft.com/azure/marketplace/azure-partner-customer-usage-attribution
 var telemetry = json(loadTextContent('../../config/telemetry.json'))
 module telemetryCustomerUsageAttribution '../../azresources/telemetry/customer-usage-attribution-subscription.bicep' = if (telemetry.customerUsageAttribution.enabled) {
-  name: 'pid-${telemetry.customerUsageAttribution.modules.networking.nvaFortinet}'
+  name: 'pid-${telemetry.customerUsageAttribution.modules.networking.paloaltoCloudNGFW}'
 }
 
 /*
