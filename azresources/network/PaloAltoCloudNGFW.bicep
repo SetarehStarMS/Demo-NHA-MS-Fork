@@ -86,6 +86,10 @@ resource paloAltoFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09-01' = {
         unTrustSubnet: {
           resourceId: network.subnets.ngfwPublicSubnet.id
         }
+        ipOfTrustSubnetForUdr: {
+          address: network.subnets.ngfwPrivateSubnet.properties.addressPrefixes[0]
+        }
+        
       }
       networkType: networkType
       publicIps: [

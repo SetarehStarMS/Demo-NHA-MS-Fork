@@ -295,7 +295,7 @@ var defaultRoutes = [
       nextHopType: 'VirtualAppliance'
       addressPrefix: '0.0.0.0/0'
       //nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.internalIp
-      nextHopIpAddress: '10.18.2.1'
+      nextHopIpAddress: hub.subnets.ngfwPrivateSubnet.properties.addressPrefixes[0]
     }
   }
 ]
@@ -306,7 +306,7 @@ var routesFromAddressPrefixes = [for addressPrefix in hub.network.addressPrefixe
       nextHopType: 'VirtualAppliance'
       addressPrefix: addressPrefix
       //nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.internalIp
-      nextHopIpAddress: '10.18.2.1'
+      nextHopIpAddress: hub.subnets.ngfwPrivateSubnet.properties.addressPrefixes[0]
     }
 }]
 
