@@ -104,10 +104,15 @@ resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09
         }
       ]: null
     }
+    associatedRulestack: {
+      resourceId: localRuleStacks.id
+      location: location
+    }
     dnsSettings: {
       enableDnsProxy: '${enableDnsProxy}'
       enabledDnsType: 'CUSTOM'
     }
+    isPanoramaManaged: 'FALSE'
     planData: {
       usageType: 'PAYG'
       billingCycle: 'MONTHLY'

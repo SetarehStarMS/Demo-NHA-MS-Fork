@@ -1,17 +1,17 @@
 variables:
   var-hubnetwork-region: canadacentral
-  var-hubnetwork-managementGroupId: BCHealth-NorthernHealth-Platform
+  #var-hubnetwork-managementGroupId: BCHealth-NorthernHealth-Platform
   #var-hubnetwork-azfw-configurationFileName: hub-azfw/hub-network.parameters.json
   #var-hubnetwork-nva-configurationFileName: hub-nva/hub-network.parameters.json
   var-hubnetwork-ngfw-configurationFileName: hub-ngfw/hub-network.parameters.json
-  var-hubnetwork-subscriptionId: dbf14654-41b8-4a18-bcdd-a200d053975f
+  var-hubnetwork-subscriptionId: ae84a0bd-7c13-4453-8557-71b544c64c81
   #var-hubnetwork-azfwPolicy-configurationFileName: hub-azfw-policy/azure-firewall-policy.parameters.json
   #var-logging-managementGroupId: Management
-  var-logging-subscriptionId: 026bb6b5-ed13-40f2-b8fa-b5b987429cbb
+  var-logging-subscriptionId: ae84a0bd-7c13-4453-8557-71b544c64c81
   deploymentRegion: canadacentral
-  var-NHA-managementGroupId: BCHealth-NorthernHealth
+  var-NHA-managementGroupId: 2624a9c3-41b1-47ec-aa72-2eb11877c7d7
   #var-BCH-managementGroupId: BCHealth
-  var-identity-managementGroupId: BCHealth-NorthernHealth-Platform
+  #var-identity-managementGroupId: BCHealth-NorthernHealth-Platform
   #var-logging-diagnosticSettingsforNetworkSecurityGroupsStoragePrefix: pubsecnsg
   var-logging-configurationFileName: logging.parameters.json
   var-managementgroup-hierarchy: |-
@@ -53,7 +53,7 @@ variables:
               ]
     }
   #var-logging-region: canadacentral
-  var-identity-configurationFileName: identity.parameters.json
-  var-identity-region: canadacentral
-  var-identity-subscriptionId: 026bb6b5-ed13-40f2-b8fa-b5b987429cbb
+  #var-identity-configurationFileName: identity.parameters.json
+  #var-identity-region: canadacentral
+  #var-identity-subscriptionId: 026bb6b5-ed13-40f2-b8fa-b5b987429cbb
 
