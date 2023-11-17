@@ -1,6 +1,6 @@
 variables:
   var-hubnetwork-region: canadacentral
-  #var-hubnetwork-managementGroupId: BCHealth-NorthernHealth-Platform
+  var-hubnetwork-managementGroupId: 2624a9c3-41b1-47ec-aa72-2eb11877c7d7
   #var-hubnetwork-azfw-configurationFileName: hub-azfw/hub-network.parameters.json
   #var-hubnetwork-nva-configurationFileName: hub-nva/hub-network.parameters.json
   var-hubnetwork-ngfw-configurationFileName: hub-ngfw/hub-network.parameters.json
