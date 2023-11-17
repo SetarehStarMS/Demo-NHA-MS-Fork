@@ -71,7 +71,7 @@ resource localRuleStacks 'PaloAltoNetworks.Cloudngfw/localRulestacks@2023-09-01'
  }
 }
 
-resource paloAltoFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09-01' = {
+resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09-01' = {
   name: name
   location: location
   properties: {
@@ -103,9 +103,6 @@ resource paloAltoFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09-01' = {
           resourceId: sourceNATPublicIp.id
         }
       ]: null
-    }
-    associatedRulestack: {
-      resourceId: localRuleStacks.id
     }
     dnsSettings: {
       enableDnsProxy: '${enableDnsProxy}'
