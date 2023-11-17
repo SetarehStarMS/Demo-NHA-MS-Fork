@@ -40,7 +40,7 @@ jobs:
         Install-Module Az -Force
         Install-Module powershell-yaml -Force
 
-     - name: Deploy Management Groups in Production
+    - name: Deploy Management Groups in Production
       if: github.event.inputs.environmentName == 'Demo-NHA-MS-Fork-main'
       run: |
         ./RunWorkflows.ps1 `
