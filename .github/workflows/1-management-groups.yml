@@ -13,9 +13,13 @@ on:
   workflow_dispatch:
     inputs:
       environmentName:
-        type: string
-        description: Environment name (optional), e.g. CanadaPubSecALZ-main
-        required: false
+        type: choice
+        description: Environment name (optional), e.g. Demo-NHA-MS-Fork-main
+        required: true
+        options:
+          - "Demo-NHA-MS-Fork-main"
+          - "Demo-NHA-MS-Fork-lab"
+        default: "Demo-NHA-MS-Fork-lab"
 
 defaults:
   run:
@@ -36,7 +40,18 @@ jobs:
         Install-Module Az -Force
         Install-Module powershell-yaml -Force
 
-    - name: Deploy Management Groups
+     - name: Deploy Management Groups in Production
+      if: github.event.inputs.environmentName == 'Demo-NHA-MS-Fork-main'
+      run: |
+        ./RunWorkflows.ps1 `
+          -DeployManagementGroups `
+          -EnvironmentName '${{github.event.inputs.environmentName}}' `
+          -LoginServicePrincipalJson (ConvertTo-SecureString -String '${{secrets.ALZ_CREDENTIALS_PROD}}' -AsPlainText -Force) `
+          -GitHubRepo ${env:GITHUB_REPOSITORY} `
+          -GitHubRef ${env:GITHUB_REF}
+
+    - name: Deploy Management Groups in Lab
+      if: github.event.inputs.environmentName == 'Demo-NHA-MS-Fork-lab'
       run: |
         ./RunWorkflows.ps1 `
           -DeployManagementGroups `

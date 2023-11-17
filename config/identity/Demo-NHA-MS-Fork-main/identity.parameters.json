@@ -1,0 +1,177 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "serviceHealthAlerts": {
+      "value": {
+        "alertRuleName": "demo Identity Alerts",
+        "receivers": {
+          "app": [
+            "identity@example.com"
+          ],
+          "sms": [
+            {
+              "countryCode": "1",
+              "phoneNumber": "6135555555"
+            }
+          ],
+          "email": [
+            "identity@example.com"
+          ],
+          "voice": [
+            {
+              "countryCode": "1",
+              "phoneNumber": "6135555555"
+            }
+          ]
+        },
+        "regions": [
+          "Global",
+          "Canada Central",
+          "Canada East"
+        ],
+        "resourceGroupName": "demo-service-health-alerts-rg",
+        "actionGroupName": "demo Identity Alerts",
+        "actionGroupShortName": "identity-ag",
+        "incidentTypes": [
+          "Incident",
+          "Security"
+        ],
+        "alertRuleDescription": "Identity Alerts for Incidents and Security"
+      }
+    },
+    "securityCenter": {
+      "value": {
+        "email": "security@example.com",
+        "phone": "6135555555"
+      }
+    },
+    "subscriptionRoleAssignments": {
+      "value": [
+        {
+          "comments": "Built-in Contributor Role",
+          "securityGroupObjectIds": [
+            
+          ],
+          "roleDefinitionId": "b24988ac-6180-42a0-ab88-20f7382dd24c"
+        }
+      ]
+    },
+    "subscriptionBudget": {
+      "value": {
+        "createBudget": false
+      }
+    },
+    "subscriptionTags": {
+      "value": {
+        
+      }
+    },
+    "resourceTags": {
+      "value": {
+        "Support" : "sronassi@microsoft.com",
+        "app-id" : "",
+        "CostCenter": "23445",
+        "env": "lab",
+        "HealthOrganization": "nha",
+        "Data Classification": "infa",
+        "DataSensitivity": "s1",
+        "ProjectName": "test",
+        "TechnicalContact": "me",
+        "ProjectContact": "me",
+        "ClientOrganization": "nha"
+      }
+    },
+    "resourceGroups": {
+      "value": {
+        "automation": "nha-automation-rg",
+        "networking": "nha-networking-identity-rg",
+        "networkWatcher": "NetworkWatcherRG",
+        "backupRecoveryVault": "nha-backup-rg",
+        "domainControllers": "nha-DomainControllersRG",
+        "dnsResolver": "nha-dns-resolverRG",
+        "dnsCondionalForwarders": "nha-dns-CondionalForwardersRG",
+        "privateDnsZones": "nha-private-dns-rg-test"
+      }
+    },
+    "automation": {
+      "value": {
+        "name": "nha-automation"
+      }
+    },
+    "backupRecoveryVault": {
+      "value": {
+        "enabled": true,
+        "name": "nha-backup-vault"
+      }
+    },
+    "privateDnsZones": {
+      "value": {
+        "enabled": true,
+        "resourceGroupName": "nha-private-dns-rg-test"
+      }
+    },
+    "privateDnsResolver": {
+      "value": {
+        "enabled": true,
+        "name": "dns-resolver",
+        "inboundEndpointName": "dns-resolver-Inbound",
+        "outboundEndpointName": "dns-resolver-Outbound"
+      }
+    },
+    "privateDnsResolverRuleset": {
+      "value": {
+        "enabled": false,
+        "name": "dns-resolver-ruleset",
+        "linkRuleSetToVnet": false,
+        "linkRuleSetToVnetName": "dns-resolver-vnet-link",
+        "forwardingRules": [
+          {
+            
+          }
+        ]
+      }
+    },
+    "hubNetwork": {
+      "value": {
+        "virtualNetworkId": "/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet",
+        "rfc1918IPRange": "10.18.0.0/22",
+        "rfc6598IPRange": "",
+        "egressVirtualApplianceIp": "10.18.2.1"
+
+      }
+    },
+    "network": {
+      "value": {
+        "deployVnet": true,
+        "peerToHubVirtualNetwork": true,
+        "useRemoteGateway": false,
+        "name": "id-vnet",
+        "dnsServers": [
+          
+        ],
+        "addressPrefixes": [
+          "10.15.0.0/24"
+        ],
+        "subnets": {
+          "domainControllers": {
+            "comments": "Identity Subnet for Domain Controllers and VM-Based DNS Servers",
+            "name": "DomainControllers",
+            "addressPrefix": "10.15.0.0/27"
+          },
+          "dnsResolverInbound": {
+            "comments": "Azure DNS Resolver Inbound Requests subnet",
+            "name": "AzureDNSResolver-Inbound",
+            "addressPrefix": "10.15.0.32/27"
+          },
+          "dnsResolverOutbound": {
+            "comments": "Azure DNS Resolver Outbound Requests subnet",
+            "name": "AzureDNSResolver-Outbound",
+            "addressPrefix": "10.15.0.64/27"
+          },
+          "optional": []
+        }
+      }
+    }
+  }
+}
