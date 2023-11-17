@@ -186,6 +186,16 @@ param privateDnsZones object
 @description('DDOS Standard configuration.  See docs/archetypes/hubnetwork-nva.md for configuration settings.')
 param ddosStandard object
 
+
+// Private DNS Resolver
+@description('Private DNS Resolver configuration for Inbound connections.')
+param privateDnsResolver object
+
+// Private DNS Resolver Ruleset
+@description('Private DNS Resolver Default Ruleset Configuration')
+param privateDnsResolverRuleset object
+
+
 // // Public Access Zone
 // @description('Public Access Zone configuration.  See docs/archetypes/hubnetwork-nva.md for configuration settings.')
 // param publicAccessZone object
@@ -208,7 +218,7 @@ param ddosStandard object
 // Reference:  https://learn.microsoft.com/azure/marketplace/azure-partner-customer-usage-attribution
 var telemetry = json(loadTextContent('../../config/telemetry.json'))
 module telemetryCustomerUsageAttribution '../../azresources/telemetry/customer-usage-attribution-subscription.bicep' = if (telemetry.customerUsageAttribution.enabled) {
-  name: 'pid-${telemetry.customerUsageAttribution.modules.networking.paloaltoCloudNGFW}'
+  name: 'pid-${telemetry.customerUsageAttribution.modules.networking.nvaFortinet}'
 }
 
 /*
@@ -287,30 +297,30 @@ module ddosPlan '../../azresources/network/ddos-standard.bicep' = if (ddosStanda
   }
 }
 
-// Route Tables
-var defaultRoutes = [
-  {
-    name: 'Hub-NGFW-Default-Route'
-    properties: {
-      nextHopType: 'VirtualAppliance'
-      addressPrefix: '0.0.0.0/0'
-      //nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.internalIp
-      nextHopIpAddress: '10.18.2.1'
-    }
-  }
-]
+// // Route Tables
+// var defaultRoutes = [
+//   {
+//     name: 'Hub-NVA-Default-Route'
+//     properties: {
+//       nextHopType: 'VirtualAppliance'
+//       addressPrefix: '0.0.0.0/0'
+//       //nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.internalIp
+//       nextHopIpAddress: '10.0.0.1'
+//     }
+//   }
+// ]
 
-var routesFromAddressPrefixes = [for addressPrefix in hub.network.addressPrefixes: {
-    name: 'Hub-NGFW-${replace(replace(addressPrefix, '.', '-'), '/', '-')}'
-    properties: {
-      nextHopType: 'VirtualAppliance'
-      addressPrefix: addressPrefix
-      //nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.internalIp
-      nextHopIpAddress: '10.18.2.1'
-    }
-}]
+// var routesFromAddressPrefixes = [for addressPrefix in hub.network.addressPrefixes: {
+//     name: 'Hub-NVA-${replace(replace(addressPrefix, '.', '-'), '/', '-')}'
+//     properties: {
+//       nextHopType: 'VirtualAppliance'
+//       addressPrefix: addressPrefix
+//       //nextHopIpAddress: hub.nvaFirewall.production.internalLoadBalancer.internalIp
+//       nextHopIpAddress: '10.0.0.1'
+//     }
+// }]
 
-var routes = union(defaultRoutes, routesFromAddressPrefixes)
+// var routes = union(defaultRoutes, routesFromAddressPrefixes)
 
 // module udrPrdSpokes '../../azresources/network/udr/udr-custom.bicep' = {
 //   name: 'deploy-route-table-PrdSpokesUdr'
@@ -350,15 +360,15 @@ var routes = union(defaultRoutes, routesFromAddressPrefixes)
 //   }
 // }
 
-module udrHub '../../azresources/network/udr/udr-custom.bicep' = {
-  name: 'deploy-route-table-HubUdr'
-  scope: rgHubVnet
-  params: {
-    location: location
-    name: 'HubUdr'
-    routes: routes
-  }
-}
+// module udrHub '../../azresources/network/udr/udr-custom.bicep' = {
+//   name: 'deploy-route-table-HubUdr'
+//   scope: rgHubVnet
+//   params: {
+//     location: location
+//     name: 'HubUdr'
+//     routes: routes
+//   }
+// }
 
 // Hub Virtual Network
 module hubVnet 'hub/hub-vnet.bicep' = {
@@ -368,26 +378,11 @@ module hubVnet 'hub/hub-vnet.bicep' = {
     location: location
 
     hubNetwork: hub.network
-    hubUdrId: udrHub.outputs.udrId
+    //hubUdrId: udrHub.outputs.udrId
     //pazUdrId: udrPaz.outputs.udrId
 
     ddosStandardPlanId: ddosStandard.enabled ? ddosPlan.outputs.ddosPlanId : ''
-  }
-}
-
-// Palo Alto Cloud NGFW
-module PaloAltoCloudNGFW '../../azresources/network/PaloAltoCloudNGFW.bicep' = {
-  name: 'deploy-paloalto-cloud-ngfw'
-  scope: rgHubVnet
-  params: {
-    location: location
-    name: hub.PaloAltoCloudNGFW.name
-    zones: hub.PaloAltoCloudNGFW.availabilityZones
-    vnetId: hubVnet.outputs.vnetId
-    network: hub.network
-    networkType: hub.PaloAltoCloudNGFW.networkType
-    enableDnsProxy: hub.PaloAltoCloudNGFW.enableDnsProxy
-    sourceNATEnabled: hub.PaloAltoCloudNGFW.sourceNATEnabled
+    deployDNSResolver: privateDnsResolver
   }
 }
 
@@ -416,6 +411,22 @@ module bastion '../../azresources/network/bastion.bicep' = if (hub.bastion.enabl
     sku: hub.bastion.sku
     scaleUnits: hub.bastion.scaleUnits
     subnetId: hubVnet.outputs.AzureBastionSubnetId
+  }
+}
+
+module dnsResolver 'dnsResolver.bicep' = if (privateDnsResolver.enabled) {
+  name: 'deploy-dns-resolver'
+  scope: subscription()
+  params: {
+    privateDnsResolver: privateDnsResolver
+    location: location
+    rgVnet: rgHubVnet.name
+    vnetId: hubVnet.outputs.vnetId
+    vnetName: hubVnet.outputs.vnetName
+    network: hub.network
+    resourceTags: resourceTags
+    privateDnsResolverRuleset: privateDnsResolverRuleset
+    dnsResolverRG: privateDnsResolver.resourceGroupName
   }
 }
 

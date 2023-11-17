@@ -61,6 +61,9 @@ OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 
   .PARAMETER DeployHubNetworkWithNVA
     If true, run the NVA hub network workflow.
+
+  .PARAMETER DeployHubNetworkWithNGFW
+    If true, run the NGFW hub network workflow.
   
   .PARAMETER DeployIdentity
     If true, run the Identity workflow.
@@ -174,6 +177,7 @@ Param(
 
   [switch]$DeployAzureFirewallPolicy,
   [switch]$DeployHubNetworkWithNVA,
+  [switch]$DeployHubNetworkWithNGFW,  
   [switch]$DeployHubNetworkWithAzureFirewall,
 
   [switch]$DeployIdentity,
@@ -190,8 +194,6 @@ Param(
   [SecureString]$NvaUsername=$null,
   [SecureString]$NvaPassword=$null
 )
-
-#Requires -Modules Az, powershell-yaml
 
 $ErrorActionPreference = "Stop"
 
@@ -224,6 +226,7 @@ Write-Host "Loading functions..."
 . ".\Functions\Logging.ps1"
 . ".\Functions\Policy.ps1"
 . ".\Functions\HubNetworkWithNVA.ps1"
+. ".\Functions\HubNetworkWithNGFW.ps1"
 . ".\Functions\HubNetworkWithAzureFirewall.ps1"
 . ".\Functions\Identity.ps1"
 . ".\Functions\Subscriptions.ps1"
@@ -372,7 +375,9 @@ if ($DeployHubNetworkWithNGFW) {
   $LoggingConfiguration = Get-LoggingConfiguration `
     -ConfigurationFilePath "$($Context.LoggingDirectory)/$($Context.Variables['var-logging-configurationFileName'])" `
     -SubscriptionId $Context.Variables['var-logging-subscriptionId']
-
+   
+  Write-Host "test place 1."
+  
   Set-HubNetwork-With-NGFW `
     -Context $Context `
     -Region $Context.Variables['var-hubnetwork-region'] `

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
-  "contentVersion": "1.0.0.0",
+  
   "parameters": {
     "serviceHealthAlerts": {
       "value": {
@@ -84,7 +84,7 @@
     },
     "privateDnsZones": {
       "value": {
-        "enabled": false,
+        "enabled": true,
         "resourceGroupName": "nha-private-dns-rg"
       }
     },
@@ -95,7 +95,28 @@
         "planName": "nha-ddos-plan"
       }
     },
-   
+    "privateDnsResolver": {
+      "value": {
+        "enabled": true,
+        "name": "dns-resolver",
+        "inboundEndpointName": "dns-resolver-Inbound",
+        "outboundEndpointName": "dns-resolver-Outbound",
+        "resourceGroupName": "nha-dns-resolverRG2"
+      }
+    },
+    "privateDnsResolverRuleset": {
+      "value": {
+        "enabled": false,
+        "name": "dns-resolver-ruleset",
+        "linkRuleSetToVnet": false,
+        "linkRuleSetToVnetName": "dns-resolver-vnet-link",
+        "forwardingRules": [
+          {
+            
+          }
+        ]
+      }
+    },
     "hub": {
       "value": {
         "resourceGroupName": "nha-hub-networking",
@@ -104,18 +125,6 @@
           "name": "bastion",
           "sku": "Standard",
           "scaleUnits": 2
-        },
-        "PaloAltoCloudNGFW": {
-          "name": "nha-hub-PaloAltoCloudNGFW",
-          "availabilityZones": [
-            "1",
-            "2",
-            "3"
-          ],
-          "sourceNATEnabled": true,
-          "networkType": "VNET",
-          "enableDnsProxy": false
-          
         },
         "network": {
           "name": "hub-vnet",
@@ -134,15 +143,15 @@
               "name": "AzureBastionSubnet",
               "addressPrefix": "10.18.0.0/27"
             },
-            "ngfwPrivateSubnet": {
-              "comments": "PaloAlto NGFW Private Subnet",
-              "name": "NGFWPrivateSubnet",
-              "addressPrefix": "10.18.2.0/26"
+            "dnsResolverInbound": {
+              "comments": "Azure DNS Resolver Inbound Requests subnet",
+              "name": "AzureDNSResolver-Inbound",
+              "addressPrefix": "10.18.0.32/27"
             },
-            "ngfwPublicSubnet": {
-              "comments": "PaloAlto NGFW Public Subnet",
-              "name": "NGFWPublicSubnet",
-              "addressPrefix": "10.18.3.0/26"
+            "dnsResolverOutbound": {
+              "comments": "Azure DNS Resolver Outbound Requests subnet",
+              "name": "AzureDNSResolver-Outbound",
+              "addressPrefix": "10.18.0.64/27"
             },
             "optional": []
           }
@@ -152,7 +161,7 @@
     },
     "networkWatcher": {
       "value": {
-        "resourceGroupName": "NetworkWatcherRG"
+        "resourceGroupName": "nha-NetworkWatcherRG"
       }
     }
   }

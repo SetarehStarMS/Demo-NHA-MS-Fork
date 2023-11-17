@@ -47,17 +47,17 @@ resource ascAutoProvision 'Microsoft.Security/autoProvisioningSettings@2017-08-0
 
 // Enable Azure Defender
 var azureDefenderServices = [
-  'Arm'
-  'AppServices'
-  'Containers'
-  'CosmosDbs'
-  'Dns'
-  'KeyVaults'
-  'OpenSourceRelationalDatabases'
-  'SqlServers'
-  'SqlServerVirtualMachines'
-  'StorageAccounts'
-  'VirtualMachines'
+  // 'Arm'
+  // 'AppServices'
+  // 'Containers'
+  // 'CosmosDbs'
+  // 'Dns'
+  // 'KeyVaults'
+  // 'OpenSourceRelationalDatabases'
+  // 'SqlServers'
+  // 'SqlServerVirtualMachines'
+  // 'StorageAccounts'
+  // 'VirtualMachines'
 ]
 
 @batchSize(1)
@@ -68,3 +68,40 @@ resource ascDefender 'Microsoft.Security/pricings@2018-06-01' = [for service in 
   }
 }]
 
+// resource defenderCspm 'Microsoft.Security/pricings@2022-03-01' = {
+//   name: 'CloudPosture'
+//   properties: {
+//     pricingTier: 'Standard'
+//   }
+// }
+
+// resource cwpPlan 'Microsoft.Security/pricings@2022-03-01' = {
+//   name: 'service'
+//   properties: {
+//     pricingTier: 'Standard'
+//   }
+// }
+ 
+// resource serversPlan 'Microsoft.Security/pricings@2022-03-01' = {
+//   name: 'VirtualMachines'
+//   dependsOn: [
+//     cwpPlan
+//   ]
+//   properties: {
+//     pricingTier: 'Standard'
+//     subPlan: 'P2'
+//   }
+// }
+ 
+// resource agentlessScanning 'Microsoft.Security/VmScanners@2022-03-01-preview' = {
+//   name: 'default'
+//   dependsOn: [
+//     cwpPlan
+//     serversPlan
+//   ]
+//   properties: {
+//     scanningMode: 'Default'
+//     // You can add exclusion tags to Agentless scanning for machines feature
+//     exclusionTags: {}
+//   }
+// }

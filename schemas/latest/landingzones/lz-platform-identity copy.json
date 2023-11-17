@@ -236,6 +236,7 @@
             },
             "required": [
                 "enabled",
+                "forwardingRules",
                 "linkRuleSetToVnet",
                 "linkRuleSetToVnetName",
                 "name"
@@ -263,7 +264,10 @@
                 }
             },
             "required": [
-                
+                "domain",
+                "name",
+                "state",
+                "targetDnsServers"
             ],
             "title": "ForwardingRule"
         },

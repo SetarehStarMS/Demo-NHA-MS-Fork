@@ -86,26 +86,31 @@ function Set-Subscriptions {
     Write-Output "Creating new file with runtime populated parameters: $PopulatedParametersFilePath"
     $Configuration | ConvertTo-Json -Depth 100 | Set-Content $PopulatedParametersFilePath
 
-    $MoveDeploymentName="move-subscription-$SubscriptionId-$DeploymentRegion"
-    $MoveDeploymentName=-join $MoveDeploymentName[0..63] 
+    # $MoveDeploymentName="move-subscription-$SubscriptionId-$DeploymentRegion"
+    # $MoveDeploymentName=-join $MoveDeploymentName[0..63] 
 
-    Write-Output "Moving Subscription ($SubscriptionId) to Management Group ($ManagementGroupId)"
-    $TemplateFile = (Resolve-Path -Path "$($Context.WorkingDirectory)/landingzones/utils/mg-move/move-subscription.bicep").Path
-    New-AzManagementGroupDeployment `
-      -Name $MoveDeploymentName `
-      -ManagementGroupId $ManagementGroupId `
-      -Location $Context.DeploymentRegion `
-      -TemplateFile $TemplateFile `
-      -TemplateParameterObject @{
-        managementGroupId = $ManagementGroupId
-        subscriptionId = $SubscriptionId
-      } `
-      -Verbose
+    # Write-Output "Moving Subscription ($SubscriptionId) to Management Group ($ManagementGroupId)"
+    # $TemplateFile = (Resolve-Path -Path "$($Context.WorkingDirectory)/landingzones/utils/mg-move/move-subscription.bicep").Path
+    # New-AzManagementGroupDeployment `
+    #   -Name $MoveDeploymentName `
+    #   -ManagementGroupId $ManagementGroupId `
+    #   -Location $Context.DeploymentRegion `
+    #   -TemplateFile $TemplateFile `
+    #   -TemplateParameterObject @{
+    #     managementGroupId = $ManagementGroupId
+    #     subscriptionId = $SubscriptionId
+    #   } `
+    #   -Verbose
 
     Write-Output "Deploying $PopulatedParametersFilePath to $SubscriptionId in $Region"
 
     Set-AzContext -Subscription $SubscriptionId
     $TemplateFile = (Resolve-Path -Path "$($Context.WorkingDirectory)/landingzones/lz-$ArchetypeName/main.bicep").Path
+    Write-Output "check 1"
+    Get-AzContext
+    Set-AzContext -Subscription $SubscriptionId
+    Write-Output "check 2"
+    Get-AzContext
     New-AzSubscriptionDeployment `
       -Name "main-$DeploymentRegion" `
       -Location $DeploymentRegion `

@@ -13,9 +13,9 @@ param location string = resourceGroup().location
 @description('Hub Virtual network configuration.  See docs/archetypes/hubnetwork-nva.md for configuration settings.')
 param hubNetwork object
 
-// Common Route Table
-@description('Route Table Resource Id for optional subnets in Hub Virtual Network')
-param hubUdrId string
+// // Common Route Table
+// @description('Route Table Resource Id for optional subnets in Hub Virtual Network')
+// param hubUdrId string
 
 // // Public Access Zone (i.e. Application Gateways)
 // @description('Public Access Zone (i.e. Application Gateway) User Defined Route Resource Id.')
@@ -24,6 +24,9 @@ param hubUdrId string
 // DDOS
 @description('DDOS Standard Plan Resource Id - optional (blank value = DDOS Standard Plan will not be linked to virtual network).')
 param ddosStandardPlanId string
+
+@description('Get the DNS Private Resolver enabled/disabled setting so the associated subnets can be optionally deployed based on the value.')
+param deployDNSResolver object
 
 // module nsgpublic '../../../azresources/network/nsg/nsg-allowall.bicep' = {
 //   name: 'deploy-nsg-${hubNetwork.subnets.public.name}'
@@ -96,6 +99,22 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2021-02-01' = [for subnet 
     securityRules: []
   }
 }]
+
+module nsgDnsResolverInbound '../../../azresources/network/nsg/nsg-empty.bicep' = if (deployDNSResolver.enabled) {
+  name: 'deploy-nsg-dnsResolverInbound'
+  params: {
+    name: '${hubNetwork.subnets.dnsResolverInbound.name}Nsg'
+    location: location
+  }
+}
+
+module nsgDnsResolverOutbound '../../../azresources/network/nsg/nsg-empty.bicep' = if (deployDNSResolver.enabled) {
+  name: 'deploy-nsg-dnsResolverOutbound'
+  params: {
+    name: '${hubNetwork.subnets.dnsResolverOutbound.name}Nsg'
+    location: location
+  }
+}
 
 var requiredSubnets = [
   // {
@@ -179,35 +198,51 @@ var requiredSubnets = [
       addressPrefix: hubNetwork.subnets.gateway.addressPrefix
     }
   }
+]
+
+var dnsResolverSubnets = [
   {
-    name: hubNetwork.subnets.ngfwPrivateSubnet.name
+    name: hubNetwork.subnets.dnsResolverInbound.name
     properties: {
-      addressPrefix: hubNetwork.subnets.ngfwPrivateSubnet.addressPrefix
+      addressPrefix: hubNetwork.subnets.dnsResolverInbound.addressPrefix
+      privateEndpointNetworkPolicies: 'Enabled'
+      // routeTable: {
+      //   id: udr.id
+      // }
+      networkSecurityGroup: {
+        id: nsgDnsResolverInbound.outputs.nsgId
+      }
       delegations: [
         {
-          name: 'PaloAltoNetworks.Cloudngfw.firewalls'
+          name: 'delAzureDNSResolverInbound'
           properties: {
-            serviceName: 'PaloAltoNetworks.Cloudngfw/firewalls'
+            serviceName: 'Microsoft.Network/dnsResolvers'
           }
         }
       ]
     }
-    
   }
+
   {
-    name: hubNetwork.subnets.ngfwPublicSubnet.name
+    name: hubNetwork.subnets.dnsResolverOutbound.name
     properties: {
-      addressPrefix: hubNetwork.subnets.ngfwPublicSubnet.addressPrefix
+      addressPrefix: hubNetwork.subnets.dnsResolverOutbound.addressPrefix
+      privateEndpointNetworkPolicies: 'Enabled'
+      // routeTable: {
+      //   id: udr.id
+      // }
+      networkSecurityGroup: {
+        id: nsgDnsResolverOutbound.outputs.nsgId
+      }
       delegations: [
         {
-          name: 'PaloAltoNetworks.Cloudngfw.firewalls'
+          name: 'delAzureDNSResolverOutbound'
           properties: {
-            serviceName: 'PaloAltoNetworks.Cloudngfw/firewalls'
+            serviceName: 'Microsoft.Network/dnsResolvers'
           }
         }
       ]
     }
-    
   }
 ]
 
@@ -218,9 +253,9 @@ var optionalSubnets = [for (subnet, i) in hubNetwork.subnets.optional: {
     networkSecurityGroup: (subnet.nsg.enabled) ? {
       id: nsg[i].id
     } : null
-    routeTable: (subnet.udr.enabled) ? {
-      id: hubUdrId
-    } : null
+    // routeTable: (subnet.udr.enabled) ? {
+    //   id: hubUdrId
+    // } : null
     delegations: contains(subnet, 'delegations') ? [
       {
         name: replace(subnet.delegations.serviceName, '/', '.')
@@ -231,8 +266,8 @@ var optionalSubnets = [for (subnet, i) in hubNetwork.subnets.optional: {
     ] : null
   }
 }]
-
-var allSubnets = union(requiredSubnets, optionalSubnets)
+//Optionally add DNS Resolver subnets based on if the deployDNSResolver parameter is set to true
+var allSubnets = deployDNSResolver.enabled ? union(requiredSubnets, optionalSubnets, dnsResolverSubnets) : union(requiredSubnets, optionalSubnets)
 
 resource hubVnet 'Microsoft.Network/virtualNetworks@2020-06-01' = {
   location: location

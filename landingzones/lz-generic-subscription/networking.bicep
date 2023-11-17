@@ -202,15 +202,15 @@ var routesToHub = [
       nextHopIpAddress: hubNetwork.egressVirtualApplianceIp
     }
   }
-  // Force Routes to Hub IPs (CGNAT range) via FW despite knowing that route via peering
-  {
-    name: 'SpokeUdrHubRFC6598FWRoute'
-    properties: {
-      addressPrefix: hubNetwork.rfc6598IPRange
-      nextHopType: 'VirtualAppliance'
-      nextHopIpAddress: hubNetwork.egressVirtualApplianceIp
-    }
-  }
+  // // Force Routes to Hub IPs (CGNAT range) via FW despite knowing that route via peering
+  // {
+  //   name: 'SpokeUdrHubRFC6598FWRoute'
+  //   properties: {
+  //     addressPrefix: hubNetwork.rfc6598IPRange
+  //     nextHopType: 'VirtualAppliance'
+  //     nextHopIpAddress: hubNetwork.egressVirtualApplianceIp
+  //   }
+  // }
   {
     name: 'RouteToEgressFirewall'
     properties: {

@@ -1,13 +1,16 @@
 {
-  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$schema": "https://raw.githubusercontent.com/Azure/CanadaPubSecALZ/main/schemas/latest/landingzones/lz-generic-subscription.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "location": {
+      "value": "canadacentral"
+    },
     "serviceHealthAlerts": {
       "value": {
-        "alertRuleName": "demo Identity Alerts",
+        "alertRuleName": "demo Subscription Owners Alerts",
         "receivers": {
           "app": [
-            "identity@example.com"
+            "subscription-owners@example.com"
           ],
           "sms": [
             {
@@ -16,7 +19,7 @@
             }
           ],
           "email": [
-            "identity@example.com"
+            "subscription-owners@example.com"
           ],
           "voice": [
             {
@@ -31,13 +34,13 @@
           "Canada East"
         ],
         "resourceGroupName": "demo-service-health-alerts-rg",
-        "actionGroupName": "demo Identity Alerts",
-        "actionGroupShortName": "identity-ag",
+        "actionGroupName": "demo Subscription Owners Alerts",
+        "actionGroupShortName": "sub-own-ag",
         "incidentTypes": [
           "Incident",
           "Security"
         ],
-        "alertRuleDescription": "Identity Alerts for Incidents and Security"
+        "alertRuleDescription": "Subscription Owners Alerts for Incidents and Security"
       }
     },
     "securityCenter": {
@@ -54,6 +57,13 @@
             
           ],
           "roleDefinitionId": "b24988ac-6180-42a0-ab88-20f7382dd24c"
+        },
+        {
+          "comments": "Custom Role: Landing Zone Application Owner",
+          "securityGroupObjectIds": [
+            
+          ],
+          "roleDefinitionId": "b4c87314-c1a1-5320-9c43-779585186bcc"
         }
       ]
     },
@@ -84,52 +94,21 @@
     },
     "resourceGroups": {
       "value": {
-        "automation": "nha-automation-rg",
-        "networking": "nha-networking-identity-rg",
-        "networkWatcher": "NetworkWatcherRG",
-        "backupRecoveryVault": "nha-backup-rg",
-        "domainControllers": "nha-DomainControllersRG",
-        "dnsResolver": "nha-dns-resolverRG",
-        "dnsCondionalForwarders": "nha-dns-CondionalForwardersRG",
-        "privateDnsZones": "nha-private-dns-rg-test"
+        "automation": "nha-automation-subscription-hybrid",
+        "networking": "nha-networking-subscription-hybrid",
+        "networkWatcher": "nha-NetworkWatcherRG-subscription-hybrid",
+        "backupRecoveryVault": "nha-backup-subscription-hybrid"
       }
     },
     "automation": {
       "value": {
-        "name": "nha-automation"
+        "name": "nha-automation-generic-hybrid"
       }
     },
     "backupRecoveryVault": {
       "value": {
         "enabled": true,
-        "name": "nha-backup-vault"
-      }
-    },
-    "privateDnsZones": {
-      "value": {
-        "enabled": true,
-        "resourceGroupName": "nha-private-dns-rg-test"
-      }
-    },
-    "privateDnsResolver": {
-      "value": {
-        "enabled": true,
-        "name": "dns-resolver",
-        "inboundEndpointName": "dns-resolver-Inbound",
-        "outboundEndpointName": "dns-resolver-Outbound"
-      }
-    },
-    "privateDnsResolverRuleset": {
-      "value": {
-        "enabled": false,
-        "name": "dns-resolver-ruleset",
-        "linkRuleSetToVnet": false,
-        "linkRuleSetToVnetName": "dns-resolver-vnet-link",
-        "forwardingRules": [
-          {
-            
-          }
-        ]
+        "name": "nha-backup-vault-generic-hybrid"
       }
     },
     "hubNetwork": {
@@ -138,7 +117,6 @@
         "rfc1918IPRange": "10.18.0.0/22",
         "rfc6598IPRange": "",
         "egressVirtualApplianceIp": "10.18.2.1"
-
       }
     },
     "network": {
@@ -146,31 +124,49 @@
         "deployVnet": true,
         "peerToHubVirtualNetwork": true,
         "useRemoteGateway": false,
-        "name": "id-vnet",
+        "name": "nha-vnet-generic-hybrid-app2",
         "dnsServers": [
           
         ],
         "addressPrefixes": [
-          "10.15.0.0/24"
+          "10.4.0.0/16"
         ],
-        "subnets": {
-          "domainControllers": {
-            "comments": "Identity Subnet for Domain Controllers and VM-Based DNS Servers",
-            "name": "DomainControllers",
-            "addressPrefix": "10.15.0.0/27"
+        "subnets": [
+          {
+            "comments": "Management Zone (OZ)",
+            "name": "Management",
+            "addressPrefix": "10.4.1.0/25",
+            "nsg": {
+              "enabled": true
+            },
+            "udr": {
+              "enabled": true
+            }
           },
-          "dnsResolverInbound": {
-            "comments": "Azure DNS Resolver Inbound Requests subnet",
-            "name": "AzureDNSResolver-Inbound",
-            "addressPrefix": "10.15.0.32/27"
+          {
+            "comments": "Application Zone (RZ)",
+            "name": "app",
+            "addressPrefix": "10.4.2.0/25",
+            "nsg": {
+              "enabled": true
+            },
+            "udr": {
+              "enabled": true
+            }
           },
-          "dnsResolverOutbound": {
-            "comments": "Azure DNS Resolver Outbound Requests subnet",
-            "name": "AzureDNSResolver-Outbound",
-            "addressPrefix": "10.15.0.64/27"
-          },
-          "optional": []
-        }
+          {
+            "comments": "Data Zone (HRZ)",
+            "name": "data",
+            "addressPrefix": "10.4.3.0/25",
+            "nsg": {
+              "enabled": true
+            },
+            "udr": {
+              "enabled": true
+            }
+          }
+          
+        ]
       }
     }
   }
