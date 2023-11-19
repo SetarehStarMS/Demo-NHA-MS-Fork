@@ -75,7 +75,8 @@ jobs:
   management-groups:
     name: Management Groups
     runs-on: ubuntu-latest
-    environment: ${{ github.ref == 'refs/heads/main' && 'Prod' || 'Lab'}}
+    environment: 
+      ENVIRONMENT_NAME: ${{ github.ref == 'refs/heads/main' && 'prod' || 'lab'}}
 
     steps:
 
