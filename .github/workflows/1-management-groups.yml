@@ -71,13 +71,14 @@ defaults:
     shell: pwsh
     working-directory: scripts/deployments
 
+env:
+  EnvironmentName: ${{ github.ref == 'refs/heads/main' && 'prod' || 'lab'}}
+
 jobs:
   management-groups:
     name: Management Groups
     runs-on: ubuntu-latest
-    environment: 
-      ENVIRONMENT_NAME: ${{ github.ref == 'refs/heads/main' && 'prod' || 'lab'}}
-
+    
     steps:
 
     - name: Checkout
