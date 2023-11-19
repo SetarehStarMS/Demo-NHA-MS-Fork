@@ -93,7 +93,7 @@ jobs:
       run: |
         ./RunWorkflows.ps1 `
           -DeployManagementGroups `
-          -EnvironmentName '${{env.ENVIRONMENT_NAME}' `
+          -EnvironmentName '${{env.ENVIRONMENT_NAME}}' `
           -LoginServicePrincipalJson (ConvertTo-SecureString -String '${{secrets.ALZ_SPN_CREDENTIALS}}' -AsPlainText -Force) `
           -GitHubRepo ${env:GITHUB_REPOSITORY} `
           -GitHubRef ${env:GITHUB_REF}
