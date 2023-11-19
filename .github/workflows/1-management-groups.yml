@@ -72,7 +72,7 @@ defaults:
     working-directory: scripts/deployments
 
 env:
-  ENVIRONMET_NAME: ${{ github.ref == 'refs/heads/main' && 'prod' || 'lab'}}
+  ENVIRONMENT_NAME: ${{ github.ref == 'refs/heads/main' && 'prod' || 'lab'}}
 
 jobs:
   management-groups:
