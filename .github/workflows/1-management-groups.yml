@@ -7,19 +7,64 @@
 # OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 # ----------------------------------------------------------------------------------
 
+# name: 1 - Management Groups
+
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       environmentName:
+#         type: choice
+#         description: Environment name (optional), e.g. Demo-NHA-MS-Fork-main
+#         required: true
+#         options:
+#           - "Demo-NHA-MS-Fork-main"
+#           - "Demo-NHA-MS-Fork-lab"
+#         default: "Demo-NHA-MS-Fork-lab"
+
+# defaults:
+#   run:
+#     shell: pwsh
+#     working-directory: scripts/deployments
+
+# jobs:
+#   management-groups:
+#     name: Management Groups
+#     runs-on: ubuntu-latest
+#     steps:
+
+#     - name: Checkout
+#       uses: actions/checkout@v3
+
+#     - name: Configure PowerShell modules
+#       run: |
+#         Install-Module Az -Force
+#         Install-Module powershell-yaml -Force
+
+#     - name: Deploy Management Groups in Production
+#       if: github.event.inputs.environmentName == 'Demo-NHA-MS-Fork-main'
+#       run: |
+#         ./RunWorkflows.ps1 `
+#           -DeployManagementGroups `
+#           -EnvironmentName '${{github.event.inputs.environmentName}}' `
+#           -LoginServicePrincipalJson (ConvertTo-SecureString -String '${{secrets.ALZ_CREDENTIALS_PROD}}' -AsPlainText -Force) `
+#           -GitHubRepo ${env:GITHUB_REPOSITORY} `
+#           -GitHubRef ${env:GITHUB_REF}
+
+#     - name: Deploy Management Groups in Lab
+#       if: github.event.inputs.environmentName == 'Demo-NHA-MS-Fork-lab'
+#       run: |
+#         ./RunWorkflows.ps1 `
+#           -DeployManagementGroups `
+#           -EnvironmentName '${{github.event.inputs.environmentName}}' `
+#           -LoginServicePrincipalJson (ConvertTo-SecureString -String '${{secrets.ALZ_CREDENTIALS}}' -AsPlainText -Force) `
+#           -GitHubRepo ${env:GITHUB_REPOSITORY} `
+#           -GitHubRef ${env:GITHUB_REF}
+
+
 name: 1 - Management Groups
 
 on:
   workflow_dispatch:
-    inputs:
-      environmentName:
-        type: choice
-        description: Environment name (optional), e.g. Demo-NHA-MS-Fork-main
-        required: true
-        options:
-          - "Demo-NHA-MS-Fork-main"
-          - "Demo-NHA-MS-Fork-lab"
-        default: "Demo-NHA-MS-Fork-lab"
 
 defaults:
   run:
@@ -30,6 +75,8 @@ jobs:
   management-groups:
     name: Management Groups
     runs-on: ubuntu-latest
+    environment: ${{ github.ref -- 'refs/heads/main' && 'Prod' || 'Lab'}}
+
     steps:
 
     - name: Checkout
@@ -40,22 +87,11 @@ jobs:
         Install-Module Az -Force
         Install-Module powershell-yaml -Force
 
-    - name: Deploy Management Groups in Production
-      if: github.event.inputs.environmentName == 'Demo-NHA-MS-Fork-main'
+    - name: Deploy Management Groups 
       run: |
         ./RunWorkflows.ps1 `
           -DeployManagementGroups `
-          -EnvironmentName '${{github.event.inputs.environmentName}}' `
-          -LoginServicePrincipalJson (ConvertTo-SecureString -String '${{secrets.ALZ_CREDENTIALS_PROD}}' -AsPlainText -Force) `
-          -GitHubRepo ${env:GITHUB_REPOSITORY} `
-          -GitHubRef ${env:GITHUB_REF}
-
-    - name: Deploy Management Groups in Lab
-      if: github.event.inputs.environmentName == 'Demo-NHA-MS-Fork-lab'
-      run: |
-        ./RunWorkflows.ps1 `
-          -DeployManagementGroups `
-          -EnvironmentName '${{github.event.inputs.environmentName}}' `
-          -LoginServicePrincipalJson (ConvertTo-SecureString -String '${{secrets.ALZ_CREDENTIALS}}' -AsPlainText -Force) `
+          -EnvironmentName '${{env.ENVIRONMENTNAME}' `
+          -LoginServicePrincipalJson (ConvertTo-SecureString -String '${{secrets.ALZ_SPN_CREDENTIALS}}' -AsPlainText -Force) `
           -GitHubRepo ${env:GITHUB_REPOSITORY} `
           -GitHubRef ${env:GITHUB_REF}
