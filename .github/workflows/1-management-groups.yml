@@ -78,6 +78,7 @@ jobs:
   management-groups:
     name: Management Groups
     runs-on: ubuntu-latest
+    environment: ${{env.ENVIRONMENT_NAME}}
     
     steps:
 
