@@ -386,7 +386,7 @@ module PaloAltoCloudNGFW '../../azresources/network/PaloAltoCloudNGFW.bicep' = {
     vnetId: hubVnet.outputs.vnetId
     network: hub.network
     networkType: hub.PaloAltoCloudNGFW.networkType
-    enableDnsProxy: hub.PaloAltoCloudNGFW.enableDnsProxy
+    // enableDnsProxy: hub.PaloAltoCloudNGFW.enableDnsProxy
     sourceNATEnabled: hub.PaloAltoCloudNGFW.sourceNATEnabled
   }
 }
