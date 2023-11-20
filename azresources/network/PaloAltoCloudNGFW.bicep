@@ -71,7 +71,7 @@ resource localRuleStacks 'PaloAltoNetworks.Cloudngfw/localRulestacks@2023-09-01'
  }
 }
 
-resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-10-10-preview' = {
+resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2022-08-29' = {
   name: name
   location: location
   properties: {
@@ -95,18 +95,21 @@ resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-10
       publicIps: [
         {
           resourceId: ngfwPublicIp.id
+          address: '20.220.52.139'
         }
       ]
       enableEgressNat: '${sourceNATEnabled}'
       egressNatIp: sourceNATEnabled ? [
         {
           resourceId: sourceNATPublicIp.id
+          address: '20.220.52.143'
         }
       ]: null
     }
     associatedRulestack: {
       resourceId: localRuleStacks.id
       location: location
+      rulestackId: 'SUBSCRIPTION~dbf14654-41b8-4a18-bcdd-a200d053975f~RG~nha-hub-networking~STACK~nha-hub-PaloAltoCloudNGFW-lrs'    
     }
     dnsSettings: {
       enableDnsProxy: '${enableDnsProxy}'
