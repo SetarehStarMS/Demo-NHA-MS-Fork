@@ -27,9 +27,6 @@ param sourceNATEnabled bool
 // @description('If enableDnsProxy')
 // param enableDnsProxy bool
 
-@description('If enableDnsProxy')
-param resourceGroupName string
-
 
 resource ngfwPublicIp 'Microsoft.Network/publicIPAddresses@2021-02-01' = {
   name: '${name}-PublicIp'
@@ -74,18 +71,22 @@ resource localRuleStacks 'PaloAltoNetworks.Cloudngfw/localRulestacks@2023-09-01'
  }
 }
 
-var networkProfile = [
-  {
+resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09-01' = {
+  name: name
+  location: location
+  properties: {
     networkProfile: {
       vnetConfiguration: {
         vnet: {
           resourceId: vnetId
         }
         trustSubnet: {
-          resourceId: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet/subnets/NGFWPrivateSubnet'
+          // resourceId: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet/subnets/NGFWPrivateSubnet'
+          resourceId: '/subscriptions/83b401c0-df5f-48fa-80c2-7087954217e8/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet/subnets/NGFWPrivateSubnet'
         }
         unTrustSubnet: {
-          resourceId: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet/subnets/NGFWPublicSubnet'
+          // resourceId: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet/subnets/NGFWPublicSubnet'
+          resourceId: '/subscriptions/83b401c0-df5f-48fa-80c2-7087954217e8/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet/subnets/NGFWPublicSubnet'
         }
         ipOfTrustSubnetForUdr: {
           address: '10.18.2.1'
@@ -95,112 +96,41 @@ var networkProfile = [
       networkType: networkType
       publicIps: [
         {
-          resourceId: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/publicIPAddresses/nha-hub-PaloAltoCloudNGFW-PublicIp'
+          // resourceId: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/publicIPAddresses/nha-hub-PaloAltoCloudNGFW-PublicIp'
+          resourceId: '/subscriptions/83b401c0-df5f-48fa-80c2-7087954217e8/resourceGroups/nha-hub-networking/providers/Microsoft.Network/publicIPAddresses/nha-hub-PaloAltoCloudNGFW-PublicIp'
         }
       ]
-      enableEgressNat: 'DISABLED'
+      enableEgressNat: 'ENABLED'
       egressNatIp: sourceNATEnabled ? [
         {
-          resourceId: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/publicIPAddresses/nha-hub-PaloAltoCloudNGFW-SourceNAT-PublicIp'
+          // resourceId: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/publicIPAddresses/nha-hub-PaloAltoCloudNGFW-SourceNAT-PublicIp'
+          resourceId: '/subscriptions/83b401c0-df5f-48fa-80c2-7087954217e8/resourceGroups/nha-hub-networking/providers/Microsoft.Network/publicIPAddresses/nha-hub-PaloAltoCloudNGFW-SourceNAT-PublicIp'
         }
       ]: null
     }
+    associatedRulestack: {
+      resourceId: localRuleStacks.id
+      location: location
+      // rulestackId: 'SUBSCRIPTION~dbf14654-41b8-4a18-bcdd-a200d053975f~RG~nha-hub-networking~STACK~nha-hub-PaloAltoCloudNGFW-lrs'    
+    }
+    dnsSettings: {
+      enableDnsProxy: 'DISABLED'
+      enabledDnsType: 'CUSTOM'
+    }
+    isPanoramaManaged: 'FALSE'
+    planData: {
+      usageType: 'PAYG'
+      billingCycle: 'MONTHLY'
+      planId: 'panw-cloud-ngfw-payg'
+    }
+    marketplaceDetails: {
+      offerId: 'pan_swfw_cloud_ngfw'
+      publisherId: 'paloaltonetworks'
+    }
+    panEtag: '9800cb8e-8899-11ee-92ff-8ee308f3e52f'
   }
-]
-
-resource resDeploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
-  name: 'Deploy--PaloAlto-cloud-NGFW'
-  location: location
-  kind: 'AzurePowerShell'
-  identity: {
-    type: 'SystemAssigned'    
-  }
-  properties: {
-    azPowerShellVersion: '10.4.1'
-    arguments: '-Name ${name} -resourceGroupName ${resourceGroupName} -Location ${location} -NetworkProfile ${networkProfile} -AssociatedRulestackResourceId ${localRuleStacks.id} -AssociatedRulestackLocation ${location} -DnsSettingEnableDnsProxy DISABLED -DnsSettingEnabledDnsType CUSTOM -MarketplaceDetailOfferId "pan_swfw_cloud_ngfw" -MarketplaceDetailPublisherId "paloaltonetworks" -PlanDataBillingCycle "MONTHLY" -PlanDataPlanId "panw-cloud-ngfw-payg" '
-    scriptContent: '''
-     param(
-       [string] $Name, 
-       [string] $resourceGroupName
-       [string] $Location
-       [INetworkProfile] $NetworkProfile
-       [string] $AssociatedRulestackResourceId
-       [string] $AssociatedRulestackLocation
-       [EnabledDnsType] $DnsSettingEnabledDnsType
-       [DnsProxy] $DnsSettingEnableDnsProxy
-       [string] $MarketplaceDetailOfferId
-       [string] $MarketplaceDetailPublisherId 
-       [BillingCycle] $PlanDataBillingCycle
-       [string] $PlanDataPlanId
-       )
-    
-     Write-Host $NetworkProfile
-     $PaloAltoClloudNGFW = New-AzPaloAltoNetworksFirewall -Name $Name -ResourceGroupName $resourceGroupName -Location $location -NetworkProfile $networkProfile -AssociatedRulestackId $AssociatedRulestackResourceId -AssociatedRulestackLocation $AssociatedRulestackLocation -DnsSettingEnabledDnsType $DnsSettingEnabledDnsType -DnsSettingEnableDnsProxy $DnsSettingEnableDnsProxy -MarketplaceDetailOfferId $MarketplaceDetailOfferId -MarketplaceDetailPublisherId $MarketplaceDetailPublisherId -PlanDataBillingCycle $PlanDataBillingCycle -PlanDataPlanId $PlanDataPlanId
-     $ResourceExists = $null -ne $PaloAltoClloudNGFW
-     $DeploymentScriptOutputs = @{}
-     $DeploymentScriptOutputs['Result'] = $ResourceExists
-     '''
-    cleanupPreference: 'OnSuccess'
-    retentionInterval: 'P1D'
-  }
-}
-
-
-// resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09-01' = {
-//   name: name
-//   location: location
-//   properties: {
-//     networkProfile: {
-//       vnetConfiguration: {
-//         vnet: {
-//           resourceId: vnetId
-//         }
-//         trustSubnet: {
-//           resourceId: network.subnets.ngfwPrivateSubnet.id
-//         }
-//         unTrustSubnet: {
-//           resourceId: network.subnets.ngfwPublicSubnet.id
-//         }
-//         ipOfTrustSubnetForUdr: {
-//           address: network.subnets.ngfwPrivateSubnet.properties.addressPrefixes[0]
-//         }
-        
-//       }
-//       networkType: networkType
-//       publicIps: [
-//         {
-//           resourceId: ngfwPublicIp.id
-//         }
-//       ]
-//       enableEgressNat: '${sourceNATEnabled}'
-//       egressNatIp: sourceNATEnabled ? [
-//         {
-//           resourceId: sourceNATPublicIp.id
-//         }
-//       ]: null
-//     }
-//     associatedRulestack: {
-//       resourceId: localRuleStacks.id
-//       location: location
-//       // rulestackId: 'SUBSCRIPTION~dbf14654-41b8-4a18-bcdd-a200d053975f~RG~nha-hub-networking~STACK~nha-hub-PaloAltoCloudNGFW-lrs'    
-//     }
-//     dnsSettings: {
-//       enableDnsProxy: '${enableDnsProxy}'
-//       enabledDnsType: 'CUSTOM'
-//     }
-//     isPanoramaManaged: 'FALSE'
-//     planData: {
-//       usageType: 'PAYG'
-//       billingCycle: 'MONTHLY'
-//       planId: 'panw-cloud-ngfw-payg'
-//     }
-//     marketplaceDetails: {
-//       offerId: 'pan_swfw_cloud_ngfw'
-//       publisherId: 'paloaltonetworks'
-//     }
-//   }
   
-// }
+}
 
 // resource paloAltoFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09-01' = {
 //   name: name
