@@ -31,6 +31,11 @@ param sourceNATEnabled bool
 param resourceGroupName string
 
 
+resource ngfwManagedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
+  name: 'ngfw-managed-identity'
+  location: location
+}
+
 resource ngfwPublicIp 'Microsoft.Network/publicIPAddresses@2021-02-01' = {
   name: '${name}-PublicIp'
   location: location
@@ -113,7 +118,10 @@ resource resDeploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' 
   location: location
   kind: 'AzurePowerShell'
   identity: {
-    type: 'SystemAssigned'    
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${ngfwManagedIdentity.id}' : {}
+    }
   }
   properties: {
     azPowerShellVersion: '10.4.1'
