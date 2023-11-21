@@ -15,8 +15,8 @@ param zones array
 @description('virtual network ID that NGFW reside in')
 param vnetId string
 
-@description('Network configuration for the spoke virtual network.  It includes name, dnsServers, address spaces, vnet peering and subnets.')
-param network object
+// @description('Network configuration for the spoke virtual network.  It includes name, dnsServers, address spaces, vnet peering and subnets.')
+// param network object
 
 @description('Network Type for NGFW: VNET or VWAN')
 param networkType string
