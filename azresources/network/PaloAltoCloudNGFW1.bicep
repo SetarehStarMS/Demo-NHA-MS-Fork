@@ -24,8 +24,8 @@ param networkType string
 @description('Whether to enable Source NAT for NGFW with different public IP Address.')
 param sourceNATEnabled bool
 
-@description('If enableDnsProxy')
-param enableDnsProxy bool
+// @description('If enableDnsProxy')
+// param enableDnsProxy bool
 
 
 resource ngfwPublicIp 'Microsoft.Network/publicIPAddresses@2021-02-01' = {
@@ -71,77 +71,6 @@ resource localRuleStacks 'PaloAltoNetworks.Cloudngfw/localRulestacks@2023-09-01'
  }
 }
 
-var networkProfile = [
-  {
-    networkProfile: {
-      vnetConfiguration: {
-        vnet: {
-          resourceId: vnetId
-        }
-        trustSubnet: {
-          resourceId: network.subnets.ngfwPrivateSubnet.id
-        }
-        unTrustSubnet: {
-          resourceId: network.subnets.ngfwPublicSubnet.id
-        }
-        ipOfTrustSubnetForUdr: {
-          address: network.subnets.ngfwPrivateSubnet.properties.addressPrefixes[0]
-        }
-        
-      }
-      networkType: networkType
-      publicIps: [
-        {
-          resourceId: ngfwPublicIp.id
-        }
-      ]
-      enableEgressNat: '${sourceNATEnabled}'
-      egressNatIp: sourceNATEnabled ? [
-        {
-          resourceId: sourceNATPublicIp.id
-        }
-      ]: null
-    }
-  }
-]
-
-resource resDeploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
-  name: 'create-spn-for-kv'
-  location: location
-  kind: 'AzurePowerShell'
-  identity: {
-    type: 'SystemAssigned'    
-  }
-  properties: {
-    azPowerShellVersion: '9.0'
-    retentionInterval: 'P1D'
-    arguments: '-Name ${name} -resourceGroupName ${resourceGroupName} -Location ${location} -NetworkProfile ${networkProfile} -AssociatedRulestackResourceId ${localRuleStacks.id} -AssociatedRulestackLocation ${location} -DnsSettingEnableDnsProxy ${enableDnsProxy} -DnsSettingEnabledDnsType CUSTOM -MarketplaceDetailOfferId "pan_swfw_cloud_ngfw" -MarketplaceDetailPublisherId "paloaltonetworks" -PlanDataBillingCycle "MONTHLY" -PlanDataPlanId "panw-cloud-ngfw-payg" '
-    scriptContent: '''
-      $spnAppId = New-AzADServicePrincipal -DisplayName "my-keyvault-spn" | Select-Object -ExpandProperty AppId
-      $DeploymentScriptOutputs = @{}
-      $DeploymentScriptOutputs['appId'] = $spnAppId
-    '''
-  }
-}
-
-$networkProfile = New-AzPaloAltoNetworksProfileObject -EnableEgressNat DISABLED -PublicIP $publicIP -NetworkType VNET -VnetConfigurationIPOfTrustSubnetForUdrAddress 10.1.1.0/24 -VnetConfigurationTrustSubnetResourceId /"subscriptions/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX/resourceGroups/azps_test_group_pan/providers/Microsoft.Network/virtualNetworks/azps-network/subnets/subnet1" -VnetConfigurationUnTrustSubnetResourceId "/subscriptions/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX/resourceGroups/azps_test_group_pan/providers/Microsoft.Network/virtualNetworks/azps-network/subnets/subnet2" -VnetResourceId "/subscriptions/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX/resourceGroups/azps_test_group_pan/providers/Microsoft.Network/virtualNetworks/azps-network"
-
-
-New-AzPaloAltoNetworksFirewall `
- -Name azps-firewall `
- -ResourceGroupName azps_test_group_pan `
- -Location eastus `
- -MarketplaceDetailOfferId "pan_swfw_cloud_ngfw" `
- -MarketplaceDetailPublisherId "paloaltonetworks" `
- -NetworkProfile $networkProfile `
- -PlanDataBillingCycle "MONTHLY" `
- -PlanDataPlanId "cloud-ngfw-payg-test" `
- -AssociatedRulestackResourceId "/subscriptions/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX/resourceGroups/azps_test_group_pan/providers/PaloAltoNetworks.Cloudngfw/localRulestacks/azps-panlr" `
- -DnsSettingDnsServer $publicIP `
- -DnsSettingEnableDnsProxy DISABLED `
- -DnsSettingEnabledDnsType CUSTOM `
- -AssociatedRulestackLocation eastus
-
 resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09-01' = {
   name: name
   location: location
@@ -168,7 +97,7 @@ resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09
           resourceId: ngfwPublicIp.id
         }
       ]
-      enableEgressNat: '${sourceNATEnabled}'
+      enableEgressNat: 'ENABLED'
       egressNatIp: sourceNATEnabled ? [
         {
           resourceId: sourceNATPublicIp.id
@@ -181,7 +110,7 @@ resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09
       // rulestackId: 'SUBSCRIPTION~dbf14654-41b8-4a18-bcdd-a200d053975f~RG~nha-hub-networking~STACK~nha-hub-PaloAltoCloudNGFW-lrs'    
     }
     dnsSettings: {
-      enableDnsProxy: '${enableDnsProxy}'
+      enableDnsProxy: 'DISABLED'
       enabledDnsType: 'CUSTOM'
     }
     isPanoramaManaged: 'FALSE'
