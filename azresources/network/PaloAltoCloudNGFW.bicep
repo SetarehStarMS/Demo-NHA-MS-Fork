@@ -95,13 +95,13 @@ var networkProfile = [
       networkType: networkType
       publicIps: [
         {
-          resourceId: ngfwPublicIp.id
+          resourceId: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/publicIPAddresses/nha-hub-PaloAltoCloudNGFW-PublicIp'
         }
       ]
       enableEgressNat: 'DISABLED'
       egressNatIp: sourceNATEnabled ? [
         {
-          resourceId: sourceNATPublicIp.id
+          resourceId: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/publicIPAddresses/nha-hub-PaloAltoCloudNGFW-SourceNAT-PublicIp'
         }
       ]: null
     }
@@ -133,6 +133,8 @@ resource resDeploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' 
        [BillingCycle] $PlanDataBillingCycle
        [string] $PlanDataPlanId
        )
+    
+     Write-Host $NetworkProfile
      $PaloAltoClloudNGFW = New-AzPaloAltoNetworksFirewall -Name $Name -ResourceGroupName $resourceGroupName -Location $location -NetworkProfile $networkProfile -AssociatedRulestackId $AssociatedRulestackResourceId -AssociatedRulestackLocation $AssociatedRulestackLocation -DnsSettingEnabledDnsType $DnsSettingEnabledDnsType -DnsSettingEnableDnsProxy $DnsSettingEnableDnsProxy -MarketplaceDetailOfferId $MarketplaceDetailOfferId -MarketplaceDetailPublisherId $MarketplaceDetailPublisherId -PlanDataBillingCycle $PlanDataBillingCycle -PlanDataPlanId $PlanDataPlanId
      $ResourceExists = $null -ne $PaloAltoClloudNGFW
      $DeploymentScriptOutputs = @{}
