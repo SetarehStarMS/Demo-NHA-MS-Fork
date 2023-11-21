@@ -108,11 +108,11 @@ resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09
         }
       ]: null
     }
-    associatedRulestack: {
-      resourceId: localRuleStacks.id
-      location: location
-      // rulestackId: 'SUBSCRIPTION~dbf14654-41b8-4a18-bcdd-a200d053975f~RG~nha-hub-networking~STACK~nha-hub-PaloAltoCloudNGFW-lrs'    
-    }
+    // associatedRulestack: {
+    //   resourceId: localRuleStacks.id
+    //   location: location
+    //   // rulestackId: 'SUBSCRIPTION~dbf14654-41b8-4a18-bcdd-a200d053975f~RG~nha-hub-networking~STACK~nha-hub-PaloAltoCloudNGFW-lrs'    
+    // }
     dnsSettings: {
       enableDnsProxy: 'DISABLED'
       enabledDnsType: 'CUSTOM'
