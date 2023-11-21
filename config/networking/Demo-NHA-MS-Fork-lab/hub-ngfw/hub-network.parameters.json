@@ -48,13 +48,7 @@
     },
     "subscriptionRoleAssignments": {
       "value": [
-        {
-          "comments": "Custom NetOps Role",
-          "securityGroupObjectIds": [
-            
-          ],
-          "roleDefinitionId": "c3eb0af1-ae5f-56b7-97cc-bc87fc7d842a"
-        }
+      
       ]
     },
     "subscriptionBudget": {
