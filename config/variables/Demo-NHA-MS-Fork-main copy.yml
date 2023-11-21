@@ -4,10 +4,10 @@ variables:
   #var-hubnetwork-azfw-configurationFileName: hub-azfw/hub-network.parameters.json
   #var-hubnetwork-nva-configurationFileName: hub-nva/hub-network.parameters.json
   var-hubnetwork-ngfw-configurationFileName: hub-ngfw/hub-network.parameters.json
-  var-hubnetwork-subscriptionId: 83b401c0-df5f-48fa-80c2-7087954217e8
+  var-hubnetwork-subscriptionId: ae84a0bd-7c13-4453-8557-71b544c64c81
   #var-hubnetwork-azfwPolicy-configurationFileName: hub-azfw-policy/azure-firewall-policy.parameters.json
   #var-logging-managementGroupId: BCHealth-Platform-Management
-  var-logging-subscriptionId: 83b401c0-df5f-48fa-80c2-7087954217e8
+  var-logging-subscriptionId: ae84a0bd-7c13-4453-8557-71b544c64c81
   deploymentRegion: canadacentral
   #var-NHA-managementGroupId: BCHealth-NorthernHealth
   #var-BCH-managementGroupId: BCHealth
@@ -258,5 +258,5 @@ variables:
   var-logging-region: canadacentral
   var-identity-configurationFileName: identity.parameters.json
   var-identity-region: canadacentral
-  var-identity-subscriptionId: 83b401c0-df5f-48fa-80c2-7087954217e8
+  var-identity-subscriptionId: ae84a0bd-7c13-4453-8557-71b544c64c81
 
