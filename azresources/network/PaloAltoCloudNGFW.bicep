@@ -82,13 +82,13 @@ var networkProfile = [
           resourceId: vnetId
         }
         trustSubnet: {
-          resourceId: network.subnets.ngfwPrivateSubnet.id
+          resourceId: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet/subnets/NGFWPrivateSubnet'
         }
         unTrustSubnet: {
-          resourceId: network.subnets.ngfwPublicSubnet.id
+          resourceId: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet/subnets/NGFWPublicSubnet'
         }
         ipOfTrustSubnetForUdr: {
-          address: network.subnets.ngfwPrivateSubnet.properties.addressPrefixes[0]
+          address: '10.18.2.1'
         }
         
       }
