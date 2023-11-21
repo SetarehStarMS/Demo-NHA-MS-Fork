@@ -111,7 +111,6 @@ resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09
     associatedRulestack: {
       resourceId: localRuleStacks.id
       location: location
-      Etag: localRuleStacks.properties.panEtag
       // rulestackId: 'SUBSCRIPTION~dbf14654-41b8-4a18-bcdd-a200d053975f~RG~nha-hub-networking~STACK~nha-hub-PaloAltoCloudNGFW-lrs'    
     }
     dnsSettings: {
@@ -128,6 +127,7 @@ resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09
       offerId: 'pan_swfw_cloud_ngfw'
       publisherId: 'paloaltonetworks'
     }
+    panEtag: 'bdbd24a0-84f5-11ee-95d2-8ee308f3e52f'
   }
   
 }
