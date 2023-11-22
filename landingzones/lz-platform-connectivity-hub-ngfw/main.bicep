@@ -389,6 +389,8 @@ module PaloAltoCloudNGFW '../../azresources/network/PaloAltoCloudNGFW.bicep' = {
     enableDnsProxy: hub.PaloAltoCloudNGFW.enableDnsProxy
     sourceNATEnabled: hub.PaloAltoCloudNGFW.sourceNATEnabled
     resourceGroupName: hub.resourceGroupName
+    ipOfTrustSubnetForUdr: hub.PaloAltoCloudNGFW.ipOfTrustSubnetForUdr
+    
   }
 }
 

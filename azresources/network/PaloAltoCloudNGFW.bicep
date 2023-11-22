@@ -30,6 +30,9 @@ param enableDnsProxy string
 @description('If enableDnsProxy')
 param resourceGroupName string
 
+@description('ipOfTrustSubnetForUdr')
+param ipOfTrustSubnetForUdr string
+
 
 resource ngfwPublicIp 'Microsoft.Network/publicIPAddresses@2021-02-01' = {
   name: '${name}-PublicIp'
@@ -127,7 +130,7 @@ resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09
           resourceId: ngfwPublicSubnet.id
         }
         ipOfTrustSubnetForUdr: {
-          address: ngfwPriavteSubnet.properties.addressPrefixes[3]
+          address: ipOfTrustSubnetForUdr
         }
         
       }
