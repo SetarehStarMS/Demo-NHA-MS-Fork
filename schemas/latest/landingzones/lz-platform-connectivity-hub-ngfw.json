@@ -346,7 +346,7 @@
           "type": "boolean"
         },  
         "enableDnsProxy": {
-          "type": "boolean"
+          "type": "string"
         },       
         "networkType": {
           "type": "string"
