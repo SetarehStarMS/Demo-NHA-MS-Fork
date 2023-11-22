@@ -390,6 +390,7 @@ module PaloAltoCloudNGFW '../../azresources/network/PaloAltoCloudNGFW.bicep' = {
     sourceNATEnabled: hub.PaloAltoCloudNGFW.sourceNATEnabled
     resourceGroupName: hub.resourceGroupName
     ipOfTrustSubnetForUdr: hub.PaloAltoCloudNGFW.ipOfTrustSubnetForUdr
+    // logAnalyticsWorkspaceResourceId: logAnalyticsWorkspaceResourceId
     
   }
 }
