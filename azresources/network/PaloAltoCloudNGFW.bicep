@@ -92,7 +92,7 @@ resource ngfwPriavteSubnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01
 output ngfwPriavteSubnetResourceId string = ngfwPriavteSubnet.id
 
 resource ngfwPublicSubnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing =  {
-  name : network.subnets.ngfwPrivateSubnet.name
+  name : network.subnets.ngfwPublicSubnet.name
   parent: vnet
 }
 output ngfwPublicSubnetResourceId string = ngfwPublicSubnet.id
