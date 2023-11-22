@@ -15,8 +15,8 @@ param zones array
 @description('virtual network ID that NGFW reside in')
 param vnetId string
 
-// @description('Network configuration for the spoke virtual network.  It includes name, dnsServers, address spaces, vnet peering and subnets.')
-// param network object
+@description('Network configuration for the hub virtual network.  It includes name, dnsServers, address spaces, vnet peering and subnets.')
+param network object
 
 @description('Network Type for NGFW: VNET or VWAN')
 param networkType string
@@ -26,6 +26,9 @@ param sourceNATEnabled bool
 
 // @description('If enableDnsProxy')
 // param enableDnsProxy bool
+
+@description('If enableDnsProxy')
+param resourceGroupName string
 
 
 resource ngfwPublicIp 'Microsoft.Network/publicIPAddresses@2021-02-01' = {
@@ -73,9 +76,38 @@ resource localRuleStacks 'PaloAltoNetworks.Cloudngfw/localRulestacks@2023-09-01'
 
 resource lrs 'PaloAltoNetworks.Cloudngfw/localRulestacks@2023-09-01' existing = {
   name: '${name}-lrs'
+  scope: resourceGroup(resourceGroupName)
+}
+output LocalRuleStackID string = lrs.id
+
+resource vnet 'Microsoft.Network/virtualNetworks@2021-02-01' existing ={
+  name: network.name
+  scope: resourceGroup(resourceGroupName)
 }
 
-output LocalRuleStackID string = lrs.id
+resource ngfwPriavteSubnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing =  {
+  name : network.subnets.ngfwPrivateSubnet.name
+  parent: vnet
+}
+output ngfwPriavteSubnetResourceId string = ngfwPriavteSubnet.id
+
+resource ngfwPublicSubnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing =  {
+  name : network.subnets.ngfwPrivateSubnet.name
+  parent: vnet
+}
+output ngfwPublicSubnetResourceId string = ngfwPublicSubnet.id
+
+resource ngfwPip 'Microsoft.Network/publicIPAddresses@2021-02-01' existing = {
+  name: ngfwPublicIp.name
+  scope: resourceGroup(resourceGroupName)
+}
+output ngfwPipResourceID string = ngfwPip.id
+
+resource ngfwSourceNATPip 'Microsoft.Network/publicIPAddresses@2021-02-01' existing = {
+  name: sourceNATPublicIp.name
+  scope: resourceGroup(resourceGroupName)
+}
+output ngfwSourceNATPipResourceID string = ngfwSourceNATPip.id
 
 resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09-01' = {
   name: name
@@ -88,14 +120,16 @@ resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09
         }
         trustSubnet: {
           // resourceId: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet/subnets/NGFWPrivateSubnet'
-          resourceId: '/subscriptions/83b401c0-df5f-48fa-80c2-7087954217e8/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet/subnets/NGFWPrivateSubnet'
+          //resourceId: '/subscriptions/83b401c0-df5f-48fa-80c2-7087954217e8/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet/subnets/NGFWPrivateSubnet'
+          resourceId: ngfwPriavteSubnet.id
         }
         unTrustSubnet: {
           // resourceId: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet/subnets/NGFWPublicSubnet'
-          resourceId: '/subscriptions/83b401c0-df5f-48fa-80c2-7087954217e8/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet/subnets/NGFWPublicSubnet'
+          //resourceId: '/subscriptions/83b401c0-df5f-48fa-80c2-7087954217e8/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet/subnets/NGFWPublicSubnet'
+          resourceId: ngfwPublicSubnet.id
         }
         ipOfTrustSubnetForUdr: {
-          address: '10.18.2.1'
+          address: '10.18.2.4'
         }
         
       }
@@ -103,14 +137,16 @@ resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09
       publicIps: [
         {
           // resourceId: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/publicIPAddresses/nha-hub-PaloAltoCloudNGFW-PublicIp'
-          resourceId: '/subscriptions/83b401c0-df5f-48fa-80c2-7087954217e8/resourceGroups/nha-hub-networking/providers/Microsoft.Network/publicIPAddresses/nha-hub-PaloAltoCloudNGFW-PublicIp'
+          //resourceId: '/subscriptions/83b401c0-df5f-48fa-80c2-7087954217e8/resourceGroups/nha-hub-networking/providers/Microsoft.Network/publicIPAddresses/nha-hub-PaloAltoCloudNGFW-PublicIp'
+          resourceId: ngfwPip.id
         }
       ]
       enableEgressNat: 'ENABLED'
       egressNatIp: sourceNATEnabled ? [
         {
           // resourceId: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/publicIPAddresses/nha-hub-PaloAltoCloudNGFW-SourceNAT-PublicIp'
-          resourceId: '/subscriptions/83b401c0-df5f-48fa-80c2-7087954217e8/resourceGroups/nha-hub-networking/providers/Microsoft.Network/publicIPAddresses/nha-hub-PaloAltoCloudNGFW-SourceNAT-PublicIp'
+          //resourceId: '/subscriptions/83b401c0-df5f-48fa-80c2-7087954217e8/resourceGroups/nha-hub-networking/providers/Microsoft.Network/publicIPAddresses/nha-hub-PaloAltoCloudNGFW-SourceNAT-PublicIp'
+          resourceId: ngfwSourceNATPip.id
         }
       ]: null
     }
