@@ -75,6 +75,8 @@ resource lrs 'PaloAltoNetworks.Cloudngfw/localRulestacks@2023-09-01' existing = 
   name: '${name}-lrs'
 }
 
+output LocalRuleStackID string = lrs.id
+
 resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09-01' = {
   name: name
   location: location
