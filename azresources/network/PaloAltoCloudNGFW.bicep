@@ -33,6 +33,8 @@ param resourceGroupName string
 @description('ipOfTrustSubnetForUdr')
 param ipOfTrustSubnetForUdr string
 
+// @description('logAnalyticsWorkspaceResourceId')
+// param logAnalyticsWorkspaceResourceId string
 
 resource ngfwPublicIp 'Microsoft.Network/publicIPAddresses@2021-02-01' = {
   name: '${name}-PublicIp'
