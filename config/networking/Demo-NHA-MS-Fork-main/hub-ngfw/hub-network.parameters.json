@@ -108,7 +108,7 @@
           ],
           "sourceNATEnabled": true,
           "networkType": "VNET",
-          "enableDnsProxy": false
+          "enableDnsProxy": "DISABLED"
           
         },
         "network": {
