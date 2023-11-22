@@ -350,15 +350,18 @@
         },       
         "networkType": {
           "type": "string"
+        },
+        "ipOfTrustSubnetForUdr": {
+          "type": "string"
         }
-              
       },
       "required": [
         "name",
         "availabilityZones",
         "sourceNATEnabled",
         "enableDnsProxy",
-        "networkType"
+        "networkType",
+        "ipOfTrustSubnetForUdr"
       ]
     }
   }

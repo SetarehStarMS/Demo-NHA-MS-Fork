@@ -108,8 +108,8 @@
           ],
           "sourceNATEnabled": true,
           "networkType": "VNET",
-          "enableDnsProxy": "DISABLED"
-          
+          "enableDnsProxy": "DISABLED",
+          "ipOfTrustSubnetForUdr": "10.18.2.4"          
         },
         "network": {
           "name": "hub-vnet",
