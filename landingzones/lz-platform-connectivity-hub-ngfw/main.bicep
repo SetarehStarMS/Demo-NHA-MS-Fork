@@ -384,11 +384,11 @@ module PaloAltoCloudNGFW '../../azresources/network/PaloAltoCloudNGFW.bicep' = {
     name: hub.PaloAltoCloudNGFW.name
     zones: hub.PaloAltoCloudNGFW.availabilityZones
     vnetId: hubVnet.outputs.vnetId
-    // network: hub.network
+    network: hub.network
     networkType: hub.PaloAltoCloudNGFW.networkType
     // enableDnsProxy: hub.PaloAltoCloudNGFW.enableDnsProxy
     sourceNATEnabled: hub.PaloAltoCloudNGFW.sourceNATEnabled
-    // resourceGroupName: hub.resourceGroupName
+    resourceGroupName: hub.resourceGroupName
   }
 }
 
