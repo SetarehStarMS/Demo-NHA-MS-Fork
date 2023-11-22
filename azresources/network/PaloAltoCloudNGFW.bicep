@@ -127,7 +127,7 @@ resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09
           resourceId: ngfwPublicSubnet.id
         }
         ipOfTrustSubnetForUdr: {
-          address: network.subnets.ngfwPrivateSubnet.properties.addressPrefixes[3]
+          address: ngfwPriavteSubnet.properties.addressPrefixes[3]
         }
         
       }
