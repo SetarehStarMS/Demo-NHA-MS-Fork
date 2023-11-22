@@ -168,8 +168,7 @@ resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09
     marketplaceDetails: {
       offerId: 'pan_swfw_cloud_ngfw'
       publisherId: 'paloaltonetworks'
-    }
-    panEtag: '9800cb8e-8899-11ee-92ff-8ee308f3e52f'
+    }    
   }
   
 }
