@@ -355,7 +355,7 @@ module udrHub '../../azresources/network/udr/udr-custom.bicep' = {
   scope: rgHubVnet
   params: {
     location: location
-    name: 'HubUdr'
+    name: '${hub.resourceGroupName}-udr'
     routes: routes
   }
 }

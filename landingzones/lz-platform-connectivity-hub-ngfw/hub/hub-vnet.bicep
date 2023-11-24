@@ -84,13 +84,13 @@ param ddosStandardPlanId string
 module nsgbastion '../../../azresources/network/nsg/nsg-bastion.bicep' = {
   name: 'deploy-nsg-AzureBastionNsg'
   params: {
-    name: 'AzureBastionNsg'
+    name: '${hubNetwork.name}-AzureBastion-nsg'
     location: location
   }
 }
 
 resource nsg 'Microsoft.Network/networkSecurityGroups@2021-02-01' = [for subnet in hubNetwork.subnets.optional: if (subnet.nsg.enabled) {
-  name: '${subnet.name}Nsg'
+  name: '${hubNetwork.name}-${subnet.name}-nsg'
   location: location
   properties: {
     securityRules: []
