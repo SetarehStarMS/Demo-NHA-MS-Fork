@@ -192,6 +192,7 @@ param network object
 @description('Get the DNS Private Resolver enabled/disabled setting so the associated subnets can be optionally deployed based on the value.')
 param deployDNSResolver object
 
+
 var hubVnetIdSplit = split(hubNetwork.virtualNetworkId, '/')
 
 
@@ -226,7 +227,7 @@ var routesToHub = [
 
 // Network Security Groups
 resource nsg 'Microsoft.Network/networkSecurityGroups@2021-02-01' = [for subnet in network.subnets.optional: if (subnet.nsg.enabled) {
-  name: '${subnet.name}Nsg'
+  name: '${network.name}-${subnet.name}-Nsg'
   location: location
   properties: {
     securityRules: []
@@ -236,7 +237,7 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2021-02-01' = [for subnet 
 module nsgDomainControllers '../../azresources/network/nsg/nsg-empty.bicep' = {
   name: 'deploy-nsg-DomainControllers'
   params: {
-    name: '${network.subnets.domainControllers.name}Nsg'
+    name: '${network.name}-${network.subnets.domainControllers.name}-Nsg'
     location: location
   }
 }
@@ -244,7 +245,7 @@ module nsgDomainControllers '../../azresources/network/nsg/nsg-empty.bicep' = {
 module nsgDnsResolverInbound '../../azresources/network/nsg/nsg-empty.bicep' = if (deployDNSResolver.enabled) {
   name: 'deploy-nsg-dnsResolverInbound'
   params: {
-    name: '${network.subnets.dnsResolverInbound.name}Nsg'
+    name: '${network.name}-${network.subnets.dnsResolverInbound.name}-Nsg'
     location: location
   }
 }
@@ -252,14 +253,14 @@ module nsgDnsResolverInbound '../../azresources/network/nsg/nsg-empty.bicep' = i
 module nsgDnsResolverOutbound '../../azresources/network/nsg/nsg-empty.bicep' = if (deployDNSResolver.enabled) {
   name: 'deploy-nsg-dnsResolverOutbound'
   params: {
-    name: '${network.subnets.dnsResolverOutbound.name}Nsg'
+    name: '${network.name}-${network.subnets.dnsResolverOutbound.name}-Nsg'
     location: location
   }
 }
 
 // Route Tables
 resource udr 'Microsoft.Network/routeTables@2021-02-01' = {
-  name: 'RouteTable'
+  name: '${resourceGroup().name}-udr'
   location: location
   properties: {
     routes: network.peerToHubVirtualNetwork ? routesToHub : null
