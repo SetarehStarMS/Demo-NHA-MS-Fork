@@ -304,7 +304,7 @@ module vnet 'networking.bicep' = if (network.deployVnet) {
     hubNetwork: hubNetwork
     network: network
     location: location
-    deployDNSResolver: privateDnsResolver
+    deployDNSResolver: privateDnsResolver    
   }
 }
 

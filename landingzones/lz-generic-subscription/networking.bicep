@@ -223,7 +223,7 @@ var routesToHub = [
 
 // Network Security Groups
 resource nsg 'Microsoft.Network/networkSecurityGroups@2021-02-01' = [for subnet in network.subnets: if (subnet.nsg.enabled) {
-  name: '${subnet.name}Nsg'
+  name: '${network.name}-${subnet.name}-nsg'
   location: location
   properties: {
     securityRules: []
@@ -232,7 +232,7 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2021-02-01' = [for subnet 
 
 // Route Tables
 resource udr 'Microsoft.Network/routeTables@2021-02-01' = {
-  name: 'RouteTable'
+  name:  '${resourceGroup().name}-udr'
   location: location
   properties: {
     routes: network.peerToHubVirtualNetwork ? routesToHub : null
