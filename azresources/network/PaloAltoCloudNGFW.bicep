@@ -36,6 +36,18 @@ param ipOfTrustSubnetForUdr string
 // @description('logAnalyticsWorkspaceResourceId')
 // param logAnalyticsWorkspaceResourceId string
 
+// Create Log Analytics Workspace for PaloAlto Cloud NGFW
+resource workspace 'Microsoft.OperationalInsights/workspaces@2020-08-01' = {
+  name: '${name}-log'
+  location: location
+  properties: {
+    sku: {
+      name: 'PerNode'
+    }
+    retentionInDays: 730
+  }
+}
+
 resource ngfwPublicIp 'Microsoft.Network/publicIPAddresses@2021-02-01' = {
   name: '${name}-PublicIp'
   location: location
