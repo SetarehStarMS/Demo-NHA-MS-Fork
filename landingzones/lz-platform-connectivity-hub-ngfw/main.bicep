@@ -423,6 +423,21 @@ module bastion '../../azresources/network/bastion.bicep' = if (hub.bastion.enabl
   }
 }
 
+// Create virtual network gateway
+module vNetGateway '../../azresources/network/virtual-network-gateway.bicep' = if (hub.virtualNetworkGateway.enabled) {
+  name: 'deploy-virtual-network-gateway'
+  scope: rgHubVnet
+  params: {
+    location: location
+    name: hub.virtualNetworkGateway.name
+    zones: hub.virtualNetworkGateway.availabilityZones
+    vNetResourceId: hubVnet.outputs.vnetId
+    gatewayType: hub.virtualNetworkGateway.gatewayType
+    skuName: hub.virtualNetworkGateway.skuName
+    allowRemoteVnetTraffic: hub.virtualNetworkGateway.allowRemoteVnetTraffic        
+  }
+}
+
 // // Non production traffic - NVAs
 // module nonProductionNVA 'ngfw/nva-vm.bicep' = [for (virtualMachine, virtualMachines) in hub.nvaFirewall.nonProduction.virtualMachines: if (hub.nvaFirewall.nonProduction.deployVirtualMachines) {
 //   name: 'deploy-nva-nonprod-${virtualMachine.name}'

@@ -152,6 +152,9 @@
             "PaloAltoCloudNGFW": {
               "$ref": "#/definitions/PaloAltoCloudNGFW"
             },
+            "virtualNetworkGateway": {
+              "$ref": "#/definitions/virtualNetworkGateway"
+            },
             "network": {
               "type": "object",
               "properties": {
@@ -362,6 +365,36 @@
         "enableDnsProxy",
         "networkType",
         "ipOfTrustSubnetForUdr"
+      ]
+    },
+    "virtualNetworkGateway": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "availabilityZones": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "enabled": {
+          "type": "boolean"
+        },  
+        "gatewayType": {
+          "type": "string"
+        },       
+        "skuName": {
+          "type": "string"
+        },
+        "allowRemoteVnetTraffic": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "enabled"
       ]
     }
   }
