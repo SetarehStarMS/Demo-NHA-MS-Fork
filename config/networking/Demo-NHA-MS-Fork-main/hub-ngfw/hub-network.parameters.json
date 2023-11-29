@@ -111,6 +111,26 @@
           "enableDnsProxy": "DISABLED",
           "ipOfTrustSubnetForUdr": "10.18.2.4"          
         },
+        "virtualNetworkGateway": {
+          "name": "nha-hub-virtualNetworkGateway",
+          "enabled":true,
+          "availabilityZones": [
+            "1",
+            "2",
+            "3"
+          ],
+          "gatewayType": "Vpn",
+          "skuName": "VpnGw3AZ",
+          "allowRemoteVnetTraffic": true,
+          "activeActive": false,
+          "enableBgp": false
+        },
+        "S2SVPNConnection": {
+          "name": "nha-hub-S2SVPNConnection",
+          "localNetworkGatewayName": "nha-hub-localNetworkGateway",
+          "enabled":true,
+          "localAddressPrefixes": ["20.0.0.0/24,30.0.0.0/24"]
+        },
         "network": {
           "name": "hub-vnet",
           "addressPrefixes": [

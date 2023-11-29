@@ -127,8 +127,15 @@
           ],
           "gatewayType": "Vpn",
           "skuName": "VpnGw3AZ",
-          "allowRemoteVnetTraffic": true
-       
+          "allowRemoteVnetTraffic": true,
+          "activeActive": false,
+          "enableBgp": false
+        },
+        "S2SVPNConnection": {
+          "name": "nha-hub-S2SVPNConnection",
+          "localNetworkGatewayName": "nha-hub-localNetworkGateway",
+          "enabled":true,
+          "localAddressPrefixes": ["20.0.0.0/24,30.0.0.0/24"]
         },
         "network": {
           "name": "hub-vnet",

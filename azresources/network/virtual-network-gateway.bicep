@@ -22,7 +22,7 @@ param gatewayPipName string = '${name}-pip1'
 param activeGatewayPipName string = '${name}-pip2'
 
 @description('Optional. Value to specify if the Gateway should be deployed in active-active or active-passive configuration.')
-param activeActive bool = true
+param activeActive bool = false
 
 @description('Required. Specifies the gateway type. E.g. VPN, ExpressRoute.')
 @allowed([
@@ -69,7 +69,7 @@ param skuName string
 param vpnType string = 'RouteBased'
 
 @description('Optional. Value to specify if BGP is enabled or not.')
-param enableBgp bool = true
+param enableBgp bool = false
 
 @description('Optional. ASN value.')
 param asn int = 65815

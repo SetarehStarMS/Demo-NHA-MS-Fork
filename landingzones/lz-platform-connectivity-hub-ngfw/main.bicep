@@ -434,7 +434,28 @@ module vNetGateway '../../azresources/network/virtual-network-gateway.bicep' = i
     vNetResourceId: hubVnet.outputs.vnetId
     gatewayType: hub.virtualNetworkGateway.gatewayType
     skuName: hub.virtualNetworkGateway.skuName
-    allowRemoteVnetTraffic: hub.virtualNetworkGateway.allowRemoteVnetTraffic        
+    allowRemoteVnetTraffic: hub.virtualNetworkGateway.allowRemoteVnetTraffic   
+    activeActive: hub.virtualNetworkGateway.activeActive
+    enableBgp: hub.virtualNetworkGateway.enableBgp     
+  }
+}
+
+// Get IP of VPN Gateway 
+resource vNetGatewayPip 'Microsoft.Network/publicIPAddresses@2023-05-01' existing = if (hub.S2SVPNConnection.enabled) {
+  name: hub.virtualNetworkGateway.name
+  scope: rgHubVnet
+}
+output vNetGatewayPipIp string = vNetGatewayPip.properties.ipAddress
+
+// Create S2S VPN Connection
+module S2SVPNConnection '../../azresources/network/s2s-vpn-connection.bicep' = if (hub.S2SVPNConnection.enabled) {
+  name: 'deploy-s2s-vpn-connection'
+  scope: rgHubVnet
+  params: {
+    location: location
+    localNetworkGatewayName: hub.S2SVPNConnection.localNetworkGatewayName
+    localAddressPrefixes: hub.S2SVPNConnection.localAddressPrefixes
+    localGatewayPublicIpAddress: vNetGatewayPip.properties.ipAddress
   }
 }
 

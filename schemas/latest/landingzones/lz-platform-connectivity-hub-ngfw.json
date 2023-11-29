@@ -155,6 +155,9 @@
             "virtualNetworkGateway": {
               "$ref": "#/definitions/virtualNetworkGateway"
             },
+            "S2SVPNConnection": {
+              "$ref": "#/definitions/S2SVPNConnection"
+            },
             "network": {
               "type": "object",
               "properties": {
@@ -390,6 +393,33 @@
         },
         "allowRemoteVnetTraffic": {
           "type": "boolean"
+        },
+        "activeActive": {
+          "type": "boolean"
+        },
+        "enableBgp": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "enabled"
+      ]
+    },
+    "S2SVPNConnection": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },  
+        "localNetworkGatewayName": {
+          "type": "string"
+        },       
+        "localAddressPrefixes": {
+          "type": "array"
         }
       },
       "required": [
