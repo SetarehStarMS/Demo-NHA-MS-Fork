@@ -441,14 +441,14 @@ module vNetGateway '../../azresources/network/virtual-network-gateway.bicep' = i
 }
 
 // Get IP of VPN Gateway 
-resource vNetGatewayPip 'Microsoft.Network/publicIPAddresses@2023-05-01' existing = if (hub.S2SVPNConnection.enabled) {
+resource vNetGatewayPip 'Microsoft.Network/publicIPAddresses@2023-05-01' existing = if (hub.virtualNetworkGateway.enabled) {
   name: hub.virtualNetworkGateway.name
   scope: rgHubVnet
 }
 output vNetGatewayPipIp string = vNetGatewayPip.properties.ipAddress
 
 // Create S2S VPN Connection
-module VPNConnection '../../azresources/network/s2s-vpn-connection.bicep' = if (hub.S2SVPNConnection.enabled) {
+module VPNConnection '../../azresources/network/s2s-vpn-connection.bicep' = if (hub.virtualNetworkGateway.enabled) {
   name: 'deploy-s2s-vpn-connection'
   scope: rgHubVnet
   params: {
