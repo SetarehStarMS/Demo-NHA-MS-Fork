@@ -483,8 +483,8 @@ module virtualNetworkGatewayConnection '../../azresources/network/virtual-networ
     location: location
     connectionName: hub.vNetGatewayConnection.connectionName
     connectionType: hub.vNetGatewayConnection.connectionType
-    virtualNetworkGateway1: vNetGateway.outputs
-    localNetworkGateway2: localNetworkGateway.outputs
+    virtualNetworkGateway1: vNetGateway
+    localNetworkGateway2: localNetworkGateway
     vpnSharedKey: hub.vNetGatewayConnection.vpnSharedKey
     enableBgp: hub.vNetGatewayConnection.enableBgp
   }
