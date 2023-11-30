@@ -125,13 +125,18 @@
           "activeActive": false,
           "enableBgp": false
         },
-        "S2SVPNConnection": {
-          "name": "nha-hub-S2SVPNConnection",
+        "localNetworkGateway": {
           "localNetworkGatewayName": "nha-hub-localNetworkGateway",
-          "enabled":true,
-          "localAddressPrefixes": ["20.0.0.0/24,30.0.0.0/24"],
-          "vpnConnectionName": "nha-hub-connection",
-          "sharedKey": "ddd"
+          "enabled": true,
+          "localAddressPrefixes": ["20.0.0.0/24","30.0.0.0/24"],
+          "localAsn": "",
+          "localBgpPeeringAddress":""          
+        },
+        "vNetGatewayConnection": {
+          "connectionName": "nha-hub-S2SVPNConnection",
+          "enabled": true,
+          "vpnSharedKey": "ddd123",
+          "enableBgp": false
         },
         "network": {
           "name": "hub-vnet",

@@ -440,25 +440,50 @@ module vNetGateway '../../azresources/network/virtual-network-gateway.bicep' = i
   }
 }
 
-// Get IP of VPN Gateway 
-resource vNetGatewayPip 'Microsoft.Network/publicIPAddresses@2023-05-01' existing = if (hub.S2SVPNConnection.enabled) {
+// Get IP of vNet Gateway 
+resource vNetGatewayPip 'Microsoft.Network/publicIPAddresses@2023-05-01' existing = if (hub.localNetworkGateway.enabled) {
   name:  '${hub.virtualNetworkGateway.name}-pip1'
   scope: rgHubVnet
 }
 output vNetGatewayPipIp string = vNetGatewayPip.properties.ipAddress
 
-// Create S2S VPN Connection
-module VPNConnectionCreation '../../azresources/network/s2s-vpn-connection.bicep' = if (hub.S2SVPNConnection.enabled) {
-  name: 'deploy-s2s-vpn-connection'
+// Create local network gateway
+module localNetworkGateway '../../azresources/network/local-network-gateway.bicep' = if (hub.localNetworkGateway.enabled) {
+  name: 'deploy-local-network-gateway'
   scope: rgHubVnet
   params: {
     location: location
-    localNetworkGatewayName: hub.S2SVPNConnection.localNetworkGatewayName
-    localAddressPrefixes: hub.S2SVPNConnection.localAddressPrefixes
+    localNetworkGatewayName: hub.localNetworkGateway.localNetworkGatewayName
+    localAddressPrefixes: hub.localNetworkGateway.localAddressPrefixes
     localGatewayPublicIpAddress: vNetGatewayPip.properties.ipAddress
-    vpnConnectionName: hub.S2SVPNConnection.vpnConnectionName
-    virtualNetworkGatewayName: hub.virtualNetworkGateway.name
-    sharedKey: hub.S2SVPNConnection.sharedKey
+    localAsn:hub.localNetworkGateway.localAsn
+    localBgpPeeringAddress:hub.localNetworkGateway.localBgpPeeringAddress
+  }
+}
+
+// Get vNet Gateway 
+resource vpnGatewayResource 'Microsoft.Network/vpnGateways@2023-05-01' existing = if (hub.vNetGatewayConnection.enabled) {
+  name: hub.virtualNetworkGateway.name
+  scope: rgHubVnet
+}
+
+// Get Local Network Gateway 
+resource localNetworkGatewayResource 'Microsoft.Network/localNetworkGateways@2023-05-01' existing = if (hub.vNetGatewayConnection.enabled) {
+  name: hub.localNetworkGateway.name
+  scope: rgHubVnet
+}
+
+// Create Connection
+module virtualNetworkGatewayConnection '../../azresources/network/virtual-network-gateway-connection.bicep' = if (hub.vNetGatewayConnection.enabled) {
+  name: 'deploy-virtual-network-gateway-connection'
+  scope: rgHubVnet
+  params: {
+    location: location
+    connectionName: hub.vNetGatewayConnection.connectionName
+    virtualNetworkGateway1: vpnGatewayResource
+    localNetworkGateway2: localNetworkGatewayResource
+    vpnSharedKey: hub.vNetGatewayConnection.vpnSharedKey
+    enableBgp: hub.vNetGatewayConnection.enableBgp
   }
 }
 

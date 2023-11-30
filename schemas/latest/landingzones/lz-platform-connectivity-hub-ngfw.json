@@ -155,8 +155,11 @@
             "virtualNetworkGateway": {
               "$ref": "#/definitions/virtualNetworkGateway"
             },
-            "S2SVPNConnection": {
-              "$ref": "#/definitions/S2SVPNConnection"
+            "localNetworkGateway": {
+              "$ref": "#/definitions/localNetworkGateway"
+            },
+            "vNetGatewayConnection": {
+              "$ref": "#/definitions/vNetGatewayConnection"
             },
             "network": {
               "type": "object",
@@ -406,33 +409,52 @@
         "enabled"
       ]
     },
-    "S2SVPNConnection": {
+    "localNetworkGateway": {
       "type": "object",
       "properties": {
-        "name": {
+        "localNetworkGatewayName": {
           "type": "string"
         },
         "enabled": {
           "type": "boolean"
-        },  
-        "localNetworkGatewayName": {
-          "type": "string"
-        },       
+        },            
         "localAddressPrefixes": {
           "type": "array"
         },
-        "vpnConnectionName": {
+        "localAsn": {
           "type": "string"
         }, 
-        "sharedKey": {
+        "localBgpPeeringAddress": {
           "type": "string"
         }
        
       },
       "required": [
-        "name",
+        "localNetworkGatewayName",
         "enabled"
       ]
-    }
+    },
+    "vNetGatewayConnection": {
+      "type": "object",
+      "properties": {
+        "connectionName": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },            
+       "vpnSharedKey": {
+          "type": "string"
+        }, 
+        "enableBgp": {
+          "type": "boolean"
+        }
+       
+      },
+      "required": [
+        "connectionName",
+        "enabled"
+      ]
+    }   
   }
 }
