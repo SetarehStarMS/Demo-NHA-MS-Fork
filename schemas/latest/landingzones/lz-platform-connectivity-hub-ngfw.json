@@ -426,8 +426,7 @@
         }, 
         "localBgpPeeringAddress": {
           "type": "string"
-        }
-       
+        }       
       },
       "required": [
         "localNetworkGatewayName",
@@ -448,8 +447,7 @@
         }, 
         "enableBgp": {
           "type": "boolean"
-        }
-       
+        }       
       },
       "required": [
         "connectionName",
