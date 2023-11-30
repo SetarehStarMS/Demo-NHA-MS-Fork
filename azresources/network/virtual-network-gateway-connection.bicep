@@ -40,13 +40,105 @@ param enablePrivateLinkFastPath bool = false
 param expressRouteGatewayBypass bool = false
 
 @description('Required. The primary Virtual Network Gateway.')
-param virtualNetworkGateway1 object
+param virtualNetworkGateway1 object = {
+  name: 'nha-hub-virtualNetworkGateway'
+  id: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworkGateways/nha-hub-virtualNetworkGateway'
+  etag: 'W/"e950b6d6-56d7-40a8-9657-591500b21f3a"'
+  type: 'Microsoft.Network/virtualNetworkGateways'
+  location: 'canadacentral'
+  tags: {
+    ClientOrganization: 'nha'
+    CostCenter: '23445'
+    'Data Classification': 'infa'
+    DataSensitivity: 's1'
+    ProjectContact: 'me'
+    ProjectName: 'test'
+    TechnicalContact: 'me'
+  }
+  properties: {
+    provisioningState: 'Succeeded'
+    resourceGuid: '6d0c03bb-8169-429e-85d7-f405db865acf'
+    enablePrivateIpAddress: false
+    ipConfigurations: [
+      {
+        name: 'vNetGatewayConfig1'
+        id: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworkGateways/nha-hub-virtualNetworkGateway/ipConfigurations/vNetGatewayConfig1'
+        etag: 'W/"e950b6d6-56d7-40a8-9657-591500b21f3a"'
+        type: 'Microsoft.Network/virtualNetworkGateways/ipConfigurations'
+        properties: {
+          provisioningState: 'Succeeded'
+          privateIPAllocationMethod: 'Dynamic'
+          publicIPAddress: {
+            id: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/publicIPAddresses/nha-hub-virtualNetworkGateway-pip1'
+          }
+          subnet: {
+            id: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworks/hub-vnet/subnets/GatewaySubnet'
+          }
+        }
+      }
+    ]
+    virtualNetworkGatewayPolicyGroups: []
+    sku: {
+      name: 'VpnGw3AZ'
+      tier: 'VpnGw3AZ'
+      capacity: 2
+    }
+    gatewayType: 'Vpn'
+    vpnType: 'RouteBased'
+    enableBgp: false
+    activeActive: false
+    bgpSettings: {
+      asn: 65815
+      bgpPeeringAddress: '10.18.1.30'
+      peerWeight: 0
+      bgpPeeringAddresses: [
+        {
+          ipconfigurationId: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/virtualNetworkGateways/nha-hub-virtualNetworkGateway/ipConfigurations/vNetGatewayConfig1'
+          defaultBgpIpAddresses: [
+            '10.18.1.30'
+          ]
+          customBgpIpAddresses: []
+          tunnelIpAddresses: [
+            '20.220.48.162'
+          ]
+        }
+      ]
+    }
+    vpnGatewayGeneration: 'Generation2'
+  }
+}
 
 @description('Optional. The remote Virtual Network Gateway. Used for connection connectionType [Vnet2Vnet].')
 param virtualNetworkGateway2 object = {}
 
 @description('Optional. The local network gateway. Used for connection type [IPsec].')
-param localNetworkGateway2 object = {}
+param localNetworkGateway2 object = {
+  name: 'nha-hub-localNetworkGateway'
+  id: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/localNetworkGateways/nha-hub-localNetworkGateway'
+  etag: 'W/"8853249b-fe9f-4ac4-85ff-4f9157c32662"'
+  type: 'Microsoft.Network/localNetworkGateways'
+  location: 'canadacentral'
+  tags: {
+    ClientOrganization: 'nha'
+    CostCenter: '23445'
+    'Data Classification': 'infa'
+    DataSensitivity: 's1'
+    ProjectContact: 'me'
+    ProjectName: 'test'
+    TechnicalContact: 'me'
+  }
+  properties: {
+    provisioningState: 'Succeeded'
+    resourceGuid: 'd07dae7b-2527-43e0-a835-1b824d7ff1da'
+    localNetworkAddressSpace: {
+      addressPrefixes: [
+        '30.0.0.0/24'
+        '40.0.0.0/24'
+      ]
+    }
+    gatewayIpAddress: '20.220.48.162'
+  }
+}
 
 @description('Optional. The Authorization Key to connect to an Express Route Circuit. Used for connection type [ExpressRoute].')
 @secure()
