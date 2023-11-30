@@ -432,27 +432,6 @@
         "localNetworkGatewayName",
         "enabled"
       ]
-    },
-    "vNetGatewayConnection": {
-      "type": "object",
-      "properties": {
-        "connectionName": {
-          "type": "string"
-        },
-        "enabled": {
-          "type": "boolean"
-        },            
-       "vpnSharedKey": {
-          "type": "string"
-        }, 
-        "enableBgp": {
-          "type": "boolean"
-        }       
-      },
-      "required": [
-        "connectionName",
-        "enabled"
-      ]
-    }   
+    }    
   }
 }
