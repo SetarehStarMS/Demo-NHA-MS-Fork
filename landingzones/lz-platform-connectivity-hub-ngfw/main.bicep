@@ -466,12 +466,14 @@ resource vpnGatewayResource 'Microsoft.Network/virtualNetworkGateways@2023-05-01
   name: hub.virtualNetworkGateway.name
   scope: rgHubVnet
 }
+output vpnGatewayResourceId string = vpnGatewayResource.id
 
 // Get Local Network Gateway 
 resource localNetworkGatewayResource 'Microsoft.Network/localNetworkGateways@2023-05-01' existing = if (hub.vNetGatewayConnection.enabled) {
   name: hub.localNetworkGateway.localNetworkGatewayName
   scope: rgHubVnet
 }
+output localNetworkGatewayResourceId string = localNetworkGatewayResource.id
 
 // Create Connection
 module virtualNetworkGatewayConnection '../../azresources/network/virtual-network-gateway-connection.bicep' = if (hub.vNetGatewayConnection.enabled) {
