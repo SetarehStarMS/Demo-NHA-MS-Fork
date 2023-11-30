@@ -118,7 +118,7 @@ resource vpnGateway 'Microsoft.Network/vpnGateways@2023-05-01' existing = {
 // Create S2S VPN Connection
 resource vpnConnection 'Microsoft.Network/vpnGateways/vpnConnections@2023-05-01' = {
   name: vpnConnectionName
-
+  parent: vpnGateway
   properties: {
     connectionBandwidth: connectionBandwidth
     enableBgp: enableBgp
@@ -137,8 +137,5 @@ resource vpnConnection 'Microsoft.Network/vpnGateways/vpnConnections@2023-05-01'
     vpnConnectionProtocolType: vpnConnectionProtocolType
     vpnLinkConnections: vpnLinkConnections
   }
-  dependsOn: [
-    localNetworkGateway
-    vpnGateway
-  ]
+  
 }
