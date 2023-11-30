@@ -27,7 +27,7 @@ param sourceNATEnabled bool
 @description('If enableDnsProxy')
 param enableDnsProxy string
 
-@description('If enableDnsProxy')
+@description('resourceGroupName')
 param resourceGroupName string
 
 @description('ipOfTrustSubnetForUdr')

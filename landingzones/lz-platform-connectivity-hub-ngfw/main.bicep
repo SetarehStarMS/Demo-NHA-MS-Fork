@@ -423,6 +423,70 @@ module bastion '../../azresources/network/bastion.bicep' = if (hub.bastion.enabl
   }
 }
 
+// Create virtual network gateway
+module vNetGateway '../../azresources/network/virtual-network-gateway.bicep' = if (hub.virtualNetworkGateway.enabled) {
+  name: 'deploy-virtual-network-gateway'
+  scope: rgHubVnet
+  params: {
+    location: location
+    name: hub.virtualNetworkGateway.name
+    zones: hub.virtualNetworkGateway.availabilityZones
+    vNetResourceId: hubVnet.outputs.vnetId
+    gatewayType: hub.virtualNetworkGateway.gatewayType
+    skuName: hub.virtualNetworkGateway.skuName
+    allowRemoteVnetTraffic: hub.virtualNetworkGateway.allowRemoteVnetTraffic   
+    activeActive: hub.virtualNetworkGateway.activeActive
+    enableBgp: hub.virtualNetworkGateway.enableBgp     
+  }
+}
+
+// Get IP of vNet Gateway 
+resource vNetGatewayPip 'Microsoft.Network/publicIPAddresses@2023-05-01' existing = if (hub.localNetworkGateway.enabled) {
+  name:  '${hub.virtualNetworkGateway.name}-pip1'
+  scope: rgHubVnet
+}
+output vNetGatewayPipIp string = vNetGatewayPip.properties.ipAddress
+
+// Create local network gateway
+module localNetworkGateway '../../azresources/network/local-network-gateway.bicep' = if (hub.localNetworkGateway.enabled) {
+  name: 'deploy-local-network-gateway'
+  scope: rgHubVnet
+  params: {
+    location: location
+    localNetworkGatewayName: hub.localNetworkGateway.localNetworkGatewayName
+    localAddressPrefixes: hub.localNetworkGateway.localAddressPrefixes
+    localGatewayPublicIpAddress: vNetGatewayPip.properties.ipAddress
+    localAsn:hub.localNetworkGateway.localAsn
+    localBgpPeeringAddress:hub.localNetworkGateway.localBgpPeeringAddress
+  }
+}
+
+// Get vNet Gateway 
+resource vpnGatewayResource 'Microsoft.Network/vpnGateways@2023-05-01' existing = if (hub.vNetGatewayConnection.enabled) {
+  name: hub.virtualNetworkGateway.name
+  scope: rgHubVnet
+}
+
+// Get Local Network Gateway 
+resource localNetworkGatewayResource 'Microsoft.Network/localNetworkGateways@2023-05-01' existing = if (hub.vNetGatewayConnection.enabled) {
+  name: hub.localNetworkGateway.name
+  scope: rgHubVnet
+}
+
+// Create Connection
+module virtualNetworkGatewayConnection '../../azresources/network/virtual-network-gateway-connection.bicep' = if (hub.vNetGatewayConnection.enabled) {
+  name: 'deploy-virtual-network-gateway-connection'
+  scope: rgHubVnet
+  params: {
+    location: location
+    connectionName: hub.vNetGatewayConnection.connectionName
+    virtualNetworkGateway1: vpnGatewayResource
+    localNetworkGateway2: localNetworkGatewayResource
+    vpnSharedKey: hub.vNetGatewayConnection.vpnSharedKey
+    enableBgp: hub.vNetGatewayConnection.enableBgp
+  }
+}
+
 // // Non production traffic - NVAs
 // module nonProductionNVA 'ngfw/nva-vm.bicep' = [for (virtualMachine, virtualMachines) in hub.nvaFirewall.nonProduction.virtualMachines: if (hub.nvaFirewall.nonProduction.deployVirtualMachines) {
 //   name: 'deploy-nva-nonprod-${virtualMachine.name}'

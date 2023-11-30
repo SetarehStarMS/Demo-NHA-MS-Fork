@@ -152,6 +152,15 @@
             "PaloAltoCloudNGFW": {
               "$ref": "#/definitions/PaloAltoCloudNGFW"
             },
+            "virtualNetworkGateway": {
+              "$ref": "#/definitions/virtualNetworkGateway"
+            },
+            "localNetworkGateway": {
+              "$ref": "#/definitions/localNetworkGateway"
+            },
+            "vNetGatewayConnection": {
+              "$ref": "#/definitions/vNetGatewayConnection"
+            },
             "network": {
               "type": "object",
               "properties": {
@@ -363,6 +372,87 @@
         "networkType",
         "ipOfTrustSubnetForUdr"
       ]
-    }
+    },
+    "virtualNetworkGateway": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "availabilityZones": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "enabled": {
+          "type": "boolean"
+        },  
+        "gatewayType": {
+          "type": "string"
+        },       
+        "skuName": {
+          "type": "string"
+        },
+        "allowRemoteVnetTraffic": {
+          "type": "boolean"
+        },
+        "activeActive": {
+          "type": "boolean"
+        },
+        "enableBgp": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "enabled"
+      ]
+    },
+    "localNetworkGateway": {
+      "type": "object",
+      "properties": {
+        "localNetworkGatewayName": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },            
+        "localAddressPrefixes": {
+          "type": "array"
+        },
+        "localAsn": {
+          "type": "string"
+        }, 
+        "localBgpPeeringAddress": {
+          "type": "string"
+        }       
+      },
+      "required": [
+        "localNetworkGatewayName",
+        "enabled"
+      ]
+    },
+    "vNetGatewayConnection": {
+      "type": "object",
+      "properties": {
+        "connectionName": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },            
+       "vpnSharedKey": {
+          "type": "string"
+        }, 
+        "enableBgp": {
+          "type": "boolean"
+        }       
+      },
+      "required": [
+        "connectionName",
+        "enabled"
+      ]
+    }   
   }
 }
