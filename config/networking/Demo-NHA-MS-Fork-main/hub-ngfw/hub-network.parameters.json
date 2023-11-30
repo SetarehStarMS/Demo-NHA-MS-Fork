@@ -128,7 +128,7 @@
         "localNetworkGateway": {
           "localNetworkGatewayName": "nha-hub-localNetworkGateway",
           "enabled": true,
-          "localAddressPrefixes": ["20.0.0.0/24","30.0.0.0/24"],
+          "localAddressPrefixes": ["30.0.0.0/24","40.0.0.0/24"],
           "localAsn": "",
           "localBgpPeeringAddress":""          
         },

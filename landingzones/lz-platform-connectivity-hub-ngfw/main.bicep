@@ -461,19 +461,19 @@ module localNetworkGateway '../../azresources/network/local-network-gateway.bice
   }
 }
 
-// Get vNet Gateway 
-resource vpnGatewayResource 'Microsoft.Network/virtualNetworkGateways@2023-05-01' existing = if (hub.vNetGatewayConnection.enabled) {
-  name: hub.virtualNetworkGateway.name
-  scope: rgHubVnet
-}
-output vpnGatewayResourceId string = vpnGatewayResource.id
+// // Get vNet Gateway 
+// resource vpnGatewayResource 'Microsoft.Network/virtualNetworkGateways@2023-05-01' existing = if (hub.vNetGatewayConnection.enabled) {
+//   name: hub.virtualNetworkGateway.name
+//   scope: rgHubVnet
+// }
+// output vpnGatewayResourceId string = vpnGatewayResource.id
 
-// Get Local Network Gateway 
-resource localNetworkGatewayResource 'Microsoft.Network/localNetworkGateways@2023-05-01' existing = if (hub.vNetGatewayConnection.enabled) {
-  name: hub.localNetworkGateway.localNetworkGatewayName
-  scope: rgHubVnet
-}
-output localNetworkGatewayResourceId string = localNetworkGatewayResource.id
+// // Get Local Network Gateway 
+// resource localNetworkGatewayResource 'Microsoft.Network/localNetworkGateways@2023-05-01' existing = if (hub.vNetGatewayConnection.enabled) {
+//   name: hub.localNetworkGateway.localNetworkGatewayName
+//   scope: rgHubVnet
+// }
+// output localNetworkGatewayResourceId string = localNetworkGatewayResource.id
 
 // Create Connection
 module virtualNetworkGatewayConnection '../../azresources/network/virtual-network-gateway-connection.bicep' = if (hub.vNetGatewayConnection.enabled) {
@@ -483,15 +483,11 @@ module virtualNetworkGatewayConnection '../../azresources/network/virtual-networ
     location: location
     connectionName: hub.vNetGatewayConnection.connectionName
     connectionType: hub.vNetGatewayConnection.connectionType
-    virtualNetworkGateway1: vpnGatewayResource
-    localNetworkGateway2: localNetworkGateway
+    virtualNetworkGateway1Name: hub.virtualNetworkGateway.name
+    localNetworkGateway2Name: hub.localNetworkGateway.localNetworkGatewayName
     vpnSharedKey: hub.vNetGatewayConnection.vpnSharedKey
     enableBgp: hub.vNetGatewayConnection.enableBgp
   }
-  dependsOn: [
-    vpnGatewayResource
-    localNetworkGatewayResource
-  ]
 }
 
 // // Non production traffic - NVAs

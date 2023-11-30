@@ -40,13 +40,13 @@ param enablePrivateLinkFastPath bool = false
 param expressRouteGatewayBypass bool = false
 
 @description('Required. The primary Virtual Network Gateway.')
-param virtualNetworkGateway1 object
+param virtualNetworkGateway1Name string
 
 @description('Optional. The remote Virtual Network Gateway. Used for connection connectionType [Vnet2Vnet].')
 param virtualNetworkGateway2 object = {}
 
 @description('Optional. The local network gateway. Used for connection type [IPsec].')
-param localNetworkGateway2 object = {}
+param localNetworkGateway2Name string = ''
 
 @description('Optional. The Authorization Key to connect to an Express Route Circuit. Used for connection type [ExpressRoute].')
 @secure()
@@ -83,6 +83,25 @@ param enableBgp bool = false
 @description('Optional. Use private local Azure IP for the connection. Only available for IPSec Virtual Network Gateways that use the Azure Private IP Property.')
 param useLocalAzureIpAddress bool = false
 
+// ================//
+// Variables     //
+// ================//
+
+
+// Get vNet Gateway 
+resource vpnGatewayResource 'Microsoft.Network/virtualNetworkGateways@2023-05-01' existing = {
+  name: virtualNetworkGateway1Name
+  scope:  resourceGroup()
+}
+output vpnGatewayResourceId string = vpnGatewayResource.id
+
+// Get Local Network Gateway 
+resource localNetworkGatewayResource 'Microsoft.Network/localNetworkGateways@2023-05-01' existing = {
+  name: localNetworkGateway2Name
+  scope:  resourceGroup()
+}
+output localNetworkGatewayResourceId string = localNetworkGatewayResource.id
+
 
 // ================//
 // Deployments     //
@@ -98,9 +117,9 @@ resource connection 'Microsoft.Network/connections@2023-04-01' = {
     dpdTimeoutSeconds: connectionType == 'IPsec' ? dpdTimeoutSeconds : null
     enablePrivateLinkFastPath: connectionType == 'ExpressRoute' ? enablePrivateLinkFastPath : null
     expressRouteGatewayBypass: connectionType == 'ExpressRoute' ? expressRouteGatewayBypass : null
-    virtualNetworkGateway1: virtualNetworkGateway1
+    virtualNetworkGateway1: vpnGatewayResource
     virtualNetworkGateway2: connectionType == 'Vnet2Vnet' ? virtualNetworkGateway2 : null
-    localNetworkGateway2: connectionType == 'IPsec' ? localNetworkGateway2 : null
+    localNetworkGateway2: connectionType == 'IPsec' ? localNetworkGatewayResource : null
     peer: connectionType == 'ExpressRoute' ? peer : null
     authorizationKey: connectionType == 'ExpressRoute' && !empty(authorizationKey) ? authorizationKey : null
     sharedKey: connectionType != 'ExpressRoute' ? vpnSharedKey : null
