@@ -157,10 +157,7 @@
             },
             "localNetworkGateway": {
               "$ref": "#/definitions/localNetworkGateway"
-            },
-            "vNetGatewayConnection": {
-              "$ref": "#/definitions/vNetGatewayConnection"
-            },
+            },          
             "network": {
               "type": "object",
               "properties": {
