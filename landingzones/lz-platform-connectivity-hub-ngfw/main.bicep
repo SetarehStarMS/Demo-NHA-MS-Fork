@@ -455,7 +455,7 @@ module localNetworkGateway '../../azresources/network/local-network-gateway.bice
     location: location
     localNetworkGatewayName: hub.localNetworkGateway.localNetworkGatewayName
     localAddressPrefixes: hub.localNetworkGateway.localAddressPrefixes
-    localGatewayPublicIpAddress: vNetGatewayPip.properties.ipAddress
+    localGatewayPublicIpAddress: hub.localNetworkGateway.localGatewayPublicIpAddress
     localAsn:hub.localNetworkGateway.localAsn
     localBgpPeeringAddress:hub.localNetworkGateway.localBgpPeeringAddress
   }

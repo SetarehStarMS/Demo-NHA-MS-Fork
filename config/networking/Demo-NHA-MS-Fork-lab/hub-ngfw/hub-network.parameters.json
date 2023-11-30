@@ -136,7 +136,8 @@
           "enabled": true,
           "localAddressPrefixes": ["30.0.0.0/24","40.0.0.0/24"],
           "localAsn": "",
-          "localBgpPeeringAddress":""          
+          "localBgpPeeringAddress":"",  
+          "localGatewayPublicIpAddress":"30.221.15.1"        
         },
         "vNetGatewayConnection": {
           "connectionName": "nha-hub-S2SVPNConnection",

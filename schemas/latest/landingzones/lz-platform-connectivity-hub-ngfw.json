@@ -426,10 +426,14 @@
         }, 
         "localBgpPeeringAddress": {
           "type": "string"
+        },
+        "localGatewayPublicIpAddress": {
+          "type": "string"
         }       
       },
       "required": [
         "localNetworkGatewayName",
+        "localGatewayPublicIpAddress",
         "enabled"
       ]
     },
