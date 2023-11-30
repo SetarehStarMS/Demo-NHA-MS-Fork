@@ -157,7 +157,10 @@
             },
             "localNetworkGateway": {
               "$ref": "#/definitions/localNetworkGateway"
-            },          
+            },
+            "vNetGatewayConnection": {
+              "$ref": "#/definitions/vNetGatewayConnection"
+            },
             "network": {
               "type": "object",
               "properties": {
@@ -429,6 +432,27 @@
         "localNetworkGatewayName",
         "enabled"
       ]
-    }    
+    },
+    "vNetGatewayConnection": {
+      "type": "object",
+      "properties": {
+        "connectionName": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },            
+       "vpnSharedKey": {
+          "type": "string"
+        }, 
+        "enableBgp": {
+          "type": "boolean"
+        }       
+      },
+      "required": [
+        "connectionName",
+        "enabled"
+      ]
+    }   
   }
 }

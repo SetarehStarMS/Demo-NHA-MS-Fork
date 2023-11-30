@@ -137,7 +137,13 @@
           "localAddressPrefixes": ["20.0.0.0/24","30.0.0.0/24"],
           "localAsn": "",
           "localBgpPeeringAddress":""          
-        },        
+        },
+        "vNetGatewayConnection": {
+          "connectionName": "nha-hub-S2SVPNConnection",
+          "enabled": true,
+          "vpnSharedKey": "ddd123",
+          "enableBgp": false
+        },
         "network": {
           "name": "hub-vnet",
           "addressPrefixes": [
