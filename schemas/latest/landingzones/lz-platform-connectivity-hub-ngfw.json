@@ -420,7 +420,14 @@
         },       
         "localAddressPrefixes": {
           "type": "array"
+        },
+        "vpnConnectionName": {
+          "type": "string"
+        }, 
+        "sharedKey": {
+          "type": "string"
         }
+       
       },
       "required": [
         "name",

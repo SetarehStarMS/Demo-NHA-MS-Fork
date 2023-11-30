@@ -456,7 +456,13 @@ module S2SVPNConnection '../../azresources/network/s2s-vpn-connection.bicep' = i
     localNetworkGatewayName: hub.S2SVPNConnection.localNetworkGatewayName
     localAddressPrefixes: hub.S2SVPNConnection.localAddressPrefixes
     localGatewayPublicIpAddress: vNetGatewayPip.properties.ipAddress
+    vpnConnectionName: hub.S2SVPNConnection.vpnConnectionName
+    virtualNetworkGatewayName: hub.virtualNetworkGateway.name
+    sharedKey: hub.S2SVPNConnection.sharedKey
   }
+  dependsOn: [
+    vNetGatewayPip
+  ]
 }
 
 // // Non production traffic - NVAs
