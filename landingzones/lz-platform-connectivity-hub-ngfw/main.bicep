@@ -448,7 +448,7 @@ resource vNetGatewayPip 'Microsoft.Network/publicIPAddresses@2023-05-01' existin
 output vNetGatewayPipIp string = vNetGatewayPip.properties.ipAddress
 
 // Create S2S VPN Connection
-module S2SVPNConnection '../../azresources/network/s2s-vpn-connection.bicep' = if (hub.S2SVPNConnection.enabled) {
+module VPNConnection '../../azresources/network/s2s-vpn-connection.bicep' = if (hub.S2SVPNConnection.enabled) {
   name: 'deploy-s2s-vpn-connection'
   scope: rgHubVnet
   params: {
@@ -460,9 +460,6 @@ module S2SVPNConnection '../../azresources/network/s2s-vpn-connection.bicep' = i
     virtualNetworkGatewayName: hub.virtualNetworkGateway.name
     sharedKey: hub.S2SVPNConnection.sharedKey
   }
-  dependsOn: [
-    vNetGatewayPip
-  ]
 }
 
 // // Non production traffic - NVAs
