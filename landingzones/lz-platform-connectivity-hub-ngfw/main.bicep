@@ -448,7 +448,7 @@ resource vNetGatewayPip 'Microsoft.Network/publicIPAddresses@2023-05-01' existin
 output vNetGatewayPipIp string = vNetGatewayPip.properties.ipAddress
 
 // Create S2S VPN Connection
-module VPNConnection '../../azresources/network/s2s-vpn-connection.bicep' = if (hub.S2SVPNConnection.enabled) {
+module VPNConnectionCreation '../../azresources/network/s2s-vpn-connection.bicep' = if (hub.S2SVPNConnection.enabled) {
   name: 'deploy-s2s-vpn-connection'
   scope: rgHubVnet
   params: {
