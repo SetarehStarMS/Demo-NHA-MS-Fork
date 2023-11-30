@@ -486,6 +486,10 @@ module virtualNetworkGatewayConnection '../../azresources/network/virtual-networ
     vpnSharedKey: hub.vNetGatewayConnection.vpnSharedKey
     enableBgp: hub.vNetGatewayConnection.enableBgp
   }
+  dependsOn: [
+    vpnGatewayResource
+    localNetworkGatewayResource
+  ]
 }
 
 // // Non production traffic - NVAs
