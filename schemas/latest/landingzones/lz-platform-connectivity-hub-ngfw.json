@@ -439,6 +439,9 @@
         "connectionName": {
           "type": "string"
         },
+        "connectionType": {
+          "type": "string"
+        },        
         "enabled": {
           "type": "boolean"
         },            
@@ -451,6 +454,7 @@
       },
       "required": [
         "connectionName",
+        "connectionType",
         "enabled"
       ]
     }   

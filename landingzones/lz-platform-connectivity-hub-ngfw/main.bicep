@@ -462,7 +462,7 @@ module localNetworkGateway '../../azresources/network/local-network-gateway.bice
 }
 
 // Get vNet Gateway 
-resource vpnGatewayResource 'Microsoft.Network/vpnGateways@2023-05-01' existing = if (hub.vNetGatewayConnection.enabled) {
+resource vpnGatewayResource 'Microsoft.Network/virtualNetworkGateways@2023-05-01' existing = if (hub.vNetGatewayConnection.enabled) {
   name: hub.virtualNetworkGateway.name
   scope: rgHubVnet
 }
@@ -480,6 +480,7 @@ module virtualNetworkGatewayConnection '../../azresources/network/virtual-networ
   params: {
     location: location
     connectionName: hub.vNetGatewayConnection.connectionName
+    connectionType: hub.vNetGatewayConnection.connectionType
     virtualNetworkGateway1: vpnGatewayResource
     localNetworkGateway2: localNetworkGatewayResource
     vpnSharedKey: hub.vNetGatewayConnection.vpnSharedKey

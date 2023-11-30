@@ -140,6 +140,7 @@
         },
         "vNetGatewayConnection": {
           "connectionName": "nha-hub-S2SVPNConnection",
+          "connectionType": "IPsec",
           "enabled": true,
           "vpnSharedKey": "ddd123",
           "enableBgp": false
