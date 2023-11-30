@@ -475,20 +475,20 @@ resource localNetworkGatewayResource 'Microsoft.Network/localNetworkGateways@202
 }
 output localNetworkGatewayResourceo object = localNetworkGatewayResource
 
-// // Create Connection
-// module virtualNetworkGatewayConnection '../../azresources/network/virtual-network-gateway-connection.bicep' = if (hub.vNetGatewayConnection.enabled) {
-//   name: 'deploy-virtual-network-gateway-connection'
-//   scope: rgHubVnet
-//   params: {
-//     location: location
-//     connectionName: hub.vNetGatewayConnection.connectionName
-//     connectionType: hub.vNetGatewayConnection.connectionType
-//     // virtualNetworkGateway1: vpnGatewayResource
-//     // localNetworkGateway2: localNetworkGatewayResource
-//     vpnSharedKey: hub.vNetGatewayConnection.vpnSharedKey
-//     enableBgp: hub.vNetGatewayConnection.enableBgp
-//   }
-// }
+// Create Connection
+module virtualNetworkGatewayConnection '../../azresources/network/virtual-network-gateway-connection.bicep' = if (hub.vNetGatewayConnection.enabled) {
+  name: 'deploy-virtual-network-gateway-connection'
+  scope: rgHubVnet
+  params: {
+    location: location
+    connectionName: hub.vNetGatewayConnection.connectionName
+    connectionType: hub.vNetGatewayConnection.connectionType
+    // virtualNetworkGateway1: vpnGatewayResource
+    // localNetworkGateway2: localNetworkGatewayResource
+    vpnSharedKey: hub.vNetGatewayConnection.vpnSharedKey
+    enableBgp: hub.vNetGatewayConnection.enableBgp
+  }
+}
 
 // // Non production traffic - NVAs
 // module nonProductionNVA 'ngfw/nva-vm.bicep' = [for (virtualMachine, virtualMachines) in hub.nvaFirewall.nonProduction.virtualMachines: if (hub.nvaFirewall.nonProduction.deployVirtualMachines) {

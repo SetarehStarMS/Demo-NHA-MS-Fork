@@ -115,7 +115,7 @@ param virtualNetworkGateway2 object = {}
 param localNetworkGateway2 object = {
   name: 'nha-hub-localNetworkGateway'
   id: '/subscriptions/dbf14654-41b8-4a18-bcdd-a200d053975f/resourceGroups/nha-hub-networking/providers/Microsoft.Network/localNetworkGateways/nha-hub-localNetworkGateway'
-  etag: 'W/"8853249b-fe9f-4ac4-85ff-4f9157c32662"'
+  etag: 'W/"2e1a1f19-4e86-4490-997f-51b02a96b634"'
   type: 'Microsoft.Network/localNetworkGateways'
   location: 'canadacentral'
   tags: {
@@ -129,14 +129,14 @@ param localNetworkGateway2 object = {
   }
   properties: {
     provisioningState: 'Succeeded'
-    resourceGuid: 'd07dae7b-2527-43e0-a835-1b824d7ff1da'
+    resourceGuid: '78486fbf-8b0d-4ed7-8da5-cccfd229d5a5'
     localNetworkAddressSpace: {
       addressPrefixes: [
         '30.0.0.0/24'
         '40.0.0.0/24'
       ]
     }
-    gatewayIpAddress: '20.220.48.162'
+    gatewayIpAddress: '30.221.15.1'
   }
 }
 
