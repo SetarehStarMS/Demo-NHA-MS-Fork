@@ -89,6 +89,14 @@ module nsgbastion '../../../azresources/network/nsg/nsg-bastion.bicep' = {
   }
 }
 
+module nsgPaloAltoPanorama '../../../azresources/network/nsg/nsg-paloalto-panorama.bicep' = {
+  name: 'deploy-nsg-NGFWPanoramaNsg'
+  params: {
+    name: '${hubNetwork.name}-NGFWPanorama-nsg'
+    location: location
+  }
+}
+
 resource nsg 'Microsoft.Network/networkSecurityGroups@2021-02-01' = [for subnet in hubNetwork.subnets.optional: if (subnet.nsg.enabled) {
   name: '${hubNetwork.name}-${subnet.name}-nsg'
   location: location
@@ -180,6 +188,15 @@ var requiredSubnets = [
     }
   }
   {
+    name: hubNetwork.subnets.ngfwPanoramaSubnet.name
+    properties: {
+      addressPrefix: hubNetwork.subnets.ngfwPanoramaSubnet.addressPrefix
+      networkSecurityGroup: {
+        id: nsgPaloAltoPanorama.outputs.nsgId
+      }
+    }
+  }
+  {
     name: hubNetwork.subnets.ngfwPrivateSubnet.name
     properties: {
       addressPrefix: hubNetwork.subnets.ngfwPrivateSubnet.addressPrefix
@@ -254,6 +271,7 @@ output vnetId string = hubVnet.id
 
 output AzureBastionSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.bastion.name}'
 output GatewaySubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.gateway.name}'
+output ngfwPanoramaSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.ngfwPanoramaSubnet.name}'
 
 //output NonProdIntSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.nonProductionInternal.name}'
 //output ProdIntSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.productionInternal.name}'

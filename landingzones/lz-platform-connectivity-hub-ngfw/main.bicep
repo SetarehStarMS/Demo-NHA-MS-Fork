@@ -186,6 +186,15 @@ param privateDnsZones object
 @description('DDOS Standard configuration.  See docs/archetypes/hubnetwork-nva.md for configuration settings.')
 param ddosStandard object
 
+// Temporary VM Credentials
+@description('Temporary username for firewall virtual machines.')
+@secure()
+param fwUsername string
+
+@description('Temporary password for firewall virtual machines.')
+@secure()
+param fwPassword string
+
 // // Public Access Zone
 // @description('Public Access Zone configuration.  See docs/archetypes/hubnetwork-nva.md for configuration settings.')
 // param publicAccessZone object
@@ -262,6 +271,12 @@ resource rgDdos 'Microsoft.Resources/resourceGroups@2020-06-01' = if (ddosStanda
 // Create Hub Virtual Network Resource Group
 resource rgHubVnet 'Microsoft.Resources/resourceGroups@2020-06-01' = {
   name: hub.resourceGroupName
+  location: location
+  tags: resourceTags
+}
+// Create Palo Alto Panorama Resource Group
+resource rgPanorama 'Microsoft.Resources/resourceGroups@2020-06-01' = if (hub.PaloAltoPanoramaA.enabled) {
+  name: hub.PaloAltoPanoramaA.resourceGroupName
   location: location
   tags: resourceTags
 }
@@ -375,7 +390,48 @@ module hubVnet 'hub/hub-vnet.bicep' = {
   }
 }
 
-// Palo Alto Cloud NGFW
+// Create Palo Alto Panorama Availability Set
+module availSet '../../azresources/compute/availability-set.bicep' = if (hub.PaloAltoPanoramaA.enabled) {
+  scope: rgPanorama
+  name: 'deploy-panorama-avail'
+  params: {
+    name: 'panorama-avail'
+    location: location
+  }
+}
+
+// Create Palo Alto Panorama VMs
+module PanoramaA '../../azresources/network/PaloAlto-Panorama-vm.bicep' = if (hub.PaloAltoPanoramaA.enabled) {
+  scope: rgPanorama
+  name: 'deploy-panoramaA-VM'
+  params: {
+    location: rgPanorama.location
+    availID: availSet.outputs.availID
+    subnetId: hubVnet.outputs.ngfwPanoramaSubnetId
+    username: fwUsername
+    password: fwPassword
+    vmName: hub.PaloAltoPanoramaA.vmName
+    vmSize: hub.PaloAltoPanoramaA.vmSize
+    privateIPAddress: hub.PaloAltoPanoramaA.privateIPAddress
+  }
+}
+
+module PanoramaB '../../azresources/network/PaloAlto-Panorama-vm.bicep' = if (hub.PaloAltoPanoramaA.enabled) {
+  scope: rgPanorama
+  name: 'deploy-panoramaB-VM'
+  params: {
+    location: rgPanorama.location
+    availID: availSet.outputs.availID
+    subnetId: hubVnet.outputs.ngfwPanoramaSubnetId
+    username: fwUsername
+    password: fwPassword
+    vmName: hub.PaloAltoPanoramaB.vmName
+    vmSize: hub.PaloAltoPanoramaB.vmSize
+    privateIPAddress: hub.PaloAltoPanoramaB.privateIPAddress
+  }
+}
+
+// Create Palo Alto Cloud NGFW
 module PaloAltoCloudNGFW '../../azresources/network/PaloAltoCloudNGFW.bicep' = {
   name: 'deploy-paloalto-cloud-ngfw'
   scope: rgHubVnet
@@ -455,23 +511,25 @@ module localNetworkGateway '../../azresources/network/local-network-gateway.bice
     location: location
     localNetworkGatewayName: hub.localNetworkGateway.localNetworkGatewayName
     localAddressPrefixes: hub.localNetworkGateway.localAddressPrefixes
-    localGatewayPublicIpAddress: vNetGatewayPip.properties.ipAddress
+    localGatewayPublicIpAddress: hub.localNetworkGateway.localGatewayPublicIpAddress
     localAsn:hub.localNetworkGateway.localAsn
     localBgpPeeringAddress:hub.localNetworkGateway.localBgpPeeringAddress
   }
 }
 
 // Get vNet Gateway 
-resource vpnGatewayResource 'Microsoft.Network/vpnGateways@2023-05-01' existing = if (hub.vNetGatewayConnection.enabled) {
+resource vpnGatewayResource 'Microsoft.Network/virtualNetworkGateways@2023-05-01' existing = if (hub.vNetGatewayConnection.enabled) {
   name: hub.virtualNetworkGateway.name
   scope: rgHubVnet
 }
+output vpnGatewayResourceId string = vpnGatewayResource.id
 
 // Get Local Network Gateway 
 resource localNetworkGatewayResource 'Microsoft.Network/localNetworkGateways@2023-05-01' existing = if (hub.vNetGatewayConnection.enabled) {
-  name: hub.localNetworkGateway.name
+  name: hub.localNetworkGateway.localNetworkGatewayName
   scope: rgHubVnet
 }
+output localNetworkGatewayResourceId string = localNetworkGatewayResource.id
 
 // Create Connection
 module virtualNetworkGatewayConnection '../../azresources/network/virtual-network-gateway-connection.bicep' = if (hub.vNetGatewayConnection.enabled) {
@@ -480,11 +538,20 @@ module virtualNetworkGatewayConnection '../../azresources/network/virtual-networ
   params: {
     location: location
     connectionName: hub.vNetGatewayConnection.connectionName
-    virtualNetworkGateway1: vpnGatewayResource
-    localNetworkGateway2: localNetworkGatewayResource
+    connectionType: hub.vNetGatewayConnection.connectionType
+    virtualNetworkGateway1: {
+      id: vpnGatewayResource.id
+    }
+    localNetworkGateway2: {
+      id: localNetworkGatewayResource.id
+    }
     vpnSharedKey: hub.vNetGatewayConnection.vpnSharedKey
     enableBgp: hub.vNetGatewayConnection.enableBgp
   }
+  dependsOn: [
+    vNetGateway
+    localNetworkGateway
+  ]
 }
 
 // // Non production traffic - NVAs

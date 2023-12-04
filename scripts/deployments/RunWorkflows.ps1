@@ -398,7 +398,9 @@ if ($DeployHubNetworkWithNGFW) {
     -ManagementGroupId $Context.Variables['var-hubnetwork-managementGroupId'] `
     -SubscriptionId $Context.Variables['var-hubnetwork-subscriptionId'] `
     -ConfigurationFilePath "$($Context.NetworkingDirectory)/$($Context.Variables['var-hubnetwork-ngfw-configurationFileName'])" `
-    -LogAnalyticsWorkspaceResourceId $LoggingConfiguration.LogAnalyticsWorkspaceResourceId 
+    -LogAnalyticsWorkspaceResourceId $LoggingConfiguration.LogAnalyticsWorkspaceResourceId `
+    -NvaUsername $NvaUsername `
+    -NvaPassword $NvaPassword
 }
 
 # Azure Firewall Policy

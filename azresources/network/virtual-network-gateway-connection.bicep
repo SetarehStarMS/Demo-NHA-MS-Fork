@@ -40,7 +40,7 @@ param enablePrivateLinkFastPath bool = false
 param expressRouteGatewayBypass bool = false
 
 @description('Required. The primary Virtual Network Gateway.')
-param virtualNetworkGateway1 object
+param virtualNetworkGateway1 object = {}
 
 @description('Optional. The remote Virtual Network Gateway. Used for connection connectionType [Vnet2Vnet].')
 param virtualNetworkGateway2 object = {}

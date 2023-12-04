@@ -28,6 +28,12 @@ function Set-HubNetwork-With-NGFW {
     [Parameter(Mandatory = $true)]
     [String]$LogAnalyticsWorkspaceResourceId,
 
+    [Parameter(Mandatory = $false)]
+    [SecureString]$NvaUsername = $null,
+
+    [Parameter(Mandatory = $false)]
+    [SecureString]$NvaPassword = $null,
+
     [Parameter(HelpMessage = "Number of retries to deploy the Hub Network")]
     [int]$RetryCount = 5,
 
@@ -62,6 +68,30 @@ function Set-HubNetwork-With-NGFW {
     $Configuration.parameters | Add-Member $LogAnalyticsWorkspaceIdElement -Force
   }
   
+  #endregion
+
+  #region Check if NVA username and password are provided.
+
+  if (-not [string]::IsNullOrEmpty($NvaUsername)) {
+    Write-Output "NVA username is provided.  Setting NVA username in configuration."
+    $NvaUsernameElement = @{
+      fwUsername = @{
+        value = ($NvaUsername | ConvertFrom-SecureString -AsPlainText)
+      }
+    }
+    $Configuration.parameters | Add-Member $NvaUsernameElement -Force
+  }
+
+  if (-not [string]::IsNullOrEmpty($NvaPassword)) {
+    Write-Output "NVA password is provided.  Setting NVA password in configuration."
+    $NvaPasswordElement = @{
+      fwPassword = @{
+        value = ($NvaPassword | ConvertFrom-SecureString -AsPlainText)
+      }
+    }
+    $Configuration.parameters | Add-Member $NvaPasswordElement -Force
+  }
+
   #endregion
   
   $PopulatedParametersFilePath = $ConfigurationFilePath.Split('.')[0] + '-populated.json'

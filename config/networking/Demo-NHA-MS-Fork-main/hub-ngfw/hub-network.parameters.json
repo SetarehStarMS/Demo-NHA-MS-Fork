@@ -99,6 +99,20 @@
           "sku": "Standard",
           "scaleUnits": 2
         },
+        "PaloAltoPanoramaA": {
+          "enabled": true,
+          "resourceGroupName": "nha-hub-panorama-rg",
+          "vmName": "Panorama-A",
+          "vmSize": "Standard_D8s_v3",
+          "privateIPAddress": "10.18.4.4" 
+        },
+        "PaloAltoPanoramaB": {
+          "enabled": true,
+          "resourceGroupName": "nha-hub-panorama-rg",
+          "vmName": "Panorama-B",
+          "vmSize": "Standard_D8s_v3",
+          "privateIPAddress": "10.18.4.5" 
+        },
         "PaloAltoCloudNGFW": {
           "name": "nha-hub-PaloAltoCloudNGFW",
           "availabilityZones": [
@@ -128,12 +142,14 @@
         "localNetworkGateway": {
           "localNetworkGatewayName": "nha-hub-localNetworkGateway",
           "enabled": true,
-          "localAddressPrefixes": ["20.0.0.0/24","30.0.0.0/24"],
+          "localAddressPrefixes": ["30.0.0.0/24","40.0.0.0/24"],
           "localAsn": "",
-          "localBgpPeeringAddress":""          
+          "localBgpPeeringAddress":"",
+          "localGatewayPublicIpAddress":"30.221.15.1"          
         },
         "vNetGatewayConnection": {
           "connectionName": "nha-hub-S2SVPNConnection",
+          "connectionType": "IPsec",
           "enabled": true,
           "vpnSharedKey": "ddd123",
           "enableBgp": false
@@ -164,6 +180,11 @@
               "comments": "PaloAlto NGFW Public Subnet",
               "name": "NGFWPublicSubnet",
               "addressPrefix": "10.18.3.0/26"
+            },
+            "ngfwPanoramaSubnet": {
+              "comments": "PaloAlto Panorama Subnet",
+              "name": "NGFWPanoramaSubnet",
+              "addressPrefix": "10.18.4.0/27"
             },
             "optional": []
           }
