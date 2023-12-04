@@ -186,6 +186,15 @@ param privateDnsZones object
 @description('DDOS Standard configuration.  See docs/archetypes/hubnetwork-nva.md for configuration settings.')
 param ddosStandard object
 
+// Temporary VM Credentials
+@description('Temporary username for firewall virtual machines.')
+@secure()
+param fwUsername string
+
+@description('Temporary password for firewall virtual machines.')
+@secure()
+param fwPassword string
+
 // // Public Access Zone
 // @description('Public Access Zone configuration.  See docs/archetypes/hubnetwork-nva.md for configuration settings.')
 // param publicAccessZone object
@@ -262,6 +271,12 @@ resource rgDdos 'Microsoft.Resources/resourceGroups@2020-06-01' = if (ddosStanda
 // Create Hub Virtual Network Resource Group
 resource rgHubVnet 'Microsoft.Resources/resourceGroups@2020-06-01' = {
   name: hub.resourceGroupName
+  location: location
+  tags: resourceTags
+}
+// Create Palo Alto Panorama Resource Group
+resource rgPanorama 'Microsoft.Resources/resourceGroups@2020-06-01' = if (hub.PaloAltoPanoramaA.enabled) {
+  name: hub.PaloAltoPanoramaA.resourceGroupName
   location: location
   tags: resourceTags
 }
@@ -375,7 +390,48 @@ module hubVnet 'hub/hub-vnet.bicep' = {
   }
 }
 
-// Palo Alto Cloud NGFW
+// Create Palo Alto Panorama Availability Set
+module availSet '../../azresources/compute/availability-set.bicep' = if (hub.PaloAltoPanoramaA.enabled) {
+  scope: rgPanorama
+  name: 'deploy-panorama-avail'
+  params: {
+    name: 'panorama-avail'
+    location: location
+  }
+}
+
+// Create Palo Alto Panorama VMs
+module PanoramaA '../../azresources/network/PaloAlto-Panorama-vm.bicep' = if (hub.PaloAltoPanoramaA.enabled) {
+  scope: rgPanorama
+  name: 'deploy-panoramaA-VM'
+  params: {
+    location: rgPanorama.location
+    availID: availSet.outputs.availID
+    subnetId: hubVnet.outputs.ngfwPanoramaSubnetId
+    username: fwUsername
+    password: fwPassword
+    vmName: hub.PaloAltoPanoramaA.vmName
+    vmSize: hub.PaloAltoPanoramaA.vmSize
+    privateIPAddress: hub.PaloAltoPanoramaA.privateIPAddress
+  }
+}
+
+module PanoramaB '../../azresources/network/PaloAlto-Panorama-vm.bicep' = if (hub.PaloAltoPanoramaA.enabled) {
+  scope: rgPanorama
+  name: 'deploy-panoramaB-VM'
+  params: {
+    location: rgPanorama.location
+    availID: availSet.outputs.availID
+    subnetId: hubVnet.outputs.ngfwPanoramaSubnetId
+    username: fwUsername
+    password: fwPassword
+    vmName: hub.PaloAltoPanoramaB.vmName
+    vmSize: hub.PaloAltoPanoramaB.vmSize
+    privateIPAddress: hub.PaloAltoPanoramaB.privateIPAddress
+  }
+}
+
+// Create Palo Alto Cloud NGFW
 module PaloAltoCloudNGFW '../../azresources/network/PaloAltoCloudNGFW.bicep' = {
   name: 'deploy-paloalto-cloud-ngfw'
   scope: rgHubVnet

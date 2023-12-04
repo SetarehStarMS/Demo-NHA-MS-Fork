@@ -149,6 +149,12 @@
             "bastion": {
               "$ref": "#/definitions/bastion"
             },
+            "PaloAltoPanoramaA": {
+              "$ref": "#/definitions/PaloAltoPanoramaA"
+            },
+            "PaloAltoPanoramaB": {
+              "$ref": "#/definitions/PaloAltoPanoramaB"
+            },
             "PaloAltoCloudNGFW": {
               "$ref": "#/definitions/PaloAltoCloudNGFW"
             },
@@ -188,6 +194,9 @@
                     "ngfwPublicSubnet": {
                       "$ref": "#/definitions/requiredSubnet"
                     },
+                    "ngfwPanoramaSubnet": {
+                      "$ref": "#/definitions/requiredSubnet"
+                    },
                     "optional": {
                       "type": "array",
                       "items": {
@@ -200,6 +209,7 @@
                     "bastion",
                     "ngfwPrivateSubnet",
                     "ngfwPublicSubnet",
+                    "ngfwPanoramaSubnet",
                     "optional"
                   ]
                 }
@@ -339,6 +349,60 @@
         "scaleUnits"
       ]
     },
+    "PaloAltoPanoramaA": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "resourceGroupName": {
+          "type": "string"
+        },
+        "vmName": {
+          "type": "string"
+        },
+        "vmSize": {
+          "type": "string"
+        },
+        "privateIPAddress": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "enabled",
+        "resourceGroupName",
+        "vmName",
+        "vmSize",
+        "privateIPAddress"
+      ]      
+    },
+    "PaloAltoPanoramaB": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "resourceGroupName": {
+          "type": "string"
+        },
+        "vmName": {
+          "type": "string"
+        },
+        "vmSize": {
+          "type": "string"
+        },
+        "privateIPAddress": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "enabled",
+        "resourceGroupName",
+        "vmName",
+        "vmSize",
+        "privateIPAddress"
+      ]      
+    },    
     "PaloAltoCloudNGFW": {
       "type": "object",
       "properties": {
