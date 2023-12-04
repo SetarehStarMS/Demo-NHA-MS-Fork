@@ -104,14 +104,14 @@
           "resourceGroupName": "nha-hub-panorama-rg",
           "vmName": "Panorama-A",
           "vmSize": "Standard_D8s_v3",
-          "privateIPAddress": "10.18.4.4" 
+          "privateIPAddress": "10.18.0.100" 
         },
         "PaloAltoPanoramaB": {
           "enabled": true,
           "resourceGroupName": "nha-hub-panorama-rg",
           "vmName": "Panorama-B",
           "vmSize": "Standard_D8s_v3",
-          "privateIPAddress": "10.18.4.5" 
+          "privateIPAddress": "10.18.0.101" 
         },
         "PaloAltoCloudNGFW": {
           "name": "nha-hub-PaloAltoCloudNGFW",
@@ -184,7 +184,7 @@
             "ngfwPanoramaSubnet": {
               "comments": "PaloAlto Panorama Subnet",
               "name": "NGFWPanoramaSubnet",
-              "addressPrefix": "10.18.4.0/27"
+              "addressPrefix": "10.18.0.96/27"
             },
             "optional": []
           }
