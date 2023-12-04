@@ -43,6 +43,6 @@ jobs:
           -EnvironmentName '${{env.ENVIRONMENT_NAME}}' `
           -LoginServicePrincipalJson (ConvertTo-SecureString -String '${{secrets.ALZ_SPN_CREDENTIALS}}' -AsPlainText -Force) `
           -GitHubRepo ${env:GITHUB_REPOSITORY} `
-          -GitHubRef ${env:GITHUB_REF} 
+          -GitHubRef ${env:GITHUB_REF} `
           -NvaUsername (ConvertTo-SecureString -String '${{secrets.PaloAltoPanorama_USERNAME}}' -AsPlainText -Force) `
           -NvaPassword (ConvertTo-SecureString -String '${{secrets.PaloAltoPanorama_PASSWORD}} '-AsPlainText -Force)
