@@ -129,7 +129,8 @@
           "sourceNATEnabled": true,
           "networkType": "VNET",
           "enableDnsProxy": "DISABLED",
-          "ipOfTrustSubnetForUdr": "10.18.2.4"          
+          "ipOfTrustSubnetForUdr": "10.18.2.4",
+          "isPanoramaManaged": true      
         },
         "virtualNetworkGateway": {
           "name": "nha-hub-virtualNetworkGateway",

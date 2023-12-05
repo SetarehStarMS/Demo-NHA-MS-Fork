@@ -33,6 +33,9 @@ param resourceGroupName string
 @description('ipOfTrustSubnetForUdr')
 param ipOfTrustSubnetForUdr string
 
+@description('If Security Policies are managed by Palo Alto Networks Panorama or policies are managed by Azure Rulestack.')
+param isPanoramaManaged bool 
+
 // @description('logAnalyticsWorkspaceResourceId')
 // param logAnalyticsWorkspaceResourceId string
 
@@ -74,7 +77,7 @@ resource sourceNATPublicIp 'Microsoft.Network/publicIPAddresses@2021-02-01' = if
   }
 }
 
-resource localRuleStacks 'PaloAltoNetworks.Cloudngfw/localRulestacks@2023-09-01' = {
+resource localRuleStacks 'PaloAltoNetworks.Cloudngfw/localRulestacks@2023-09-01' = if (!isPanoramaManaged) {
   name: '${name}-lrs'
   location: location
   properties: {
@@ -91,11 +94,11 @@ resource localRuleStacks 'PaloAltoNetworks.Cloudngfw/localRulestacks@2023-09-01'
  }
 }
 
-resource lrs 'PaloAltoNetworks.Cloudngfw/localRulestacks@2023-09-01' existing = {
+resource lrs 'PaloAltoNetworks.Cloudngfw/localRulestacks@2023-09-01' existing = if (!isPanoramaManaged) {
   name: '${name}-lrs'
   scope: resourceGroup(resourceGroupName)
 }
-output LocalRuleStackID string = lrs.id
+//output LocalRuleStackID string = lrs.id
 
 resource vnet 'Microsoft.Network/virtualNetworks@2021-02-01' existing ={
   name: network.name
@@ -120,13 +123,13 @@ resource ngfwPip 'Microsoft.Network/publicIPAddresses@2021-02-01' existing = {
 }
 output ngfwPipResourceID string = ngfwPip.id
 
-resource ngfwSourceNATPip 'Microsoft.Network/publicIPAddresses@2021-02-01' existing = {
+resource ngfwSourceNATPip 'Microsoft.Network/publicIPAddresses@2021-02-01' existing = if (sourceNATEnabled) {
   name: sourceNATPublicIp.name
   scope: resourceGroup(resourceGroupName)
 }
-output ngfwSourceNATPipResourceID string = ngfwSourceNATPip.id
+//output ngfwSourceNATPipResourceID string = ngfwSourceNATPip.id
 
-resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09-01' = {
+resource paloAltoCloudNGFWFirewallWithAzureRuleStack 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09-01' = if (!isPanoramaManaged) {
   name: name
   location: location
   properties: {
@@ -185,4 +188,61 @@ resource paloAltoCloudNGFWFirewall 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09
   
 }
 
-output ngfwResourceId string = paloAltoCloudNGFWFirewall.id
+resource paloAltoCloudNGFWFirewallWithPaloAltoPanorama 'PaloAltoNetworks.Cloudngfw/firewalls@2023-09-01' = if (isPanoramaManaged) {
+  name: name
+  location: location
+  properties: {
+    networkProfile: {
+      vnetConfiguration: {
+        vnet: {
+          resourceId: vnetId
+        }
+        trustSubnet: {
+          
+          resourceId: ngfwPriavteSubnet.id
+        }
+        unTrustSubnet: {
+          
+          resourceId: ngfwPublicSubnet.id
+        }
+        ipOfTrustSubnetForUdr: {
+          address: ipOfTrustSubnetForUdr
+        }
+        
+      }
+      networkType: networkType
+      publicIps: [
+        {
+          
+          resourceId: ngfwPip.id
+        }
+      ]
+      enableEgressNat: sourceNATEnabled? 'ENABLED' : 'DISABLED'
+      egressNatIp: sourceNATEnabled ? [
+        {
+          
+          resourceId: ngfwSourceNATPip.id
+        }
+      ]: null
+    }
+    dnsSettings: {
+      enableDnsProxy: enableDnsProxy
+      enabledDnsType: 'CUSTOM'
+    }
+    isPanoramaManaged: 'TRUE'
+    panoramaConfig: {
+      configString: 'hggggugutd5r6tiuh0h0jffgf8t9y00y08y08y08y08y08yhugkgkgug09g00hur75r75r5e4e46u9p'
+    }
+    planData: {
+      usageType: 'PAYG'
+      billingCycle: 'MONTHLY'
+      planId: 'panw-cloud-ngfw-payg'
+    }
+    marketplaceDetails: {
+      offerId: 'pan_swfw_cloud_ngfw'
+      publisherId: 'paloaltonetworks'
+    }    
+  }
+  
+}
+output ngfwResourceId string = isPanoramaManaged? paloAltoCloudNGFWFirewallWithPaloAltoPanorama.id : paloAltoCloudNGFWFirewallWithAzureRuleStack.id
