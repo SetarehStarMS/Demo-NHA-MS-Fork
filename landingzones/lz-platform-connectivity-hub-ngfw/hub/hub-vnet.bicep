@@ -271,7 +271,7 @@ output vnetId string = hubVnet.id
 
 output AzureBastionSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.bastion.name}'
 output GatewaySubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.gateway.name}'
-output ngfwPanoramaSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.ngfwPanoramaSubnet.name}'
+output ngfwPanoramaSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.ngfwPanoramaSubnet.name}'
 
 //output NonProdIntSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.nonProductionInternal.name}'
 //output ProdIntSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.productionInternal.name}'
