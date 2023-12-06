@@ -281,6 +281,13 @@ resource rgPanorama 'Microsoft.Resources/resourceGroups@2020-06-01' = if (hub.Pa
   tags: resourceTags
 }
 
+// Create Jumpbx Resource Group
+resource rgJumpbox 'Microsoft.Resources/resourceGroups@2020-06-01' = if (hub.jumpbox.enabled) {
+  name: hub.jumpbox.resourceGroupName
+  location: location
+  tags: resourceTags
+}
+
 // Enable delete locks
 module rgDdosDeleteLock '../../azresources/util/delete-lock.bicep' = if (ddosStandard.enabled) {
   name: 'deploy-delete-lock-${ddosStandard.resourceGroupName}'
@@ -401,7 +408,7 @@ module availSet '../../azresources/compute/availability-set.bicep' = if (hub.Pal
 }
 
 // Create Palo Alto Panorama VMs
-module PanoramaA '../../azresources/network/PaloAlto-Panorama-vm.bicep' = if (hub.PaloAltoPanoramaA.enabled) {
+module PanoramaA '../../azresources/network/PaloAlto-Network-Panorama.bicep' = if (hub.PaloAltoPanoramaA.enabled) {
   scope: rgPanorama
   name: 'deploy-panoramaA-VM'
   params: {
@@ -416,7 +423,7 @@ module PanoramaA '../../azresources/network/PaloAlto-Panorama-vm.bicep' = if (hu
   }
 }
 
-module PanoramaB '../../azresources/network/PaloAlto-Panorama-vm.bicep' = if (hub.PaloAltoPanoramaA.enabled) {
+module PanoramaB '../../azresources/network/PaloAlto-Network-Panorama.bicep' = if (hub.PaloAltoPanoramaA.enabled) {
   scope: rgPanorama
   name: 'deploy-panoramaB-VM'
   params: {
@@ -432,7 +439,7 @@ module PanoramaB '../../azresources/network/PaloAlto-Panorama-vm.bicep' = if (hu
 }
 
 // Create Palo Alto Cloud NGFW
-module PaloAltoCloudNGFW '../../azresources/network/PaloAltoCloudNGFW.bicep' = {
+module PaloAltoCloudNGFW '../../azresources/network/PaloAltoCloudNGFW.bicep' = if (hub.PaloAltoCloudNGFW.enabled) {
   name: 'deploy-paloalto-cloud-ngfw'
   scope: rgHubVnet
   params: {
@@ -476,6 +483,20 @@ module bastion '../../azresources/network/bastion.bicep' = if (hub.bastion.enabl
     sku: hub.bastion.sku
     scaleUnits: hub.bastion.scaleUnits
     subnetId: hubVnet.outputs.AzureBastionSubnetId
+  }
+}
+
+//Create Jumpbox for network management 
+module jumpbox '../../azresources/compute/jumpbox/jumpbox-vm.bicep' = if (hub.jumpbox.enabled) {
+  scope: rgJumpbox
+  name: 'deploy-jumpbox'
+  params: {
+    location: location
+    password: fwPassword
+    subnetId: hubVnet.outputs.managementSubnetId
+    username: fwUsername
+    vmName: hub.jumpbox.name
+    vmSize: hub.jumpbox.VMSize
   }
 }
 

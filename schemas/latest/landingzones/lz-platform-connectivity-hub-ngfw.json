@@ -149,6 +149,9 @@
             "bastion": {
               "$ref": "#/definitions/bastion"
             },
+            "jumpbox": {
+              "$ref": "#/definitions/jumpbox"
+            },
             "PaloAltoPanoramaA": {
               "$ref": "#/definitions/PaloAltoPanoramaA"
             },
@@ -188,15 +191,18 @@
                     "bastion": {
                       "$ref": "#/definitions/requiredSubnet"
                     },
-                    "ngfwPrivateSubnet": {
-                      "$ref": "#/definitions/requiredSubnet"
-                    },
-                    "ngfwPublicSubnet": {
+                    "ManagementSubnet": {
                       "$ref": "#/definitions/requiredSubnet"
                     },
                     "ngfwPanoramaSubnet": {
                       "$ref": "#/definitions/requiredSubnet"
                     },
+                    "ngfwPrivateSubnet": {
+                      "$ref": "#/definitions/requiredSubnet"
+                    },
+                    "ngfwPublicSubnet": {
+                      "$ref": "#/definitions/requiredSubnet"
+                    },                    
                     "optional": {
                       "type": "array",
                       "items": {
@@ -207,6 +213,7 @@
                   "required": [
                     "gateway",
                     "bastion",
+                    "ManagementSubnet",
                     "ngfwPrivateSubnet",
                     "ngfwPublicSubnet",
                     "ngfwPanoramaSubnet",
@@ -348,7 +355,31 @@
         "sku",
         "scaleUnits"
       ]
-    },
+    },   
+    "jumpbox": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "resourceGroupName": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "vmSize": {
+          "type": "string"
+        }       
+      },
+      "required": [
+        "enabled",
+        "resourceGroupName",
+        "vmName",
+        "vmSize",
+        "privateIPAddress"
+      ]      
+    },    
     "PaloAltoPanoramaA": {
       "type": "object",
       "properties": {
@@ -406,6 +437,9 @@
     "PaloAltoCloudNGFW": {
       "type": "object",
       "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
         "name": {
           "type": "string"
         },
