@@ -376,8 +376,7 @@
         "enabled",
         "resourceGroupName",
         "vmName",
-        "vmSize",
-        "privateIPAddress"
+        "vmSize"       
       ]      
     },    
     "PaloAltoPanoramaA": {

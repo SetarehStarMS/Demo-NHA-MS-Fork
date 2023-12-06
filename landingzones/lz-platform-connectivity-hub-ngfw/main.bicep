@@ -492,9 +492,9 @@ module jumpbox '../../azresources/compute/jumpbox/jumpbox-vm.bicep' = if (hub.ju
   name: 'deploy-jumpbox'
   params: {
     location: location
-    password: fwPassword
     subnetId: hubVnet.outputs.managementSubnetId
     username: fwUsername
+    password: fwPassword
     vmName: hub.jumpbox.vmName
     vmSize: hub.jumpbox.vmSize
   }
