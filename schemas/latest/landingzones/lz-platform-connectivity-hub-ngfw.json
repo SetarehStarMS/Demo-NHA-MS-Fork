@@ -365,7 +365,7 @@
         "resourceGroupName": {
           "type": "string"
         },
-        "name": {
+        "vmName": {
           "type": "string"
         },
         "vmSize": {

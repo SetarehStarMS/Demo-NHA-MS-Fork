@@ -101,8 +101,8 @@
         },
         "jumpbox": {
           "enabled": true,
-          "name": "JumpboxVM",
-          "VMSize": "Standard_D2s_v3",
+          "vmName": "JumpboxVM",
+          "vmSize": "Standard_D2s_v3",
           "resourceGroupName": "nh-hub-jumpbox-rg"
         },
         "PaloAltoPanoramaA": {

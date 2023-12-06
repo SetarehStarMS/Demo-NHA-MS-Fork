@@ -495,8 +495,8 @@ module jumpbox '../../azresources/compute/jumpbox/jumpbox-vm.bicep' = if (hub.ju
     password: fwPassword
     subnetId: hubVnet.outputs.managementSubnetId
     username: fwUsername
-    vmName: hub.jumpbox.name
-    vmSize: hub.jumpbox.VMSize
+    vmName: hub.jumpbox.vmName
+    vmSize: hub.jumpbox.vmSize
   }
 }
 
