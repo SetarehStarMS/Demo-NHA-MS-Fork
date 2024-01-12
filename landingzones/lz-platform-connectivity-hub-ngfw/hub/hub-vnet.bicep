@@ -89,6 +89,14 @@ module nsgbastion '../../../azresources/network/nsg/nsg-bastion.bicep' = {
   }
 }
 
+module nsgjumpbox '../../../azresources/network/nsg/nsg-jumpbox.bicep' = {
+  name: 'deploy-nsg-ManagementNsg'
+  params: {
+    name: 'Management-Nsg'
+    location: location
+  }
+}
+
 module nsgPaloAltoPanorama '../../../azresources/network/nsg/nsg-paloalto-panorama.bicep' = {
   name: 'deploy-nsg-NGFWPanoramaNsg'
   params: {
@@ -182,6 +190,15 @@ var requiredSubnets = [
     }
   }
   {
+    name: hubNetwork.subnets.ManagementSubnet.name
+    properties: {
+      addressPrefix: hubNetwork.subnets.ManagementSubnet.addressPrefix
+      networkSecurityGroup: {
+        id: nsgjumpbox.outputs.nsgId
+      }
+    }
+  }
+  {
     name: hubNetwork.subnets.gateway.name
     properties: {
       addressPrefix: hubNetwork.subnets.gateway.addressPrefix
@@ -270,6 +287,7 @@ output vnetName string = hubVnet.name
 output vnetId string = hubVnet.id
 
 output AzureBastionSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.bastion.name}'
+output managementSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.ManagementSubnet.name}'
 output GatewaySubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.gateway.name}'
 output ngfwPanoramaSubnetId string = '${hubVnet.id}/subnets/${hubNetwork.subnets.ngfwPanoramaSubnet.name}'
 

@@ -99,6 +99,12 @@
           "sku": "Standard",
           "scaleUnits": 2
         },
+        "jumpbox": {
+          "enabled": true,
+          "vmName": "JumpboxVM",
+          "vmSize": "Standard_D2s_v3",
+          "resourceGroupName": "nh-hub-jumpbox-rg"
+        },
         "PaloAltoPanoramaA": {
           "enabled": true,
           "resourceGroupName": "nha-hub-panorama-rg",
@@ -114,6 +120,7 @@
           "privateIPAddress": "10.18.0.101" 
         },
         "PaloAltoCloudNGFW": {
+          "enabled": false,
           "name": "nha-hub-PaloAltoCloudNGFW",
           "availabilityZones": [
             "1",
@@ -172,6 +179,16 @@
               "name": "AzureBastionSubnet",
               "addressPrefix": "10.18.0.0/27"
             },
+            "ManagementSubnet": {
+              "comments": "ManagementSubnet (Jumpboxes)",
+              "name": "ManagementSubnet",
+              "addressPrefix": "10.18.0.64/27"
+            },
+            "ngfwPanoramaSubnet": {
+              "comments": "PaloAlto Panorama Subnet",
+              "name": "NGFWPanoramaSubnet",
+              "addressPrefix": "10.18.0.96/27"
+            },
             "ngfwPrivateSubnet": {
               "comments": "PaloAlto NGFW Private Subnet",
               "name": "NGFWPrivateSubnet",
@@ -181,12 +198,7 @@
               "comments": "PaloAlto NGFW Public Subnet",
               "name": "NGFWPublicSubnet",
               "addressPrefix": "10.18.3.0/26"
-            },
-            "ngfwPanoramaSubnet": {
-              "comments": "PaloAlto Panorama Subnet",
-              "name": "NGFWPanoramaSubnet",
-              "addressPrefix": "10.18.0.96/27"
-            },
+            },            
             "optional": []
           }
         }
