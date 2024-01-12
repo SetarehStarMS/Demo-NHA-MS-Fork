@@ -95,7 +95,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2020-06-01' = {
                 publisher: 'paloaltonetworks'
                 offer: 'panorama'
                 sku: 'byol'
-                version: 'latest'
+                version: '11.1'
             }
             osDisk: {
                 name: '${vmName}-os'
