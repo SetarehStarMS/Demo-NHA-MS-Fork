@@ -6,7 +6,7 @@ variables:
   var-hubnetwork-ngfw-configurationFileName: hub-ngfw/hub-network.parameters.json
   var-hubnetwork-subscriptionId: dbf14654-41b8-4a18-bcdd-a200d053975f
   #var-hubnetwork-azfwPolicy-configurationFileName: hub-azfw-policy/azure-firewall-policy.parameters.json
-  #var-logging-managementGroupId: Management
+  var-logging-managementGroupId: Management
   var-logging-subscriptionId: 026bb6b5-ed13-40f2-b8fa-b5b987429cbb
   deploymentRegion: canadacentral
   var-NHA-managementGroupId: BCHealth-NorthernHealth
