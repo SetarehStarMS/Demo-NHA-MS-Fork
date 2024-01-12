@@ -95,7 +95,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2020-06-01' = {
                 publisher: 'paloaltonetworks'
                 offer: 'panorama'
                 sku: 'byol'
-                version: 'latest'
+                version: 'PANOS 10.2.7-h3'
             }
             osDisk: {
                 name: '${vmName}-os'
@@ -105,6 +105,18 @@ resource vm 'Microsoft.Compute/virtualMachines@2020-06-01' = {
                     storageAccountType: 'Premium_LRS'
                 }
             }
+            dataDisks: [
+                {
+                    caching: 'None'
+                    name: '${vmName}-data-1'
+                    diskSizeGB: 2048
+                    lun: 0
+                    managedDisk: {
+                        storageAccountType: 'Premium_LRS'                        
+                    }
+                    createOption: 'Empty'
+                }
+            ]
         }
         osProfile: {
             computerName: vmName
