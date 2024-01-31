@@ -4,6 +4,7 @@ variables:
   #var-hubnetwork-azfw-configurationFileName: hub-azfw/hub-network.parameters.json
   #var-hubnetwork-nva-configurationFileName: hub-nva/hub-network.parameters.json
   var-hubnetwork-ngfw-configurationFileName: hub-ngfw/hub-network.parameters.json
+  var-vhubnetwork-nva-configurationFileName: vwan-nva/vwan-nva.parameters.json
   var-hubnetwork-subscriptionId: dbf14654-41b8-4a18-bcdd-a200d053975f
   #var-hubnetwork-azfwPolicy-configurationFileName: hub-azfw-policy/azure-firewall-policy.parameters.json
   var-logging-managementGroupId: Management
