@@ -29,37 +29,19 @@ param password string
 @description('Subnet Resource Id.')
 param subnetId string
 
-param availID string
-
-resource PanoramaPIP 'Microsoft.Network/publicIPAddresses@2023-05-01' = {
-  name: '${vmName}-pip-01'
-  location: location
-  sku: {
-    name: 'Standard'
-  }
-  properties: {
-    publicIPAllocationMethod: 'Static'
-  }
-}
-
-param privateIPAddress string
 
 resource nic 'Microsoft.Network/networkInterfaces@2020-06-01' = {
-    name: '${vmName}-nic-01'
+    name: '${vmName}-nic'
     location: location
     properties: {
         ipConfigurations: [
             {
-                name: 'ipconfig1'
+                name: 'IpConf'
                 properties: {
                     subnet: {
                         id: subnetId
                     }
-                    publicIPAddress: {
-                      id: PanoramaPIP.id
-                    }
-                    privateIPAllocationMethod: 'Static'
-                    privateIPAddress: privateIPAddress
+                    privateIPAllocationMethod: 'Dynamic'
                     privateIPAddressVersion: 'IPv4'
                     primary: true
                 }
@@ -68,20 +50,12 @@ resource nic 'Microsoft.Network/networkInterfaces@2020-06-01' = {
     }
 }
 
-resource vm 'Microsoft.Compute/virtualMachines@2023-09-01' = {
+resource vm 'Microsoft.Compute/virtualMachines@2020-06-01' = {
     name: vmName
     location: location
-    plan: {
-      name: 'byol'
-      publisher: 'paloaltonetworks'
-      product: 'panorama'
-    }
     properties: {
         hardwareProfile: {
             vmSize: vmSize
-        }
-        availabilitySet: {
-          id: availID
         }
         networkProfile: {
             networkInterfaces: [
@@ -92,11 +66,10 @@ resource vm 'Microsoft.Compute/virtualMachines@2023-09-01' = {
         }
         storageProfile: {
             imageReference: {
-                publisher: 'paloaltonetworks'
-                offer: 'panorama'
-                sku: 'byol'
-                version: '10.2.3'
-                
+                publisher: 'MicrosoftWindowsServer'
+                offer: 'WindowsServer'
+                sku: '2022-datacenter-azure-edition'
+                version: 'latest'
             }
             osDisk: {
                 name: '${vmName}-os'
@@ -106,18 +79,6 @@ resource vm 'Microsoft.Compute/virtualMachines@2023-09-01' = {
                     storageAccountType: 'Premium_LRS'
                 }
             }
-            dataDisks: [
-                {
-                    caching: 'None'
-                    name: '${vmName}-data-1'
-                    diskSizeGB: 2048
-                    lun: 0
-                    managedDisk: {
-                        storageAccountType: 'Premium_LRS'                        
-                    }
-                    createOption: 'Empty'
-                }
-            ]
         }
         osProfile: {
             computerName: vmName

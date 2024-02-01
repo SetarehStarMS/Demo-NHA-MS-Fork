@@ -29,23 +29,11 @@ param password string
 @description('Subnet Resource Id.')
 param subnetId string
 
-param availID string
-
-resource PanoramaPIP 'Microsoft.Network/publicIPAddresses@2023-05-01' = {
-  name: '${vmName}-pip-01'
-  location: location
-  sku: {
-    name: 'Standard'
-  }
-  properties: {
-    publicIPAllocationMethod: 'Static'
-  }
-}
-
 param privateIPAddress string
+param loadBalancerBackendAddressPoolID string
 
 resource nic 'Microsoft.Network/networkInterfaces@2020-06-01' = {
-    name: '${vmName}-nic-01'
+    name: '${vmName}-nic'
     location: location
     properties: {
         ipConfigurations: [
@@ -55,20 +43,22 @@ resource nic 'Microsoft.Network/networkInterfaces@2020-06-01' = {
                     subnet: {
                         id: subnetId
                     }
-                    publicIPAddress: {
-                      id: PanoramaPIP.id
-                    }
                     privateIPAllocationMethod: 'Static'
                     privateIPAddress: privateIPAddress
                     privateIPAddressVersion: 'IPv4'
                     primary: true
+                    loadBalancerBackendAddressPools: [
+                        {
+                            id: loadBalancerBackendAddressPoolID
+                        }
+                    ]
                 }
             }
         ]
     }
 }
 
-resource vm 'Microsoft.Compute/virtualMachines@2023-09-01' = {
+resource vm 'Microsoft.Compute/virtualMachines@2020-06-01' = {
     name: vmName
     location: location
     plan: {
@@ -79,9 +69,6 @@ resource vm 'Microsoft.Compute/virtualMachines@2023-09-01' = {
     properties: {
         hardwareProfile: {
             vmSize: vmSize
-        }
-        availabilitySet: {
-          id: availID
         }
         networkProfile: {
             networkInterfaces: [
@@ -95,11 +82,10 @@ resource vm 'Microsoft.Compute/virtualMachines@2023-09-01' = {
                 publisher: 'paloaltonetworks'
                 offer: 'panorama'
                 sku: 'byol'
-                version: '10.2.3'
-                
+                version: 'latest'
             }
             osDisk: {
-                name: '${vmName}-os'
+                name: '${vmName}-OS'
                 caching: 'ReadWrite'
                 createOption: 'FromImage'
                 managedDisk: {
@@ -107,15 +93,15 @@ resource vm 'Microsoft.Compute/virtualMachines@2023-09-01' = {
                 }
             }
             dataDisks: [
-                {
-                    caching: 'None'
-                    name: '${vmName}-data-1'
-                    diskSizeGB: 2048
-                    lun: 0
-                    managedDisk: {
-                        storageAccountType: 'Premium_LRS'                        
-                    }
-                    createOption: 'Empty'
+                {   
+                name: '${vmName}-Log01'
+                caching: 'ReadOnly'
+                diskSizeGB: 2000
+                createOption: 'Empty'
+                managedDisk: {
+                    storageAccountType: 'Standard_LRS'
+                }
+                lun: 0
                 }
             ]
         }
@@ -131,3 +117,4 @@ resource vm 'Microsoft.Compute/virtualMachines@2023-09-01' = {
 output vmName string = vm.name
 output vmId string = vm.id
 output nicId string = nic.id
+output nicName string = nic.name
