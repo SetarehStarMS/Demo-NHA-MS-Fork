@@ -219,7 +219,7 @@ module builtInRouteTables 'vwan/defaultRouteTable.bicep' = [for (hub, i) in Virt
   scope: rgVWAN
   name: 'defaultRouteTable-${hub.HubLocation}-Ids'
   params: {
-    hubName: hub.DeployVWANHUB ? resVHUB[i].outputs.resourceName : null
+    hubName: hub.DeployVWANHUB ? resVHUB[i].outputs.resourceName : ''
   }
 }]
 
@@ -230,7 +230,7 @@ module resERGateway 'vwan/ergw.bicep' = [for (hub, i) in VirtualWanHUBs: if ((hu
   params: {
     name: '${hub.VirtualWanHUBName}-ergw'
     tags: resourceTags
-    vHUBId: hub.DeployVWANHUB ? resVHUB[i].outputs.resourceId : null
+    vHUBId: hub.DeployVWANHUB ? resVHUB[i].outputs.resourceId : ''
     location: hub.HubLocation
     scaleUnits: hub.ExpressRouteConfig.ExpressRouteGatewayScaleUnits
   }
@@ -436,7 +436,7 @@ module PanoramaPrimary 'sharedservices/panorama-vm.bicep' = if (SharedConnServic
     vmName: SharedConnServicesPrimaryRegionConfig.PanoramaConfig.vmName
     vmSize: SharedConnServicesPrimaryRegionConfig.PanoramaConfig.vmSize
     privateIPAddress: SharedConnServicesPrimaryRegionConfig.PanoramaConfig.privateIPAddress
-    loadBalancerBackendAddressPoolID: SharedConnServicesPrimaryRegionConfig.PanoramaConfig.enabled ? ILBPrimary.outputs.backendAddressPoolID: null
+    loadBalancerBackendAddressPoolID: SharedConnServicesPrimaryRegionConfig.PanoramaConfig.enabled ? ILBPrimary.outputs.backendAddressPoolID: ''
   }
 }
 
@@ -459,12 +459,12 @@ module PanoramaPrimary 'sharedservices/panorama-vm.bicep' = if (SharedConnServic
 //   }
 // }
 
-// //Create Resource Group for Private Link Solution in Primary Region
-// resource rgPrivateLinkPrimary 'Microsoft.Resources/resourceGroups@2020-06-01' = if (SharedConnServicesPrimaryRegionConfig.PanoramaConfig.enabled) {
-//   name: SharedConnServicesPrimaryRegionConfig.PanoramaConfig.ResourceGroupNameForPrivateLink
-//   location: SharedConnServicesPrimaryRegionConfig.DeploymentRegion
-//   tags: resourceTags
-// }
+//Create Resource Group for Private Link Solution in Primary Region
+resource rgPrivateLinkPrimary 'Microsoft.Resources/resourceGroups@2020-06-01' = if (SharedConnServicesPrimaryRegionConfig.PanoramaConfig.enabled) {
+  name: SharedConnServicesPrimaryRegionConfig.PanoramaConfig.ResourceGroupNameForPrivateLink
+  location: SharedConnServicesPrimaryRegionConfig.DeploymentRegion
+  tags: resourceTags
+}
 
 // //Create Resource Group for Private Link Solution in Secondary Region
 // resource rgPrivateLinkSecondary 'Microsoft.Resources/resourceGroups@2020-06-01' = if (SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled) {
@@ -473,27 +473,27 @@ module PanoramaPrimary 'sharedservices/panorama-vm.bicep' = if (SharedConnServic
 //   tags: resourceTags
 // }
 
-// //Create Internal Load Balancer for PrivateLink Support in Privary Region
-// module ILBPrimary 'sharedservices/panorama-privatelink.bicep' = if (SharedConnServicesPrimaryRegionConfig.PanoramaConfig.enabled) {
-//   scope: rgPrivateLinkPrimary
-//   name: 'Deploy-ILB-Primary'
-//   params: {
-//     tags: resourceTags
-//     location: SharedConnServicesPrimaryRegionConfig.PanoramaConfig.enabled ? rgPrivateLinkPrimary.location: null
-//     LBname: '${SharedConnServicesPrimaryRegionConfig.PanoramaConfig.vmName}-ILB'
-//     frontendIPConfigurationsName: 'ILBConfig'
-//     frontendIPConfigSubnetID: vnetPrimary.outputs.PanoramaSubnetId
-//     frontendIPConfigurationsPrivateIPAddress: SharedConnServicesPrimaryRegionConfig.PanoramaConfig.privateIPAddressForILB
-//     backendAddressPoolName: SharedConnServicesPrimaryRegionConfig.PanoramaConfig.vmName
-//     backendAddressPoolID: SharedConnServicesPrimaryRegionConfig.PanoramaConfig.enabled ? resourceId(subscription().subscriptionId,rgPrivateLinkPrimary.name,'Microsoft.Network/loadBalancers/backendAddressPools', '${SharedConnServicesPrimaryRegionConfig.PanoramaConfig.vmName}-ILB', SharedConnServicesPrimaryRegionConfig.PanoramaConfig.vmName): null
-//     frontendIPConfigurationID: SharedConnServicesPrimaryRegionConfig.PanoramaConfig.enabled ? resourceId(subscription().subscriptionId,rgPrivateLinkPrimary.name,'Microsoft.Network/loadBalancers/frontendIpConfigurations', '${SharedConnServicesPrimaryRegionConfig.PanoramaConfig.vmName}-ILB', 'ILBConfig'): null
-//     probeID: SharedConnServicesPrimaryRegionConfig.PanoramaConfig.enabled ? resourceId(subscription().subscriptionId,rgPrivateLinkPrimary.name,'Microsoft.Network/loadBalancers/probes', '${SharedConnServicesPrimaryRegionConfig.PanoramaConfig.vmName}-ILB', 'HealthProbe'): null
-//     PrivateLinkName: '${SharedConnServicesPrimaryRegionConfig.PanoramaConfig.vmName}-PrivateLinkService'
-//     PrivateLinkNameIP: '${SharedConnServicesPrimaryRegionConfig.PanoramaConfig.vmName}-PrivateLink'
-//     PrivateLinkPrivateIPAddress: SharedConnServicesPrimaryRegionConfig.PanoramaConfig.privateIPAddressForPrivateLink
-//     PrivateLinkPrivateSubnetID: vnetPrimary.outputs.PanoramaSubnetId
-//   }
-// }
+//Create Internal Load Balancer for PrivateLink Support in Privary Region
+module ILBPrimary 'sharedservices/panorama-privatelink.bicep' = if (SharedConnServicesPrimaryRegionConfig.PanoramaConfig.enabled) {
+  scope: rgPrivateLinkPrimary
+  name: 'Deploy-ILB-Primary'
+  params: {
+    tags: resourceTags
+    location: SharedConnServicesPrimaryRegionConfig.PanoramaConfig.enabled ? rgPrivateLinkPrimary.location: null
+    LBname: '${SharedConnServicesPrimaryRegionConfig.PanoramaConfig.vmName}-ILB'
+    frontendIPConfigurationsName: 'ILBConfig'
+    frontendIPConfigSubnetID: vnetPrimary.outputs.PanoramaSubnetId
+    frontendIPConfigurationsPrivateIPAddress: SharedConnServicesPrimaryRegionConfig.PanoramaConfig.privateIPAddressForILB
+    backendAddressPoolName: SharedConnServicesPrimaryRegionConfig.PanoramaConfig.vmName
+    backendAddressPoolID: SharedConnServicesPrimaryRegionConfig.PanoramaConfig.enabled ? resourceId(subscription().subscriptionId,rgPrivateLinkPrimary.name,'Microsoft.Network/loadBalancers/backendAddressPools', '${SharedConnServicesPrimaryRegionConfig.PanoramaConfig.vmName}-ILB', SharedConnServicesPrimaryRegionConfig.PanoramaConfig.vmName): null
+    frontendIPConfigurationID: SharedConnServicesPrimaryRegionConfig.PanoramaConfig.enabled ? resourceId(subscription().subscriptionId,rgPrivateLinkPrimary.name,'Microsoft.Network/loadBalancers/frontendIpConfigurations', '${SharedConnServicesPrimaryRegionConfig.PanoramaConfig.vmName}-ILB', 'ILBConfig'): null
+    probeID: SharedConnServicesPrimaryRegionConfig.PanoramaConfig.enabled ? resourceId(subscription().subscriptionId,rgPrivateLinkPrimary.name,'Microsoft.Network/loadBalancers/probes', '${SharedConnServicesPrimaryRegionConfig.PanoramaConfig.vmName}-ILB', 'HealthProbe'): null
+    PrivateLinkName: '${SharedConnServicesPrimaryRegionConfig.PanoramaConfig.vmName}-PrivateLinkService'
+    PrivateLinkNameIP: '${SharedConnServicesPrimaryRegionConfig.PanoramaConfig.vmName}-PrivateLink'
+    PrivateLinkPrivateIPAddress: SharedConnServicesPrimaryRegionConfig.PanoramaConfig.privateIPAddressForPrivateLink
+    PrivateLinkPrivateSubnetID: vnetPrimary.outputs.PanoramaSubnetId
+  }
+}
 
 // //Create Internal Load Balancer for PrivateLink Support in Secondary Region
 // module ILBSecondary 'sharedservices/panorama-privatelink.bicep' = if (SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled) {
