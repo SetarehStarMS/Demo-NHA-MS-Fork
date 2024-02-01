@@ -53,17 +53,17 @@ function Set-VWANNetwork-With-NVA {
 
   #region Check if Log Analytics Workspace Id is provided.  Otherwise set it.
 
-  # $LogAnalyticsWorkspaceResourceIdInFile = $Configuration.parameters | Get-Member -Name logAnalyticsWorkspaceResourceId
+  $LogAnalyticsWorkspaceResourceIdInFile = $Configuration.parameters | Get-Member -Name logAnalyticsWorkspaceResourceId
  
-  # if ($null -eq $LogAnalyticsWorkspaceResourceIdInFile -or $Configuration.parameters.logAnalyticsWorkspaceResourceId.value -eq "") {
-  #   Write-Output "Log Analytics Workspace Resource Id is not provided in the configuration file.  Setting it to the default value."
-  #   $LogAnalyticsWorkspaceIdElement = @{
-  #     logAnalyticsWorkspaceResourceId = @{
-  #       value = $LogAnalyticsWorkspaceResourceId
-  #     }
-  #   }
-  #   $Configuration.parameters | Add-Member $LogAnalyticsWorkspaceIdElement -Force
-  # }
+  if ($null -eq $LogAnalyticsWorkspaceResourceIdInFile -or $Configuration.parameters.logAnalyticsWorkspaceResourceId.value -eq "") {
+    Write-Output "Log Analytics Workspace Resource Id is not provided in the configuration file.  Setting it to the default value."
+    $LogAnalyticsWorkspaceIdElement = @{
+      logAnalyticsWorkspaceResourceId = @{
+        value = $LogAnalyticsWorkspaceResourceId
+      }
+    }
+    $Configuration.parameters | Add-Member $LogAnalyticsWorkspaceIdElement -Force
+  }
   
   #endregion
 

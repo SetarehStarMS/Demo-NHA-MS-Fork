@@ -40,6 +40,9 @@
         "serviceHealthAlerts": {
           "$ref": "types/serviceHealthAlerts.json#/definitions/ServiceHealthAlerts"
         },
+        "securityCenter": {
+          "$ref": "types/securityCenter.json#/definitions/SecurityCenter"
+        },
         "subscriptionRoleAssignments": {
           "$ref": "types/subscriptionRoleAssignments.json#/definitions/SubscriptionRoleAssignments"
         },
