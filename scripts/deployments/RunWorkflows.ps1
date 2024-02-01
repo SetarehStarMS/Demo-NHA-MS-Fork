@@ -178,6 +178,7 @@ Param(
   [switch]$DeployAzureFirewallPolicy,
   [switch]$DeployHubNetworkWithNVA,
   [switch]$DeployHubNetworkWithNGFW,  
+  [switch]$DeployVWANNetworkWithNVA,
   [switch]$DeployHubNetworkWithAzureFirewall,
 
   [switch]$DeployIdentity,
