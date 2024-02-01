@@ -160,6 +160,7 @@
     },
     "SharedConnServicesSecondaryRegionConfig": {
       "value": {
+        "DeploySharedConnServicesSecondaryRegion": false,
         "DeploymentRegion": "canadaeast",
         "ResourceGroupName": "SharedConVNET-CE-RG",
         "NetworkConfig": {

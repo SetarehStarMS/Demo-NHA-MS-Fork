@@ -258,7 +258,7 @@ module NGFWPIPs '../../azresources/network/custom-public-ip.bicep' = [for PIPNam
 }]
 
 param SharedConnServicesPrimaryRegionConfig object
-// param SharedConnServicesSecondaryRegionConfig object
+param SharedConnServicesSecondaryRegionConfig object
 
 // Create Shared Connectivity Services Resource Group for VNET in Primary Region
 resource rgVNETPrimary 'Microsoft.Resources/resourceGroups@2020-06-01' = {
@@ -267,12 +267,12 @@ resource rgVNETPrimary 'Microsoft.Resources/resourceGroups@2020-06-01' = {
   location: SharedConnServicesPrimaryRegionConfig.DeploymentRegion
 }
 
-// // Create Shared Connectivity Services Resource Group for VNET in Secondary Region
-// resource rgVNETSecondary 'Microsoft.Resources/resourceGroups@2020-06-01' = {
-//   name: SharedConnServicesSecondaryRegionConfig.ResourceGroupName
-//   tags: resourceTags
-//   location: SharedConnServicesSecondaryRegionConfig.DeploymentRegion
-// }
+// Create Shared Connectivity Services Resource Group for VNET in Secondary Region
+resource rgVNETSecondary 'Microsoft.Resources/resourceGroups@2020-06-01' = if (SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion) {
+  name: SharedConnServicesSecondaryRegionConfig.ResourceGroupName
+  tags: resourceTags
+  location: SharedConnServicesSecondaryRegionConfig.DeploymentRegion
+}
 
 // Create & configure virtaual network in Primary Region
 module vnetPrimary 'sharedservices/networking.bicep' = {
@@ -284,15 +284,15 @@ module vnetPrimary 'sharedservices/networking.bicep' = {
   }
 }
 
-// // Create & configure virtaual network in Secondary Region
-// module vnetSecondary 'sharedservices/networking.bicep' = {
-//   name: 'deploy-networking'
-//   scope: resourceGroup(rgVNETSecondary.name)
-//   params: {
-//     SharedConnServicesNetwork:SharedConnServicesSecondaryRegionConfig.NetworkConfig
-//     location: rgVNETSecondary.location
-//   }
-// }
+// Create & configure virtaual network in Secondary Region
+module vnetSecondary 'sharedservices/networking.bicep' = if (SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion) {
+  name: 'deploy-networking'
+  scope: resourceGroup(rgVNETSecondary.name)
+  params: {
+    SharedConnServicesNetwork:SharedConnServicesSecondaryRegionConfig.NetworkConfig
+    location: rgVNETSecondary.location
+  }
+}
 
 //Connect Shared Connectivity Services VNET (PrimaryRegion) with First HUB
 module vNetConnPrimary 'vwan/hubVirtualNetworkConnections.bicep' = {
@@ -305,16 +305,16 @@ module vNetConnPrimary 'vwan/hubVirtualNetworkConnections.bicep' = {
   }
 }
 
-// //Connect Shared Connectivity Services VNET (SecondaryRegion) with First HUB
-// module vNetConnSecondary 'vwan/hubVirtualNetworkConnections.bicep' = {
-//   scope: rgVWAN
-//   name: 'deploy-vhub-connection-Secondary'
-//   params: {
-//     vHubName: resVHUB[0].outputs.resourceName
-//     vHubConnName: '${vnetSecondary.outputs.vnetName}-to-${resVHUB[0].outputs.resourceName}'
-//     remoteVirtualNetworkId: vnetSecondary.outputs.vnetId
-//   }
-// }
+//Connect Shared Connectivity Services VNET (SecondaryRegion) with First HUB
+module vNetConnSecondary 'vwan/hubVirtualNetworkConnections.bicep' = if (SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion) {
+  scope: rgVWAN
+  name: 'deploy-vhub-connection-Secondary'
+  params: {
+    vHubName: resVHUB[0].outputs.resourceName
+    vHubConnName: '${vnetSecondary.outputs.vnetName}-to-${resVHUB[0].outputs.resourceName}'
+    remoteVirtualNetworkId: vnetSecondary.outputs.vnetId
+  }
+}
 
 // Create Bastion Resource Group in Primary Region
 resource rgBastionPrimary 'Microsoft.Resources/resourceGroups@2020-06-01' = if (SharedConnServicesPrimaryRegionConfig.BastionConfig.enabled) {
@@ -323,12 +323,12 @@ resource rgBastionPrimary 'Microsoft.Resources/resourceGroups@2020-06-01' = if (
   tags: resourceTags
 }
 
-// // Create Bastion Resource Group in Secondary Region
-// resource rgBastionSecondary 'Microsoft.Resources/resourceGroups@2020-06-01' = if (SharedConnServicesSecondaryRegionConfig.BastionConfig.enabled) {
-//   name: SharedConnServicesSecondaryRegionConfig.BastionConfig.resourceGroupName
-//   location: SharedConnServicesSecondaryRegionConfig.DeploymentRegion
-//   tags: resourceTags
-// }
+// Create Bastion Resource Group in Secondary Region
+resource rgBastionSecondary 'Microsoft.Resources/resourceGroups@2020-06-01' = if ((SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion) && (SharedConnServicesSecondaryRegionConfig.BastionConfig.enabled)){
+  name: SharedConnServicesSecondaryRegionConfig.BastionConfig.resourceGroupName
+  location: SharedConnServicesSecondaryRegionConfig.DeploymentRegion
+  tags: resourceTags
+}
 
 // Azure Bastion for Primary Region
 module bastionPrimary '../../azresources/network/custom-bastion.bicep' = if (SharedConnServicesPrimaryRegionConfig.BastionConfig.enabled) {
@@ -343,18 +343,18 @@ module bastionPrimary '../../azresources/network/custom-bastion.bicep' = if (Sha
   }
 }
 
-// // Azure Bastion for Secondary Region
-// module bastionSecondary '../../azresources/network/custom-bastion.bicep' = if (SharedConnServicesSecondaryRegionConfig.BastionConfig.enabled) {
-//   name: 'deploy-bastionSecondary'
-//   scope: rgBastionSecondary
-//   params: {
-//     location: SharedConnServicesSecondaryRegionConfig.BastionConfig.enabled ? rgBastionSecondary.location : null
-//     name: SharedConnServicesSecondaryRegionConfig.BastionConfig.name
-//     sku: SharedConnServicesSecondaryRegionConfig.BastionConfig.sku
-//     scaleUnits: SharedConnServicesSecondaryRegionConfig.BastionConfig.scaleUnits
-//     subnetId: vnetSecondary.outputs.AzureBastionSubnetId
-//   }
-// }
+// Azure Bastion for Secondary Region
+module bastionSecondary '../../azresources/network/custom-bastion.bicep' = if ((SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion) && (SharedConnServicesSecondaryRegionConfig.BastionConfig.enabled)) {
+  name: 'deploy-bastionSecondary'
+  scope: rgBastionSecondary
+  params: {
+    location: SharedConnServicesSecondaryRegionConfig.BastionConfig.enabled ? rgBastionSecondary.location : null
+    name: SharedConnServicesSecondaryRegionConfig.BastionConfig.name
+    sku: SharedConnServicesSecondaryRegionConfig.BastionConfig.sku
+    scaleUnits: SharedConnServicesSecondaryRegionConfig.BastionConfig.scaleUnits
+    subnetId: vnetSecondary.outputs.AzureBastionSubnetId
+  }
+}
 
 // Create Jumpbox Resource Group in Primary Region
 resource rgJumpboxPrimary 'Microsoft.Resources/resourceGroups@2020-06-01' = if (SharedConnServicesPrimaryRegionConfig.JumpboxConfig.enabled) {
@@ -363,12 +363,12 @@ resource rgJumpboxPrimary 'Microsoft.Resources/resourceGroups@2020-06-01' = if (
   tags: resourceTags
 }
 
-// // Create Jumpbox Resource Group in Secondary Region
-// resource rgJumpboxSecondary 'Microsoft.Resources/resourceGroups@2020-06-01' = if (SharedConnServicesSecondaryRegionConfig.JumpboxConfig.enabled) {
-//   name: SharedConnServicesSecondaryRegionConfig.JumpboxConfig.resourceGroupName
-//   location: SharedConnServicesSecondaryRegionConfig.DeploymentRegion
-//   tags: resourceTags
-// }
+// Create Jumpbox Resource Group in Secondary Region
+resource rgJumpboxSecondary 'Microsoft.Resources/resourceGroups@2020-06-01' = if ((SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion) && (SharedConnServicesSecondaryRegionConfig.JumpboxConfig.enabled)) {
+  name: SharedConnServicesSecondaryRegionConfig.JumpboxConfig.resourceGroupName
+  location: SharedConnServicesSecondaryRegionConfig.DeploymentRegion
+  tags: resourceTags
+}
 
 // Temporary VM Credentials
 @description('Temporary username for firewall virtual machines.')
@@ -393,19 +393,19 @@ module jumpboxPrimary 'sharedservices/management-vm.bicep' = if (SharedConnServi
   }
 }
 
-// // Create Jumpbox VM in Secondary Region
-// module jumpboxSecondary 'sharedservices/management-vm.bicep' = if (SharedConnServicesSecondaryRegionConfig.JumpboxConfig.enabled) {
-//   scope: rgJumpboxSecondary
-//   name: 'deploy-jumpboxSecondary'
-//   params: {
-//     location: SharedConnServicesSecondaryRegionConfig.JumpboxConfig.enabled ? rgJumpboxSecondary.location : null
-//     password: fwPassword
-//     subnetId: vnetSecondary.outputs.ManagementSubnetId
-//     username: fwUsername
-//     vmName: SharedConnServicesSecondaryRegionConfig.JumpboxConfig.name
-//     vmSize: SharedConnServicesSecondaryRegionConfig.JumpboxConfig.VMSize
-//   }
-// }
+// Create Jumpbox VM in Secondary Region
+module jumpboxSecondary 'sharedservices/management-vm.bicep' = if ((SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion) && (SharedConnServicesSecondaryRegionConfig.JumpboxConfig.enabled)) {
+  scope: rgJumpboxSecondary
+  name: 'deploy-jumpboxSecondary'
+  params: {
+    location: SharedConnServicesSecondaryRegionConfig.JumpboxConfig.enabled ? rgJumpboxSecondary.location : null
+    password: fwPassword
+    subnetId: vnetSecondary.outputs.ManagementSubnetId
+    username: fwUsername
+    vmName: SharedConnServicesSecondaryRegionConfig.JumpboxConfig.name
+    vmSize: SharedConnServicesSecondaryRegionConfig.JumpboxConfig.VMSize
+  }
+}
 
 // Create Panorama Resource Group in Primary Region
 resource rgPanoramaPrimary 'Microsoft.Resources/resourceGroups@2020-06-01' = if (SharedConnServicesPrimaryRegionConfig.PanoramaConfig.enabled) {
@@ -414,12 +414,12 @@ resource rgPanoramaPrimary 'Microsoft.Resources/resourceGroups@2020-06-01' = if 
   tags: resourceTags
 }
 
-// // Create Panorama Resource Group in Secondary Region
-// resource rgPanoramaSecondary 'Microsoft.Resources/resourceGroups@2020-06-01' = if (SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled) {
-//   name: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.resourceGroupName
-//   location: SharedConnServicesSecondaryRegionConfig.DeploymentRegion
-//   tags: resourceTags
-// }
+// Create Panorama Resource Group in Secondary Region
+resource rgPanoramaSecondary 'Microsoft.Resources/resourceGroups@2020-06-01' = if ((SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion) && (SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled)) {
+  name: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.resourceGroupName
+  location: SharedConnServicesSecondaryRegionConfig.DeploymentRegion
+  tags: resourceTags
+}
 
 // Create Panorama VM in Primary Region
 module PanoramaPrimary 'sharedservices/panorama-vm.bicep' = if (SharedConnServicesPrimaryRegionConfig.PanoramaConfig.enabled) {
@@ -440,24 +440,24 @@ module PanoramaPrimary 'sharedservices/panorama-vm.bicep' = if (SharedConnServic
   }
 }
 
-// // Create Panorama VM in Secondary Region
-// module PanoramaSecondary 'sharedservices/panorama-vm.bicep' = if (SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled) {
-//   scope: rgPanoramaSecondary
-//   name: 'deploy-panoramaSecondary-VM'
-//   dependsOn: [
-//     ILBSecondary
-//   ]
-//   params: {
-//     location: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled ? rgPanoramaSecondary.location: null
-//     password: fwPassword
-//     subnetId: vnetSecondary.outputs.PanoramaSubnetId
-//     username: fwUsername
-//     vmName: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmName
-//     vmSize: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmSize
-//     privateIPAddress: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.privateIPAddress
-//     loadBalancerBackendAddressPoolID: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled ? ILBSecondary.outputs.backendAddressPoolID: null
-//   }
-// }
+// Create Panorama VM in Secondary Region
+module PanoramaSecondary 'sharedservices/panorama-vm.bicep' = if ((SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion) && (SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled)) {
+  scope: rgPanoramaSecondary
+  name: 'deploy-panoramaSecondary-VM'
+  dependsOn: [
+    ILBSecondary
+  ]
+  params: {
+    location: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled ? rgPanoramaSecondary.location: null
+    password: fwPassword
+    subnetId: vnetSecondary.outputs.PanoramaSubnetId
+    username: fwUsername
+    vmName: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmName
+    vmSize: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmSize
+    privateIPAddress: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.privateIPAddress
+    loadBalancerBackendAddressPoolID: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled ? ILBSecondary.outputs.backendAddressPoolID: ''
+  }
+}
 
 //Create Resource Group for Private Link Solution in Primary Region
 resource rgPrivateLinkPrimary 'Microsoft.Resources/resourceGroups@2020-06-01' = if (SharedConnServicesPrimaryRegionConfig.PanoramaConfig.enabled) {
@@ -466,12 +466,12 @@ resource rgPrivateLinkPrimary 'Microsoft.Resources/resourceGroups@2020-06-01' = 
   tags: resourceTags
 }
 
-// //Create Resource Group for Private Link Solution in Secondary Region
-// resource rgPrivateLinkSecondary 'Microsoft.Resources/resourceGroups@2020-06-01' = if (SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled) {
-//   name: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.ResourceGroupNameForPrivateLink
-//   location: SharedConnServicesSecondaryRegionConfig.DeploymentRegion
-//   tags: resourceTags
-// }
+//Create Resource Group for Private Link Solution in Secondary Region
+resource rgPrivateLinkSecondary 'Microsoft.Resources/resourceGroups@2020-06-01' = if ((SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion) && (SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled)) {
+  name: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.ResourceGroupNameForPrivateLink
+  location: SharedConnServicesSecondaryRegionConfig.DeploymentRegion
+  tags: resourceTags
+}
 
 //Create Internal Load Balancer for PrivateLink Support in Privary Region
 module ILBPrimary 'sharedservices/panorama-privatelink.bicep' = if (SharedConnServicesPrimaryRegionConfig.PanoramaConfig.enabled) {
@@ -495,27 +495,27 @@ module ILBPrimary 'sharedservices/panorama-privatelink.bicep' = if (SharedConnSe
   }
 }
 
-// //Create Internal Load Balancer for PrivateLink Support in Secondary Region
-// module ILBSecondary 'sharedservices/panorama-privatelink.bicep' = if (SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled) {
-//   scope: rgPrivateLinkSecondary
-//   name: 'Deploy-ILB-Secondary'
-//   params: {
-//     tags: resourceTags
-//     location: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled ? rgPrivateLinkSecondary.location: null
-//     LBname: '${SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmName}-ILB'
-//     frontendIPConfigurationsName: 'ILBConfig'
-//     frontendIPConfigSubnetID: vnetSecondary.outputs.PanoramaSubnetId
-//     frontendIPConfigurationsPrivateIPAddress: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.privateIPAddressForILB
-//     backendAddressPoolName: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmName
-//     backendAddressPoolID: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled ? resourceId(subscription().subscriptionId,rgPrivateLinkSecondary.name,'Microsoft.Network/loadBalancers/backendAddressPools', '${SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmName}-ILB', SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmName): null
-//     frontendIPConfigurationID: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled ? resourceId(subscription().subscriptionId,rgPrivateLinkSecondary.name,'Microsoft.Network/loadBalancers/frontendIpConfigurations', '${SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmName}-ILB', 'ILBConfig') : null
-//     probeID: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled ? resourceId(subscription().subscriptionId,rgPrivateLinkSecondary.name,'Microsoft.Network/loadBalancers/probes', '${SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmName}-ILB', 'HealthProbe') : null
-//     PrivateLinkName: '${SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmName}-PrivateLinkService'
-//     PrivateLinkNameIP: '${SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmName}-PrivateLink'
-//     PrivateLinkPrivateIPAddress: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.privateIPAddressForPrivateLink
-//     PrivateLinkPrivateSubnetID: vnetSecondary.outputs.PanoramaSubnetId
-//   }
-// }
+//Create Internal Load Balancer for PrivateLink Support in Secondary Region
+module ILBSecondary 'sharedservices/panorama-privatelink.bicep' = if ((SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion) && (SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled)) {
+  scope: rgPrivateLinkSecondary
+  name: 'Deploy-ILB-Secondary'
+  params: {
+    tags: resourceTags
+    location: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled ? rgPrivateLinkSecondary.location: null
+    LBname: '${SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmName}-ILB'
+    frontendIPConfigurationsName: 'ILBConfig'
+    frontendIPConfigSubnetID: vnetSecondary.outputs.PanoramaSubnetId
+    frontendIPConfigurationsPrivateIPAddress: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.privateIPAddressForILB
+    backendAddressPoolName: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmName
+    backendAddressPoolID: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled ? resourceId(subscription().subscriptionId,rgPrivateLinkSecondary.name,'Microsoft.Network/loadBalancers/backendAddressPools', '${SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmName}-ILB', SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmName): null
+    frontendIPConfigurationID: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled ? resourceId(subscription().subscriptionId,rgPrivateLinkSecondary.name,'Microsoft.Network/loadBalancers/frontendIpConfigurations', '${SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmName}-ILB', 'ILBConfig') : null
+    probeID: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled ? resourceId(subscription().subscriptionId,rgPrivateLinkSecondary.name,'Microsoft.Network/loadBalancers/probes', '${SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmName}-ILB', 'HealthProbe') : null
+    PrivateLinkName: '${SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmName}-PrivateLinkService'
+    PrivateLinkNameIP: '${SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmName}-PrivateLink'
+    PrivateLinkPrivateIPAddress: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.privateIPAddressForPrivateLink
+    PrivateLinkPrivateSubnetID: vnetSecondary.outputs.PanoramaSubnetId
+  }
+}
 
 
 

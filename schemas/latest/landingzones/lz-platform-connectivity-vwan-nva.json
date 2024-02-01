@@ -222,6 +222,9 @@
         "value": {
           "type": "object",
           "properties": {
+            "DeploySharedConnServicesSecondaryRegion": {
+              "type": "boolean"
+            },
             "DeploymentRegion": {
               "type": "string"
             },
