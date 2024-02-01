@@ -51,11 +51,17 @@
     },
     "resourceTags": {
       "value": {
-        "Env": "Lab",
-        "Support": "Lab",
-        "App-id": "3f34-d34d3",
-        "Cost-center": "432432",
-        "HealthOrganization": "NHA"
+        "Support" : "sronassi@microsoft.com",
+        "app-id" : "",
+        "CostCenter": "23445",
+        "env": "lab",
+        "HealthOrganization": "nha",
+        "Data Classification": "infa",
+        "DataSensitivity": "s1",
+        "ProjectName": "test",
+        "TechnicalContact": "me",
+        "ProjectContact": "me",
+        "ClientOrganization": "nha"
       }
     },
     "VWAN": {
