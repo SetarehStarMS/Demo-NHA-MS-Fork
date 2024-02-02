@@ -261,9 +261,10 @@ if ($LoginServicePrincipalJson -ne $null) {
   $ServicePrincipal = ($LoginServicePrincipalJson | ConvertFrom-SecureString -AsPlainText) | ConvertFrom-Json
   Write-Host $ServicePrincipal
   $Password = ConvertTo-SecureString $ServicePrincipal.password -AsPlainText -Force
-  Write-Host $Password
+  Write-Host $ServicePrincipal.password 
   $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $ServicePrincipal.appId, $Password
   Write-Host $ServicePrincipal.tenant
+  Write-Host $ServicePrincipal.appId
   Connect-AzAccount -ServicePrincipal -TenantId $ServicePrincipal.tenant -Credential $Credential
 }
 
