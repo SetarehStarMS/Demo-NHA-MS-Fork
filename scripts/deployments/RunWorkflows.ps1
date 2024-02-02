@@ -273,9 +273,12 @@ Write-Host "Setting Azure Landing Zones Context..."
 Write-Host $EnvironmentName
 Write-Host $WorkingDirectory
 $Context = New-EnvironmentContext -Environment $EnvironmentName -WorkingDirectory $WorkingDirectory
+Write-Host $Context
+Write-Host "kkkk"
 
 # Deploy Management Groups
 if ($DeployManagementGroups) {
+  Write-Host "kkkk2222"
   Write-Host "Deploying Management Groups..."
   Set-ManagementGroups `
     -Context $Context `
