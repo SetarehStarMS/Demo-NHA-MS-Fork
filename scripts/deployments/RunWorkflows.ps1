@@ -259,17 +259,19 @@ if (-not [string]::IsNullOrEmpty($LoginInteractiveTenantId)) {
 if ($LoginServicePrincipalJson -ne $null) {
   Write-Host "Logging in to Azure using service principal..."
   $ServicePrincipal = ($LoginServicePrincipalJson | ConvertFrom-SecureString -AsPlainText) | ConvertFrom-Json
-  Write-Host $ServicePrincipal
+  #Write-Host $ServicePrincipal
   $Password = ConvertTo-SecureString $ServicePrincipal.password -AsPlainText -Force
-  Write-Host $ServicePrincipal.password 
+  #Write-Host $ServicePrincipal.password 
   $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $ServicePrincipal.appId, $Password
-  Write-Host $ServicePrincipal.tenant
-  Write-Host $ServicePrincipal.appId
+  #Write-Host $ServicePrincipal.tenant
+  #Write-Host $ServicePrincipal.appId
   Connect-AzAccount -ServicePrincipal -TenantId $ServicePrincipal.tenant -Credential $Credential
 }
 
 # Set Azure Landing Zones Context
 Write-Host "Setting Azure Landing Zones Context..."
+Write-Host $EnvironmentName
+Write-Host $WorkingDirectory
 $Context = New-EnvironmentContext -Environment $EnvironmentName -WorkingDirectory $WorkingDirectory
 
 # Deploy Management Groups
