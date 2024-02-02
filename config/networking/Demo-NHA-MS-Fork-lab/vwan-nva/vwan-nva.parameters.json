@@ -66,15 +66,15 @@
     },
     "VWAN": {
       "value": {
-        "resourceGroupName" : "Central-VWAN-Connectivity-RG",
-        "name" : "Central-VWAN-Prod"
+        "resourceGroupName" : "nh-cc-rg-lab-vwan-networking-01",
+        "name" : "NHA-CC-VWAN-Lab"
       }
     },
     "VirtualWanHUBs":{
       "value": [ 
         {
         "DeployVWANHUB": true,
-        "VirtualWanHUBName": "vHUB-CC-Prod",
+        "VirtualWanHUBName": "vHUB-CC-Lab",
         "VirtualHubAddressPrefix": "10.100.0.0/23",
         "HubLocation": "canadacentral",
         "VirtualRouterAutoScaleConfiguration": 2,
@@ -87,7 +87,7 @@
       },
         {
         "DeployVWANHUB": false,
-        "VirtualWanHUBName": "vHUB-CE-Prod",
+        "VirtualWanHUBName": "vHUB-CE-Lab",
         "VirtualHubAddressPrefix": "10.200.0.0/23",
         "HubLocation": "canadaeast",
         "VirtualRouterAutoScaleConfiguration": 2,
@@ -103,19 +103,19 @@
     "FirewallPublicIPsConfig": {
       "value": {
         "DeployPublicIPs": true,
-        "ResourceGroupName": "PaloAltoPublicIPAddresses-RG",
+        "ResourceGroupName": "nh-ce-rg-lab-sharedcon-networking-01",
         "PublicIPNames": [
-          "NGFW-SNAT-PubIP",
-          "NGFW-DNAT-App1-PubIP"
+          "NHA-NGFW-SNAT-PIP",
+          "NHA-NGFW-DNAT-App1-PIP"
         ]
       }
     },
     "SharedConnServicesPrimaryRegionConfig": {
       "value": {
         "DeploymentRegion": "canadacentral",
-        "ResourceGroupName": "SharedConVNET-CC-RG",
+        "ResourceGroupName": "nh-cc-rg-lab-sharedcon-networking-01",
         "NetworkConfig": {
-          "name": "SharedConVNET",
+          "name": "NHASharedConVNET",
           "addressPrefixes": [
             "10.250.0.0/24"
           ],
@@ -141,21 +141,21 @@
         },
         "BastionConfig": {
           "enabled": true,
-          "ResourceGroupName": "Bastion-CC-RG",
-          "name": "bastion-shared-cc",
+          "ResourceGroupName": "nh-cc-rg-lab-sharedcon-bastion-01",
+          "name": "nha-bastion-shared-cc",
           "sku": "Standard",
           "scaleUnits": 2
         },
         "JumpboxConfig": {
           "enabled": true,
-          "ResourceGroupName": "Jumpbox-CC-RG",
-          "name": "JumpboxVM-CC-01",
+          "ResourceGroupName": "nh-cc-rg-lab-sharedcon-jumpbox-01",
+          "name": "nha-JumpboxVM-CC-01",
           "VMSize": "Standard_D2s_v3"
         },
         "PanoramaConfig": {
           "enabled": true,
-          "ResourceGroupName": "Panorama-CC-RG",
-          "vmName": "Panorama-CC",
+          "ResourceGroupName": "nh-cc-rg-lab-sharedcon-panorama-01",
+          "vmName": "nha-Panorama-CC",
           "vmSize": "Standard_D8s_v3",
           "privateIPAddress": "10.250.0.100",
           "ResourceGroupNameForPrivateLink": "Panorama-PrivateLink-CC-RG",
@@ -168,7 +168,7 @@
       "value": {
         "DeploySharedConnServicesSecondaryRegion": false,
         "DeploymentRegion": "canadaeast",
-        "ResourceGroupName": "SharedConVNET-CE-RG",
+        "ResourceGroupName": "nh-ce-rg-lab-sharedcon-networking-01",
         "NetworkConfig": {
           "name": "SharedCon-CE-VNET",
           "addressPrefixes": [
@@ -208,7 +208,7 @@
           "VMSize": "Standard_D2s_v3"
         },
         "PanoramaConfig": {
-          "enabled": true,
+          "enabled": false,
           "ResourceGroupName": "Panorama-CE-RG",
           "vmName": "Panorama-CE",
           "vmSize": "Standard_D8s_v3",

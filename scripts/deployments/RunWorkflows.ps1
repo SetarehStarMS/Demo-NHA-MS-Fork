@@ -415,6 +415,7 @@ if ($DeployVWANNetworkWithNVA) {
     -ManagementGroupId $Context.Variables['var-hubnetwork-managementGroupId'] `
     -SubscriptionId $Context.Variables['var-hubnetwork-subscriptionId'] `
     -ConfigurationFilePath "$($Context.NetworkingDirectory)/$($Context.Variables['var-vhubnetwork-nva-configurationFileName'])" `
+    -LogAnalyticsWorkspaceResourceId $LoggingConfiguration.LogAnalyticsWorkspaceResourceId `
     -NvaUsername $NvaUsername `
     -NvaPassword $NvaPassword
 }
