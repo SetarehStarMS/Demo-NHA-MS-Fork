@@ -103,7 +103,7 @@
     "FirewallPublicIPsConfig": {
       "value": {
         "DeployPublicIPs": true,
-        "ResourceGroupName": "alz-lab-cc-sharedcon-networking-rg",
+        "ResourceGroupName": "alz-lab-cc-sharedcon-ngfw-rg",
         "PublicIPNames": [
           "NGFW-SNAT-PIP",
           "NGFW-DNAT-App1-PIP"
@@ -141,7 +141,7 @@
         },
         "BastionConfig": {
           "enabled": true,
-          "ResourceGroupName": "alz-lab-cc-sharedcon-networking-rg",
+          "ResourceGroupName": "alz-lab-cc-sharedcon-bastion-rg",
           "name": "bastion-shared-cc",
           "sku": "Standard",
           "scaleUnits": 2
