@@ -259,8 +259,11 @@ if (-not [string]::IsNullOrEmpty($LoginInteractiveTenantId)) {
 if ($LoginServicePrincipalJson -ne $null) {
   Write-Host "Logging in to Azure using service principal..."
   $ServicePrincipal = ($LoginServicePrincipalJson | ConvertFrom-SecureString -AsPlainText) | ConvertFrom-Json
+  Write-Host $ServicePrincipal
   $Password = ConvertTo-SecureString $ServicePrincipal.password -AsPlainText -Force
+  Write-Host $Password
   $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $ServicePrincipal.appId, $Password
+  Write-Host $ServicePrincipal.tenant
   Connect-AzAccount -ServicePrincipal -TenantId $ServicePrincipal.tenant -Credential $Credential
 }
 
