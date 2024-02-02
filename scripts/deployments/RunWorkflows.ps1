@@ -270,11 +270,7 @@ if ($LoginServicePrincipalJson -ne $null) {
 
 # Set Azure Landing Zones Context
 Write-Host "Setting Azure Landing Zones Context..."
-Write-Host $EnvironmentName
-Write-Host $WorkingDirectory
 $Context = New-EnvironmentContext -Environment $EnvironmentName -WorkingDirectory $WorkingDirectory
-Write-Host $Context
-Write-Host "kkkk"
 
 # Deploy Management Groups
 if ($DeployManagementGroups) {

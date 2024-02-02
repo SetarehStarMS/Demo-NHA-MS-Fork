@@ -15,7 +15,7 @@ variables:
   var-identity-managementGroupId: BCHealth-NorthernHealth-Platform
   #var-logging-diagnosticSettingsforNetworkSecurityGroupsStoragePrefix: pubsecnsg
   var-logging-configurationFileName: logging.parameters.json
- var-managementgroup-hierarchy: |-
+  var-managementgroup-hierarchy: |-
     {
       "id": "3c70e550-aa90-4e85-b227-d2fa3efddd7a",
       "name": "Tenant Root Group",
