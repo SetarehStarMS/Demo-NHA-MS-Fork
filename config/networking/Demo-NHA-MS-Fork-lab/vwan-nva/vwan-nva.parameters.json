@@ -89,7 +89,8 @@
           "VPNSiteName": "site1",
           "VPNDeviceVendors": "Juniper",
           "VPNDeviceModel": "SRX-345",
-          "linkSpeedInMbps": 500
+          "linkSpeedInMbps": 500,
+          "addressPrefixes": "192.168.0.0/24"
         },
         "VirtualHubRoutingIntentDestinations": []
       },
@@ -110,7 +111,8 @@
           "VPNSiteName": "site1",
           "VPNDeviceVendors": "Juniper",
           "VPNDeviceModel": "SRX-345",
-          "linkSpeedInMbps": 500
+          "linkSpeedInMbps": 500,
+          "addressPrefixes": "192.168.0.0/24"
         },
         "VirtualHubRoutingIntentDestinations": []
       }

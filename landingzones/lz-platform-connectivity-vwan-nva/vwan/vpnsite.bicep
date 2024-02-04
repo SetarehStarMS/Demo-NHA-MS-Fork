@@ -2,7 +2,7 @@ param vpnSiteName string
 param deviceVendor string
 param deviceModel string
 param linkSpeedInMbps int
-param ipAddress string
+param addressPrefixes string
 @description('Location for the deployment.')
 param location string = resourceGroup().location
 
@@ -15,12 +15,16 @@ resource virtualGatewaySite 'Microsoft.Network/vpnSites@2020-05-01' = {
   location: location
   tags: tags
   properties: {
+    addressSpace: {
+      addressPrefixes: [
+        addressPrefixes
+      ]
+    }
     deviceProperties: {
       deviceVendor: deviceVendor
       deviceModel: deviceModel
       linkSpeedInMbps: linkSpeedInMbps      
     }
-    ipAddress: ipAddress
     virtualWan: {
       id: VWANId
     }
