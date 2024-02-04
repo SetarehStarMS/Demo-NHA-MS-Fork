@@ -90,7 +90,10 @@
           "VPNDeviceVendors": "Juniper",
           "VPNDeviceModel": "SRX-345",
           "linkSpeedInMbps": 500,
-          "addressPrefixes": "192.168.0.0/24"
+          "addressPrefixes": "192.168.0.0/24",
+          "vpnsitelinkName": "site1Link",
+          "linkIPAddress": "192.168.0.4",
+          "linkProviderName": "Juniper"
         },
         "VirtualHubRoutingIntentDestinations": []
       },
@@ -112,7 +115,10 @@
           "VPNDeviceVendors": "Juniper",
           "VPNDeviceModel": "SRX-345",
           "linkSpeedInMbps": 500,
-          "addressPrefixes": "192.168.0.0/24"
+          "addressPrefixes": "192.168.0.0/24",
+          "vpnsitelinkName": "site1Link",
+          "linkIPAddress": "192.168.0.4",
+          "linkProviderName": "Juniper"
         },
         "VirtualHubRoutingIntentDestinations": []
       }

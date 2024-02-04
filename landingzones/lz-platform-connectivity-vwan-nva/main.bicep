@@ -262,6 +262,9 @@ module resVPNSite 'vwan/vpnsite.bicep' = [for (hub, i) in VirtualWanHUBs: if ((h
     deviceModel: hub.VPNConfig.VPNDeviceModel
     linkSpeedInMbps: hub.VPNConfig.linkSpeedInMbps
     addressPrefixes:hub.VPNConfig.addressPrefixes
+    vpnsitelinkName: hub.VPNConfig.vpnsitelinkName
+    linkIPAddress: hub.VPNConfig.linkIPAddress
+    linkProviderName: hub.VPNConfig.linkProviderName
   }
 }]
 
