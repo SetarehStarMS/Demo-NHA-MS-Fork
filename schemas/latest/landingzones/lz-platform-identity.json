@@ -85,8 +85,7 @@
             },
             "required": [
                 "automation",
-                "backupRecoveryVault",
-                "hubNetwork",
+                "backupRecoveryVault",                
                 "network",
                 "privateDnsResolver",
                 "privateDnsResolverRuleset",
