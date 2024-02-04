@@ -397,9 +397,14 @@ resource vnet 'Microsoft.Network/virtualNetworks@2021-02-01' = {
 //   }
 // }
 
+resource VWANRG 'Microsoft.Resources/resourceGroups@2023-07-01' existing = {
+  scope: subscription(network.vHubConnection.ConnectivitySubscriptionID)
+  name: network.vHubConnection.VWANResourceGroupName
+}
+
 module vHUBConn 'hubVirtualNetworkConnections.bicep' = if ((network.deployVnet) && (network.vHubConnection.deployvHUBConnection)) {
   name: 'Deploy-VNET-to-${network.vHubConnection.VHUBName}'
-  scope: resourceGroup(network.vHubConnection.VWANResourceGroupName)
+  scope: VWANRG
   params: {
     remoteVirtualNetworkId: vnet.id
     vHUBConnName: '${network.name}-to-${network.vHubConnection.VHUBName}'

@@ -455,6 +455,9 @@
                 "VHUBName": {
                     "type": "string"
                 },
+                "ConnectivitySubscriptionID": {
+                    "type": "string"
+                },                
                 "VWANResourceGroupName": {
                     "type": "string"
                 }
