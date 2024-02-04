@@ -83,6 +83,10 @@
           "ExpressRouteGatewayEnabled": false,
           "ExpressRouteGatewayScaleUnits": 1
         },
+        "VPNConfig": {
+          "VPNGatewayEnabled": true,
+          "VPNGatewayScaleUnits": 1
+        },
         "VirtualHubRoutingIntentDestinations": []
       },
         {
@@ -95,6 +99,10 @@
         "ExpressRouteConfig": {
           "ExpressRouteGatewayEnabled": false,
           "ExpressRouteGatewayScaleUnits": 1
+        },
+        "VPNConfig": {
+          "VPNGatewayEnabled": false,
+          "VPNGatewayScaleUnits": 1
         },
         "VirtualHubRoutingIntentDestinations": []
       }

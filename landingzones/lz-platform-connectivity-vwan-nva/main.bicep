@@ -236,6 +236,18 @@ module resERGateway 'vwan/ergw.bicep' = [for (hub, i) in VirtualWanHUBs: if ((hu
   }
 }]
 
+//Create VPN Gateways inside of the Virtual HUBs
+module resVPNGateway 'vwan/vpngw.bicep' = [for (hub, i) in VirtualWanHUBs: if ((hub.DeployVWANHUB) && (hub.VPNConfig.VPNGatewayEnabled)) {
+  name: 'deploy-vhub-${hub.VirtualWanHUBName}-vpngw'
+  scope: rgVWAN
+  params: {
+    name: '${hub.VirtualWanHUBName}-vpngw'
+    tags: resourceTags
+    vHUBId: hub.DeployVWANHUB ? resVHUB[i].outputs.resourceId : ''
+    location: hub.HubLocation
+    scaleUnits: hub.VPNConfig.VPNGatewayScaleUnits
+  }
+}]
 
 param FirewallPublicIPsConfig object
 
