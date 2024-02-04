@@ -256,11 +256,12 @@ module resVPNSite 'vwan/vpnsite.bicep' = [for (hub, i) in VirtualWanHUBs: if ((h
   params: {
     vpnSiteName: hub.VPNConfig.VPNSiteName
     tags: resourceTags
-    vHUBId: hub.DeployVWANHUB ? resVHUB[i].outputs.resourceId : ''
+    VWANId: resVWAN.outputs.resourceId
     location: hub.HubLocation
     deviceVendor: hub.VPNConfig.VPNDeviceVendors
     deviceModel: hub.VPNConfig.VPNDeviceModel
     linkSpeedInMbps: hub.VPNConfig.linkSpeedInMbps
+    ipAddress:hub.VPNConfig.ipAddress
   }
 }]
 
