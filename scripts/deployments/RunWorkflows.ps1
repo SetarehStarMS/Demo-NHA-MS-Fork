@@ -412,7 +412,12 @@ if ($DeployHubNetworkWithNGFW) {
 
 # Deploy vHub Networking with NVA
 if ($DeployVWANNetworkWithNVA) {
-  Write-Host "Deploying Hub Networking with NVA..."
+  Write-Host "Deploying vWAN Networking with NVA..."
+ # Get Logging information using logging config file
+ $LoggingConfiguration = Get-LoggingConfiguration `
+ -ConfigurationFilePath "$($Context.LoggingDirectory)/$($Context.Variables['var-logging-configurationFileName'])" `
+ -SubscriptionId $Context.Variables['var-logging-subscriptionId']
+
 
   Set-VWANNetwork-With-NVA `
     -Context $Context `

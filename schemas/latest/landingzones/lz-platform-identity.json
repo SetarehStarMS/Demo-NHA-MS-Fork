@@ -446,6 +446,21 @@
                 "optional"
             ],
             "title": "Subnets"
+        },
+        "vHubConnection": {
+            "type": "object",
+            "properties": {
+                "deployvHUBConnection":{
+                    "type": "boolean"
+                },
+                "VHUBName": {
+                    "type": "string"
+                },
+                "VWANResourceGroupName": {
+                    "type": "string"
+                }
+            }
+            
         }
     }
 }

@@ -516,7 +516,3 @@ module ILBSecondary 'sharedservices/panorama-privatelink.bicep' = if ((SharedCon
     PrivateLinkPrivateSubnetID: vnetSecondary.outputs.PanoramaSubnetId
   }
 }
-
-
-
-

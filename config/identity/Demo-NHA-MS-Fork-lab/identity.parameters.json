@@ -170,6 +170,11 @@
             "addressPrefix": "10.15.0.64/27"
           },
           "optional": []
+        },
+        "vHubConnection": {
+          "deployvHUBConnection": true,
+          "VHUBName": "vHUB-CC-Lab",
+          "VWANResourceGroupName": "alz-lab-vwan-networking-rg"
         }
       }
     }
