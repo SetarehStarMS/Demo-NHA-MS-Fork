@@ -85,7 +85,11 @@
         },
         "VPNConfig": {
           "VPNGatewayEnabled": true,
-          "VPNGatewayScaleUnits": 1
+          "VPNGatewayScaleUnits": 1,
+          "VPNSiteName": "site1",
+          "VPNDeviceVendors": "Juniper",
+          "VPNDeviceModel": "SRX-345",
+          "linkSpeedInMbps": 500
         },
         "VirtualHubRoutingIntentDestinations": []
       },
@@ -102,7 +106,11 @@
         },
         "VPNConfig": {
           "VPNGatewayEnabled": false,
-          "VPNGatewayScaleUnits": 1
+          "VPNGatewayScaleUnits": 1,
+          "VPNSiteName": "site1",
+          "VPNDeviceVendors": "Juniper",
+          "VPNDeviceModel": "SRX-345",
+          "linkSpeedInMbps": 500
         },
         "VirtualHubRoutingIntentDestinations": []
       }

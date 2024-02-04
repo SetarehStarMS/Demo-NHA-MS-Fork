@@ -249,6 +249,21 @@ module resVPNGateway 'vwan/vpngw.bicep' = [for (hub, i) in VirtualWanHUBs: if ((
   }
 }]
 
+//Create VPN site inside of the VPN Gateway
+module resVPNSite 'vwan/vpnsite.bicep' = [for (hub, i) in VirtualWanHUBs: if ((hub.DeployVWANHUB) && (hub.VPNConfig.VPNGatewayEnabled)) {
+  name: hub.VPNConfig.VPNSiteName
+  scope: rgVWAN
+  params: {
+    vpnSiteName: hub.VPNConfig.VPNSiteName
+    tags: resourceTags
+    vHUBId: hub.DeployVWANHUB ? resVHUB[i].outputs.resourceId : ''
+    location: hub.HubLocation
+    deviceVendor: hub.VPNConfig.VPNDeviceVendors
+    deviceModel: hub.VPNConfig.VPNDeviceModel
+    linkSpeedInMbps: hub.VPNConfig.linkSpeedInMbps
+  }
+}]
+
 param FirewallPublicIPsConfig object
 
 //Create Resource Group for Firewall's Public IP Addresses

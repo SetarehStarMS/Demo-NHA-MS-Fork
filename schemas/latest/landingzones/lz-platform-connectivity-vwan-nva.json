@@ -96,8 +96,7 @@
         "VWAN",
         "VirtualWanHUBs",
         "FirewallPublicIPsConfig",
-        "SharedConnServicesPrimaryRegionConfig",
-        "SharedConnServicesSecondaryRegionConfig"
+        "SharedConnServicesPrimaryRegionConfig"      
       ],
       "title": "Parameters"
     },
