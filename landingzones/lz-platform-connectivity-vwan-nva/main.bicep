@@ -266,9 +266,6 @@ module resVPNSite 'vwan/vpnsite.bicep' = [for (hub, i) in VirtualWanHUBs: if ((h
     linkIPAddress: hub.VPNConfig.linkIPAddress
     linkProviderName: hub.VPNConfig.linkProviderName
   }
-  dependsOn: [
-    resVPNGateway
-  ]
 }]
 
 //Create VPN connection for VPN site
@@ -276,7 +273,7 @@ module resVPNConnection 'vwan/vpnconnection.bicep' = [for (hub, i) in VirtualWan
   name: hub.VPNConfig.VPNConnectionName
   scope: rgVWAN
   params: {
-    vpnConnectionName: '${resVPNSite[i].outputs.resourceId}/${hub.VPNConfig.vpnConnectionName}'
+    vpnConnectionName: 'Microsoft.Network/vpnSites/${hub.VPNConfig.VPNSiteName}/${hub.VPNConfig.vpnConnectionName}'
     vpnSiteName: hub.VPNConfig.VPNSiteName
     vpnSiteId: resVPNSite[i].outputs.resourceId
     vpnsitelinkName: hub.VPNConfig.vpnsitelinkName
