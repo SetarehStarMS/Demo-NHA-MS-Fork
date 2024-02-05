@@ -165,7 +165,7 @@
         "vHubConnection": {
           "deployvHUBConnection": true,
           "VHUBName": "vHUB-CC-Lab",
-          "ConnectivitySubscriptionID": " 1b824d8b-d6c3-4625-b7f7-19f5f9cf3f37",
+          "ConnectivitySubscriptionID": "1b824d8b-d6c3-4625-b7f7-19f5f9cf3f37",
           "VWANResourceGroupName": "alz-lab-vwan-networking-rg"
         }
       }
