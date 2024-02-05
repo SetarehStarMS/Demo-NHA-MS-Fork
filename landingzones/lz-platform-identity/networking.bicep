@@ -414,7 +414,3 @@ module vHUBConn 'hubVirtualNetworkConnections.bicep' = if ((network.deployVnet) 
 
 output vnetId string = vnet.id
 output vnetName string = vnet.name
-output subnets array = [for subnet in network.subnets: {
-  id: '${vnet.id}/subnets/${subnet.name}'
-}]
-
