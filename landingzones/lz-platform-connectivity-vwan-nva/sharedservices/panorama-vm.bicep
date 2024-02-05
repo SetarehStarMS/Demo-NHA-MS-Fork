@@ -30,7 +30,7 @@ param password string
 param subnetId string
 
 param privateIPAddress string
-param loadBalancerBackendAddressPoolID string
+// param loadBalancerBackendAddressPoolID string
 
 resource nic 'Microsoft.Network/networkInterfaces@2020-06-01' = {
     name: '${vmName}-nic'
@@ -47,11 +47,11 @@ resource nic 'Microsoft.Network/networkInterfaces@2020-06-01' = {
                     privateIPAddress: privateIPAddress
                     privateIPAddressVersion: 'IPv4'
                     primary: true
-                    loadBalancerBackendAddressPools: [
-                        {
-                            id: loadBalancerBackendAddressPoolID
-                        }
-                    ]
+                    // loadBalancerBackendAddressPools: [
+                    //     {
+                    //         id: loadBalancerBackendAddressPoolID
+                    //     }
+                    // ]
                 }
             }
         ]
