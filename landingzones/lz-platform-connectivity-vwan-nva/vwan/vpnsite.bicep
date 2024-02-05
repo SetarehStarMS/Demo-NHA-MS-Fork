@@ -45,3 +45,4 @@ resource virtualGatewaySite 'Microsoft.Network/vpnSites@2020-05-01' = {
     }
   }
 }
+output resourceId string = virtualGatewaySite.id

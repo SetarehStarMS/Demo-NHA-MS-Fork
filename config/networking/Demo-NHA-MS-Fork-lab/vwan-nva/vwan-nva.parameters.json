@@ -198,7 +198,7 @@
       "value": {
         "DeploySharedConnServicesSecondaryRegion": false,
         "DeploymentRegion": "canadaeast",
-        "ResourceGroupName": "alz-lab-ce-sharedcon-networking-01",
+        "ResourceGroupName": "alz-lab-ce-sharedcon-networking-rg",
         "NetworkConfig": {
           "name": "SharedCon-CE-VNET",
           "addressPrefixes": [

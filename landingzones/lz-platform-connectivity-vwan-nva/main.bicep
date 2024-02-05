@@ -278,6 +278,7 @@ module resVPNConnection 'vwan/vpnconnection.bicep' = [for (hub, i) in VirtualWan
   params: {
     vpnConnectionName: '${hub.VPNConfig.VPNSiteName}/${hub.VPNConfig.vpnConnectionName}'
     vpnSiteName: hub.VPNConfig.VPNSiteName
+    vpnSiteId: resVPNSite[i].outputs.resourceId
     vpnsitelinkName: hub.VPNConfig.vpnsitelinkName
     sharedKey: hub.VPNConfig.sharedKey
     enableBgp: hub.VPNConfig.enableBGP
