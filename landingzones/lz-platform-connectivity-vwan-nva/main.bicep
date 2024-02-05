@@ -335,7 +335,7 @@ module vnetPrimary 'sharedservices/networking.bicep' = {
 
 // Create & configure virtual network in Secondary Region
 module vnetSecondary 'sharedservices/networking.bicep' = if (SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion) {
-  name: 'deploy-networking'
+  name: 'deploy-networking-secondary'
   scope: SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion ? resourceGroup(rgVNETSecondary.name): resourceGroup(rgVNETPrimary.name)
   params: {
     SharedConnServicesNetwork:SharedConnServicesSecondaryRegionConfig.NetworkConfig
