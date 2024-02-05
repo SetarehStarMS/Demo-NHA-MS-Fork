@@ -276,7 +276,7 @@ module resVPNConnection 'vwan/vpnconnection.bicep' = [for (hub, i) in VirtualWan
   name: hub.VPNConfig.VPNConnectionName
   scope: rgVWAN
   params: {
-    vpnConnectionName: '${hub.VPNConfig.VPNSiteName}/${hub.VPNConfig.vpnConnectionName}'
+    vpnConnectionName: '${resVPNSite[i].outputs.resourceId}/${hub.VPNConfig.vpnConnectionName}'
     vpnSiteName: hub.VPNConfig.VPNSiteName
     vpnSiteId: resVPNSite[i].outputs.resourceId
     vpnsitelinkName: hub.VPNConfig.vpnsitelinkName
