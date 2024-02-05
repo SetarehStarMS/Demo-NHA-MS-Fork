@@ -390,9 +390,7 @@
         "vmSize",
         "ResourceGroupName",
         "ResourceGroupNameForPrivateLink",
-        "privateIPAddress",
-        "privateIPAddressForILB",
-        "privateIPAddressForPrivateLink"
+        "privateIPAddress"
       ]
     },
     "requiredSubnet": {

@@ -323,7 +323,7 @@ resource rgVNETSecondary 'Microsoft.Resources/resourceGroups@2020-06-01' = if (S
   location: SharedConnServicesSecondaryRegionConfig.DeploymentRegion
 }
 
-// Create & configure virtaual network in Primary Region
+// Create & configure virtual network in Primary Region
 module vnetPrimary 'sharedservices/networking.bicep' = {
   name: 'deploy-networking'
   scope: resourceGroup(rgVNETPrimary.name)
@@ -333,13 +333,13 @@ module vnetPrimary 'sharedservices/networking.bicep' = {
   }
 }
 
-// Create & configure virtaual network in Secondary Region
+// Create & configure virtual network in Secondary Region
 module vnetSecondary 'sharedservices/networking.bicep' = if (SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion) {
   name: 'deploy-networking'
   scope: SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion ? resourceGroup(rgVNETSecondary.name): resourceGroup(rgVNETPrimary.name)
   params: {
     SharedConnServicesNetwork:SharedConnServicesSecondaryRegionConfig.NetworkConfig
-    location: rgVNETSecondary.location
+    location: SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion ? rgVNETSecondary.location : rgVNETPrimary.location
   }
 }
 
