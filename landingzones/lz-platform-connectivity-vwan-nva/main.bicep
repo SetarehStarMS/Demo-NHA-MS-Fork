@@ -266,6 +266,26 @@ module resVPNSite 'vwan/vpnsite.bicep' = [for (hub, i) in VirtualWanHUBs: if ((h
     linkIPAddress: hub.VPNConfig.linkIPAddress
     linkProviderName: hub.VPNConfig.linkProviderName
   }
+  dependsOn: [
+    resVPNGateway
+  ]
+}]
+
+//Create VPN connection for VPN site
+module resVPNConnection 'vwan/vpnconnection.bicep' = [for (hub, i) in VirtualWanHUBs: if ((hub.DeployVWANHUB) && (hub.VPNConfig.VPNGatewayEnabled)) {
+  name: hub.VPNConfig.VPNConnectionName
+  scope: rgVWAN
+  params: {
+    vpnConnectionName: hub.VPNConfig.VPNConnectionName
+    vpnSiteName: hub.VPNConfig.VPNSiteName
+    vpnsitelinkName: hub.VPNConfig.vpnsitelinkName
+    sharedKey: hub.VPNConfig.SharedKeyName
+    enableBgp: hub.VPNConfig.EnableBGP
+    vHUBName: hub.DeployVWANHUB ? resVHUB[i].outputs.resourceName : ''    
+  }
+  dependsOn: [
+    resVPNGateway
+  ]
 }]
 
 param FirewallPublicIPsConfig object

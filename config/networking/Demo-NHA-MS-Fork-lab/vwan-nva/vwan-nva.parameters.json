@@ -93,7 +93,10 @@
           "addressPrefixes": "192.168.0.0/24",
           "vpnsitelinkName": "site1Link",
           "linkIPAddress": "192.168.0.4",
-          "linkProviderName": "Juniper"
+          "linkProviderName": "Juniper", 
+          "vpnConnectionName": "site1Connection",
+          "sharedKey": "dfgtewjjfsd",
+          "enableBgp": false
         },
         "VirtualHubRoutingIntentDestinations": []
       },
@@ -118,7 +121,10 @@
           "addressPrefixes": "192.168.0.0/24",
           "vpnsitelinkName": "site1Link",
           "linkIPAddress": "192.168.0.4",
-          "linkProviderName": "Juniper"
+          "linkProviderName": "Juniper", 
+          "vpnConnectionName": "site1Connection",
+          "sharedKey": "dfgtewjjfsd",
+          "enableBgp": false
         },
         "VirtualHubRoutingIntentDestinations": []
       }
