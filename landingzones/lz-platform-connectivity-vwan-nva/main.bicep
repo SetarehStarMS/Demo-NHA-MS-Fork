@@ -266,6 +266,9 @@ module resVPNSite 'vwan/vpnsite.bicep' = [for (hub, i) in VirtualWanHUBs: if ((h
     linkIPAddress: hub.VPNConfig.linkIPAddress
     linkProviderName: hub.VPNConfig.linkProviderName
   }
+  dependsOn: [
+    resVPNGateway
+  ]
 }]
 
 //Create VPN connection for VPN site
@@ -274,15 +277,14 @@ module resVPNConnection 'vwan/vpnconnection.bicep' = [for (hub, i) in VirtualWan
   scope: rgVWAN
   params: {
     vpnConnectionName: '${hub.VPNConfig.VPNSiteName}/${hub.VPNConfig.vpnConnectionName}'
-    vpnSiteName: hub.VPNConfig.VPNSiteName
-    vpnSiteId: resVPNSite[i].outputs.resourceId
+    vpnSiteName: hub.VPNConfig.VPNGatewayEnabled ? hub.VPNConfig.VPNSiteName: ''
     vpnsitelinkName: hub.VPNConfig.vpnsitelinkName
     sharedKey: hub.VPNConfig.sharedKey
     enableBgp: hub.VPNConfig.enableBGP
     vHUBName: hub.DeployVWANHUB ? resVHUB[i].outputs.resourceName : ''    
   }
   dependsOn: [
-    resVPNGateway
+    resVPNSite
   ]
 }]
 
@@ -336,7 +338,7 @@ module vnetPrimary 'sharedservices/networking.bicep' = {
 // Create & configure virtual network in Secondary Region
 module vnetSecondary 'sharedservices/networking.bicep' = if (SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion) {
   name: 'deploy-networking-secondary'
-  scope: SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion ? resourceGroup(rgVNETSecondary.name): resourceGroup(rgVNETPrimary.name)
+  scope: resourceGroup(SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion ? rgVNETSecondary.name : rgVNETPrimary.name)
   params: {
     SharedConnServicesNetwork:SharedConnServicesSecondaryRegionConfig.NetworkConfig
     location: SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion ? rgVNETSecondary.location : rgVNETPrimary.location
