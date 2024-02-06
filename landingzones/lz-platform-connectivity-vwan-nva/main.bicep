@@ -335,6 +335,7 @@ module vnetPrimary 'sharedservices/networking.bicep' = {
   }
 }
 
+ 
 // Create & configure virtual network in Secondary Region
 module vnetSecondary 'sharedservices/networking.bicep' = if (SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion) {
   name: 'deploy-networking-secondary'
@@ -362,8 +363,8 @@ module vNetConnSecondary 'vwan/hubVirtualNetworkConnections.bicep' = if (SharedC
   name: 'deploy-vhub-connection-Secondary'
   params: {
     vHubName: resVHUB[0].outputs.resourceName
-    vHubConnName: '${vnetSecondary.outputs.vnetName}-to-${resVHUB[0].outputs.resourceName}'
-    remoteVirtualNetworkId: vnetSecondary.outputs.vnetId
+    vHubConnName: SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion ? '${vnetSecondary.outputs.vnetName}-to-${resVHUB[0].outputs.resourceName}' : ''
+    remoteVirtualNetworkId: SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion ? vnetSecondary.outputs.vnetId : ''
   }
 }
 
