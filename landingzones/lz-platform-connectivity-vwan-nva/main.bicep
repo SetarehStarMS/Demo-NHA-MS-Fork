@@ -276,7 +276,7 @@ module resVPNConnection 'vwan/vpnconnection.bicep' = [for (hub, i) in VirtualWan
   name: hub.VPNConfig.VPNConnectionName
   scope: rgVWAN
   params: {
-    vpnConnectionName: '${resVPNGateway[i].outputs.resourceName}/${hub.VPNConfig.vpnConnectionName}'
+    vpnConnectionName: hub.VPNConfig.VPNGatewayEnabled ? '${resVPNGateway[i].outputs.resourceName}/${hub.VPNConfig.vpnConnectionName}' : ''
     vpnSiteName: hub.VPNConfig.VPNGatewayEnabled ? hub.VPNConfig.VPNSiteName: ''
     vpnsitelinkName: hub.VPNConfig.vpnsitelinkName
     sharedKey: hub.VPNConfig.sharedKey
@@ -404,7 +404,7 @@ module bastionSecondary '../../azresources/network/custom-bastion.bicep' = if ((
     name: SharedConnServicesSecondaryRegionConfig.BastionConfig.name
     sku: SharedConnServicesSecondaryRegionConfig.BastionConfig.sku
     scaleUnits: SharedConnServicesSecondaryRegionConfig.BastionConfig.scaleUnits
-    subnetId: vnetSecondary.outputs.AzureBastionSubnetId
+    subnetId: SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion ? vnetSecondary.outputs.AzureBastionSubnetId : ''
   }
 }
 
@@ -452,7 +452,7 @@ module jumpboxSecondary 'sharedservices/management-vm.bicep' = if ((SharedConnSe
   params: {
     location: SharedConnServicesSecondaryRegionConfig.JumpboxConfig.enabled ? rgJumpboxSecondary.location : null
     password: fwPassword
-    subnetId: vnetSecondary.outputs.ManagementSubnetId
+    subnetId: SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion ? vnetSecondary.outputs.ManagementSubnetId : ''
     username: fwUsername
     vmName: SharedConnServicesSecondaryRegionConfig.JumpboxConfig.name
     vmSize: SharedConnServicesSecondaryRegionConfig.JumpboxConfig.VMSize
@@ -502,7 +502,7 @@ module PanoramaSecondary 'sharedservices/panorama-vm.bicep' = if ((SharedConnSer
   params: {
     location: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.enabled ? rgPanoramaSecondary.location: null
     password: fwPassword
-    subnetId: vnetSecondary.outputs.PanoramaSubnetId
+    subnetId: SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion ? vnetSecondary.outputs.PanoramaSubnetId : ''
     username: fwUsername
     vmName: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmName
     vmSize: SharedConnServicesSecondaryRegionConfig.PanoramaConfig.vmSize
