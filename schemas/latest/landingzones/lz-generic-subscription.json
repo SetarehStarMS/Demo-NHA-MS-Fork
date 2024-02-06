@@ -260,6 +260,23 @@
         "udr"
       ],
       "title": "subnet"
-    }
+    },
+    "vHubConnection": {
+      "type": "object",
+      "properties": {
+          "deployvHUBConnection":{
+              "type": "boolean"
+          },
+          "VHUBName": {
+              "type": "string"
+          },
+          "ConnectivitySubscriptionID": {
+              "type": "string"
+          },                
+          "VWANResourceGroupName": {
+              "type": "string"
+          }
+      }      
+  }
   }
 }

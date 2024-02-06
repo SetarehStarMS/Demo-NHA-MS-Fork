@@ -30,8 +30,8 @@ param location string = resourceGroup().location
 //   rfc6598IPRange: '100.60.0.0/16'
 //   egressVirtualApplianceIp: '10.18.0.36'
 // }
-@description('Hub Network configuration that includes virtualNetworkId, rfc1918IPRange, rfc6598IPRange and egressVirtualApplianceIp.')
-param hubNetwork object
+// @description('Hub Network configuration that includes virtualNetworkId, rfc1918IPRange, rfc6598IPRange and egressVirtualApplianceIp.')
+// param hubNetwork object
 
 // Example (JSON)
 // -----------------------------
@@ -190,36 +190,36 @@ param hubNetwork object
 @description('Network configuration for the spoke virtual network.  It includes name, dnsServers, address spaces, vnet peering and subnets.')
 param network object
 
-var hubVnetIdSplit = split(hubNetwork.virtualNetworkId, '/')
+// var hubVnetIdSplit = split(hubNetwork.virtualNetworkId, '/')
 
-var routesToHub = [
-  // Force Routes to Hub IPs (RFC1918 range) via FW despite knowing that route via peering
-  {
-    name: 'SpokeUdrHubRFC1918FWRoute'
-    properties: {
-      addressPrefix: hubNetwork.rfc1918IPRange
-      nextHopType: 'VirtualAppliance'
-      nextHopIpAddress: hubNetwork.egressVirtualApplianceIp
-    }
-  }
-  // // Force Routes to Hub IPs (CGNAT range) via FW despite knowing that route via peering
-  // {
-  //   name: 'SpokeUdrHubRFC6598FWRoute'
-  //   properties: {
-  //     addressPrefix: hubNetwork.rfc6598IPRange
-  //     nextHopType: 'VirtualAppliance'
-  //     nextHopIpAddress: hubNetwork.egressVirtualApplianceIp
-  //   }
-  // }
-  {
-    name: 'RouteToEgressFirewall'
-    properties: {
-      addressPrefix: '0.0.0.0/0'
-      nextHopType: 'VirtualAppliance'
-      nextHopIpAddress: hubNetwork.egressVirtualApplianceIp
-    }
-  }
-]
+// var routesToHub = [
+//   // Force Routes to Hub IPs (RFC1918 range) via FW despite knowing that route via peering
+//   {
+//     name: 'SpokeUdrHubRFC1918FWRoute'
+//     properties: {
+//       addressPrefix: hubNetwork.rfc1918IPRange
+//       nextHopType: 'VirtualAppliance'
+//       nextHopIpAddress: hubNetwork.egressVirtualApplianceIp
+//     }
+//   }
+//   // // Force Routes to Hub IPs (CGNAT range) via FW despite knowing that route via peering
+//   // {
+//   //   name: 'SpokeUdrHubRFC6598FWRoute'
+//   //   properties: {
+//   //     addressPrefix: hubNetwork.rfc6598IPRange
+//   //     nextHopType: 'VirtualAppliance'
+//   //     nextHopIpAddress: hubNetwork.egressVirtualApplianceIp
+//   //   }
+//   // }
+//   {
+//     name: 'RouteToEgressFirewall'
+//     properties: {
+//       addressPrefix: '0.0.0.0/0'
+//       nextHopType: 'VirtualAppliance'
+//       nextHopIpAddress: hubNetwork.egressVirtualApplianceIp
+//     }
+//   }
+// ]
 
 // Network Security Groups
 resource nsg 'Microsoft.Network/networkSecurityGroups@2021-02-01' = [for subnet in network.subnets: if (subnet.nsg.enabled) {
@@ -230,14 +230,14 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2021-02-01' = [for subnet 
   }
 }]
 
-// Route Tables
-resource udr 'Microsoft.Network/routeTables@2021-02-01' = {
-  name:  '${resourceGroup().name}-udr'
-  location: location
-  properties: {
-    routes: network.peerToHubVirtualNetwork ? routesToHub : null
-  }
-}
+// // Route Tables
+// resource udr 'Microsoft.Network/routeTables@2021-02-01' = {
+//   name:  '${resourceGroup().name}-udr'
+//   location: location
+//   properties: {
+//     routes: network.peerToHubVirtualNetwork ? routesToHub : null
+//   }
+// }
 
 // Virtual Network
 resource vnet 'Microsoft.Network/virtualNetworks@2021-02-01' = {
@@ -257,9 +257,9 @@ resource vnet 'Microsoft.Network/virtualNetworks@2021-02-01' = {
         networkSecurityGroup: (subnet.nsg.enabled) ? {
           id: nsg[i].id
         } : null
-        routeTable: (subnet.udr.enabled) ? {
-          id: udr.id
-        } : null
+        // routeTable: (subnet.udr.enabled) ? {
+        //   id: udr.id
+        // } : null
         delegations: contains(subnet, 'delegations') ? [
           {
             name: replace(subnet.delegations.serviceName, '/', '.')
@@ -273,37 +273,51 @@ resource vnet 'Microsoft.Network/virtualNetworks@2021-02-01' = {
   }
 }
 
-// Virtual Network Peering - Spoke to Hub
-module vnetPeeringSpokeToHub '../../azresources/network/vnet-peering.bicep' = if (network.peerToHubVirtualNetwork) {
-  name: 'deploy-vnet-peering-spoke-to-hub'
-  scope: resourceGroup()
-  params: {
-    peeringName: 'Hub-${vnet.name}-to-${last(hubVnetIdSplit)}'
-    allowForwardedTraffic: true
-    allowVirtualNetworkAccess: true
-    sourceVnetName: vnet.name
-    targetVnetId: hubNetwork.virtualNetworkId
-    useRemoteGateways: network.useRemoteGateway
-  }
+// // Virtual Network Peering - Spoke to Hub
+// module vnetPeeringSpokeToHub '../../azresources/network/vnet-peering.bicep' = if (network.peerToHubVirtualNetwork) {
+//   name: 'deploy-vnet-peering-spoke-to-hub'
+//   scope: resourceGroup()
+//   params: {
+//     peeringName: 'Hub-${vnet.name}-to-${last(hubVnetIdSplit)}'
+//     allowForwardedTraffic: true
+//     allowVirtualNetworkAccess: true
+//     sourceVnetName: vnet.name
+//     targetVnetId: hubNetwork.virtualNetworkId
+//     useRemoteGateways: network.useRemoteGateway
+//   }
+// }
+
+// // Virtual Network Peering - Hub to Spoke
+// // We must rescope the deployment to the subscription id & resource group of where the Hub VNET is located.
+// module vnetPeeringHubToSpoke '../../azresources/network/vnet-peering.bicep' = if (network.peerToHubVirtualNetwork) {
+//   name: 'deploy-vnet-peering-${subscription().subscriptionId}'
+//   // vnet id = /subscriptions/<<SUBSCRIPTION ID>>/resourceGroups/<<RESOURCE GROUP>>/providers/Microsoft.Network/virtualNetworks/<<VNET NAME>>
+//   scope: resourceGroup(network.peerToHubVirtualNetwork ? hubVnetIdSplit[2] : '', network.peerToHubVirtualNetwork ? hubVnetIdSplit[4] : '')
+//   params: {
+//     peeringName: 'Spoke-${last(hubVnetIdSplit)}-to-${vnet.name}-${uniqueString(vnet.id)}'
+//     allowForwardedTraffic: true
+//     allowVirtualNetworkAccess: true
+//     allowGatewayTransit: true
+//     sourceVnetName: last(hubVnetIdSplit)!
+//     targetVnetId: vnet.id
+//     useRemoteGateways: false
+//   }
+// }
+
+resource VWANRG 'Microsoft.Resources/resourceGroups@2023-07-01' existing = {
+  scope: subscription(network.vHubConnection.ConnectivitySubscriptionID)
+  name: network.vHubConnection.VWANResourceGroupName
 }
 
-// Virtual Network Peering - Hub to Spoke
-// We must rescope the deployment to the subscription id & resource group of where the Hub VNET is located.
-module vnetPeeringHubToSpoke '../../azresources/network/vnet-peering.bicep' = if (network.peerToHubVirtualNetwork) {
-  name: 'deploy-vnet-peering-${subscription().subscriptionId}'
-  // vnet id = /subscriptions/<<SUBSCRIPTION ID>>/resourceGroups/<<RESOURCE GROUP>>/providers/Microsoft.Network/virtualNetworks/<<VNET NAME>>
-  scope: resourceGroup(network.peerToHubVirtualNetwork ? hubVnetIdSplit[2] : '', network.peerToHubVirtualNetwork ? hubVnetIdSplit[4] : '')
+module vHUBConn '../../landingzones/lz-platform-connectivity-vwan-nva/vwan/hubVirtualNetworkConnections.bicep' = if ((network.deployVnet) && (network.vHubConnection.deployvHUBConnection)) {
+  name: 'Deploy-VNET-to-${network.vHubConnection.VHUBName}'
+  scope: VWANRG
   params: {
-    peeringName: 'Spoke-${last(hubVnetIdSplit)}-to-${vnet.name}-${uniqueString(vnet.id)}'
-    allowForwardedTraffic: true
-    allowVirtualNetworkAccess: true
-    allowGatewayTransit: true
-    sourceVnetName: last(hubVnetIdSplit)!
-    targetVnetId: vnet.id
-    useRemoteGateways: false
+    remoteVirtualNetworkId: vnet.id
+    vHubConnName: '${network.name}-to-${network.vHubConnection.VHUBName}'
+    vHubName: network.vHubConnection.VHUBName
   }
 }
-
 // Outputs
 output vnetId string = vnet.id
 output vnetName string = vnet.name
