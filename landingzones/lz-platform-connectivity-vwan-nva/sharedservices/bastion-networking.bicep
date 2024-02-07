@@ -50,5 +50,3 @@ output vnetName string = SharedConnServicesBastionVNET.name
 output vnetId string = SharedConnServicesBastionVNET.id
 
 output AzureBastionSubnetId string = '${SharedConnServicesBastionVNET.id}/subnets/${SharedConnServicesBastionNetwork.subnets.AzureBastionSubnet.name}'
-output ManagementSubnetId string = '${SharedConnServicesBastionVNET.id}/subnets/${SharedConnServicesBastionNetwork.subnets.ManagementSubnet.name}'
-output PanoramaSubnetId string = '${SharedConnServicesBastionVNET.id}/subnets/${SharedConnServicesBastionNetwork.subnets.PanoramaSubnet.name}'
