@@ -151,11 +151,6 @@
           ],
           "dnsServers": [],
           "subnets": {
-            "AzureBastionSubnet": {
-              "comments": "AzureBastionSubnet",
-              "name": "AzureBastionSubnet",
-              "addressPrefix": "10.250.0.0/26"
-            },
             "ManagementSubnet": {
               "comments": "ManagementSubnet (Jumpboxes)",
               "name": "ManagementSubnet",
@@ -167,6 +162,20 @@
               "addressPrefix": "10.250.0.96/27"
             },
             "optional": []
+          }
+        },
+        "BastionNetworkConfig": {
+          "name": "SharedConBastionVNET",
+          "addressPrefixes": [
+            "10.251.0.0/24"
+          ],
+          "dnsServers": [],
+          "subnets": {
+            "AzureBastionSubnet": {
+              "comments": "AzureBastionSubnet",
+              "name": "AzureBastionSubnet",
+              "addressPrefix": "10.251.0.0/26"
+            }
           }
         },
         "BastionConfig": {
@@ -206,11 +215,6 @@
           ],
           "dnsServers": [],
           "subnets": {
-            "AzureBastionSubnet": {
-              "comments": "AzureBastionSubnet",
-              "name": "AzureBastionSubnet",
-              "addressPrefix": "10.99.0.0/26"
-            },
             "ManagementSubnet": {
               "comments": "ManagementSubnet (Jumpboxes)",
               "name": "ManagementSubnet",
@@ -222,6 +226,20 @@
               "addressPrefix": "10.99.0.96/27"
             },
             "optional": []
+          }
+        },
+        "BastionNetworkConfig": {
+          "name": "SharedCon-CE-BastionVNET",
+          "addressPrefixes": [
+            "10.100.0.0/24"
+          ],
+          "dnsServers": [],
+          "subnets": {
+            "AzureBastionSubnet": {
+              "comments": "AzureBastionSubnet",
+              "name": "AzureBastionSubnet",
+              "addressPrefix": "10.100.0.0/26"
+            }
           }
         },
         "BastionConfig": {

@@ -335,6 +335,15 @@ module vnetPrimary 'sharedservices/networking.bicep' = {
   }
 }
 
+// Create & configure Bastion virtual network in Primary Region
+module bastionVnetPrimary 'sharedservices/bastion-networking.bicep' = {
+  name: 'deploy-bastion-networking'
+  scope: resourceGroup(rgVNETPrimary.name)
+  params: {
+    SharedConnServicesBastionNetwork:SharedConnServicesPrimaryRegionConfig.BastionNetworkConfig
+    location: rgVNETPrimary.location
+  }
+}
  
 // Create & configure virtual network in Secondary Region
 module vnetSecondary 'sharedservices/networking.bicep' = if (SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion) {
@@ -342,6 +351,16 @@ module vnetSecondary 'sharedservices/networking.bicep' = if (SharedConnServicesS
   scope: resourceGroup(SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion ? rgVNETSecondary.name : rgVNETPrimary.name)
   params: {
     SharedConnServicesNetwork:SharedConnServicesSecondaryRegionConfig.NetworkConfig
+    location: SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion ? rgVNETSecondary.location : rgVNETPrimary.location
+  }
+}
+
+// Create & configure Bastion virtual network in Secondary Region
+module bastionVnetSecondary 'sharedservices/bastion-networking.bicep' = if (SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion) {
+  name: 'deploy-bastion-networking-secondary'
+  scope: resourceGroup(SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion ? rgVNETSecondary.name : rgVNETPrimary.name)
+  params: {
+    SharedConnServicesBastionNetwork:SharedConnServicesSecondaryRegionConfig.BastionNetworkConfig
     location: SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion ? rgVNETSecondary.location : rgVNETPrimary.location
   }
 }
@@ -357,6 +376,17 @@ module vNetConnPrimary 'vwan/hubVirtualNetworkConnections.bicep' = {
   }
 }
 
+//Connect Shared Connectivity Services VNET (PrimaryRegion) with First HUB
+module bastionVNetConnPrimary 'vwan/hubVirtualNetworkConnections.bicep' = {
+  scope: rgVWAN
+  name: 'deploy-bastion-to-vhub-connection-primary'
+  params: {
+    vHubName: resVHUB[0].outputs.resourceName
+    vHubConnName: '${bastionVnetPrimary.outputs.vnetName}-to-${resVHUB[0].outputs.resourceName}'
+    remoteVirtualNetworkId: bastionVnetPrimary.outputs.vnetId
+  }
+}
+
 //Connect Shared Connectivity Services VNET (SecondaryRegion) with First HUB
 module vNetConnSecondary 'vwan/hubVirtualNetworkConnections.bicep' = if (SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion) {
   scope: rgVWAN
@@ -365,6 +395,17 @@ module vNetConnSecondary 'vwan/hubVirtualNetworkConnections.bicep' = if (SharedC
     vHubName: resVHUB[0].outputs.resourceName
     vHubConnName: SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion ? '${vnetSecondary.outputs.vnetName}-to-${resVHUB[0].outputs.resourceName}' : ''
     remoteVirtualNetworkId: SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion ? vnetSecondary.outputs.vnetId : ''
+  }
+}
+
+//Connect Shared Connectivity Services VNET (PrimaryRegion) with First HUB
+module bastionVNetConnSecondary 'vwan/hubVirtualNetworkConnections.bicep' = if (SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion) {
+  scope: rgVWAN
+  name: 'deploy-bastion-to-vhub-connection-secondary'
+  params: {
+    vHubName: resVHUB[0].outputs.resourceName
+    vHubConnName: SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion ? '${bastionVnetSecondary.outputs.vnetName}-to-${resVHUB[0].outputs.resourceName}' : ''
+    remoteVirtualNetworkId: SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion ? bastionVnetSecondary.outputs.vnetId : ''
   }
 }
 
@@ -391,7 +432,7 @@ module bastionPrimary '../../azresources/network/custom-bastion.bicep' = if (Sha
     name: SharedConnServicesPrimaryRegionConfig.BastionConfig.name
     sku: SharedConnServicesPrimaryRegionConfig.BastionConfig.sku
     scaleUnits: SharedConnServicesPrimaryRegionConfig.BastionConfig.scaleUnits
-    subnetId: vnetPrimary.outputs.AzureBastionSubnetId
+    subnetId: bastionVnetPrimary.outputs.AzureBastionSubnetId
   }
 }
 
@@ -404,7 +445,7 @@ module bastionSecondary '../../azresources/network/custom-bastion.bicep' = if ((
     name: SharedConnServicesSecondaryRegionConfig.BastionConfig.name
     sku: SharedConnServicesSecondaryRegionConfig.BastionConfig.sku
     scaleUnits: SharedConnServicesSecondaryRegionConfig.BastionConfig.scaleUnits
-    subnetId: SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion ? vnetSecondary.outputs.AzureBastionSubnetId : ''
+    subnetId: SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion ? bastionVnetSecondary.outputs.AzureBastionSubnetId : ''
   }
 }
 
