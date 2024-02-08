@@ -377,7 +377,7 @@ module vNetConnPrimary 'vwan/hubVirtualNetworkConnections.bicep' = {
 }
 
 //Connect Shared Connectivity Services VNET (PrimaryRegion) with First HUB
-module bastionVNetConnPrimary 'vwan/hubVirtualNetworkConnections.bicep' = {
+module bastionVNetConnPrimary 'vwan/hubVirtualNetworkConnectionsNoInternetSecurity.bicep' = {
   scope: rgVWAN
   name: 'deploy-bastion-to-vhub-connection-primary'
   params: {
@@ -399,7 +399,7 @@ module vNetConnSecondary 'vwan/hubVirtualNetworkConnections.bicep' = if (SharedC
 }
 
 //Connect Shared Connectivity Services VNET (PrimaryRegion) with First HUB
-module bastionVNetConnSecondary 'vwan/hubVirtualNetworkConnections.bicep' = if (SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion) {
+module bastionVNetConnSecondary 'vwan/hubVirtualNetworkConnectionsNoInternetSecurity.bicep' = if (SharedConnServicesSecondaryRegionConfig.DeploySharedConnServicesSecondaryRegion) {
   scope: rgVWAN
   name: 'deploy-bastion-to-vhub-connection-secondary'
   params: {
